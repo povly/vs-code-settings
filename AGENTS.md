@@ -41,6 +41,8 @@ _var-www-_vscode/
 ├── tools/
 │   ├── intellisense-check/     # автотест IntelliSense (@vscode/test-electron, npm test)
 │   │                           #   кейсы 8/8b/8c: vue-css-jump из vendor/*.vsix
+│   ├── machine/                # глобальный машинный сетап: снимок user settings
+│   │                           #   Code OSS + php-cs-fixer (развёртывание — по своему README)
 │   └── vscode-vue-css-jump/    # исходники povly.vscode-vue-css-jump (MIT):
 │                               #   hover/Ctrl+Click по <style src>, $style-подсказки;
 │                               #   npm run package → dist/*.vsix → code-oss --install-extension --force
