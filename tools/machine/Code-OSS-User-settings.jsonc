@@ -16,8 +16,11 @@
     "editor.defaultFormatter": "junstyle.php-cs-fixer"
   },
   "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
-  // CLI-бинарь: composer global (быстрее встроенного phar расширения)
-  "php-cs-fixer.executablePath": "~/.config/composer/vendor/bin/php-cs-fixer",
+  // CLI-бинарь composer global через wrapper: cwd = ~/.config/vscode-php-cs-fixer
+  // (служебный composer.json с config.platform.php) → нет WARN «Unable to determine
+  // minimum PHP version…»; фильтр баннера из stderr чинит баг junstyle 0.3.21
+  // «provider FAILED» на уже-чистых файлах. Шаблоны: tools/machine/ в _vscode
+  "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
   // Гасит ложный тост php-resolver «phpcs - Mismatch configuration provided»
   // (PHPCS 4.x битовая маска) глобально — стиль держат php-cs-fixer, не PHPCS
   "phpResolver.phpSnifferCommand": "",

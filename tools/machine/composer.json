@@ -1,0 +1,12 @@
+{
+  "_note": [
+    "Служебный файл машинного сетапа php-cs-fixer (воркспейс _vscode). Виден только запуску с cwd этого каталога (см. php-cs-fixer-wrapper.sh) — гасит WARN WarningsDetector::detectHigherPhpVersion: «Unable to determine minimum PHP version supported by your project from composer.json: Failed to read file composer.json».",
+    "platform.php = major.minor текущего runtime PHP. При апгрейде PHP обновить: php -r 'echo PHP_MAJOR_VERSION.\".\".PHP_MINOR_VERSION;' — иначе WARN вернётся (runtime > min).",
+    "НЕ добавлять require.php / require-dev.php: detectPhp() объединяет кандидаты через «||», getMinSemVer() берёт минимум из объединения — любой require вернёт WARN обратно."
+  ],
+  "config": {
+    "platform": {
+      "php": "8.5"
+    }
+  }
+}

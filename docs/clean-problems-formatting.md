@@ -125,7 +125,7 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
   даёт 4 пробела. Рецепт `pint.json {"rules":{"indentation_type":true}}` из
   ранних версий этого гайда был ошибочен — pint из конвейера убран.
 - **Три уровня конфига** (правила одни: `setIndent("\t")` + `@PSR12` +
-  `indentation_type`):
+  `indentation_type` + `array_indentation`):
   1. машинный `~/.config/vscode-php-cs-fixer/.php-cs-fixer.php` — подключён в
      user settings ключом `php-cs-fixer.config` (путь с `~/` поддерживается
      расширением) → действует в **любом** открытом корне; шаблон и снимок
@@ -166,6 +166,75 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
 - **Анти-паттерн**: `laravel.vscode-laravel` как `[php]`-форматтер в user
   settings — его Pint-форматирование зависит от `vendor/bin/pint` в корне
   проекта (в WP-инсталлах не работает вовсе) и даёт 4 пробела вместо табов.
+
+### WARN `composer.json` / «provider FAILED» при format-on-save
+
+Симптом → диагностика → фикс (эмпирика 2026-09-21: junstyle.php-cs-fixer
+0.3.21-universal + PHP CS Fixer 3.95.26, runtime PHP 8.5).
+
+**Симптомы:**
+
+1. При каждом сохранении Output php-cs-fixer показывает stderr-WARN
+   `Unable to determine minimum PHP version supported by your project from
+   composer.json: Failed to read file "composer.json".`
+2. Форматирование «умирает»: exthost-лог сыплет
+   `[junstyle.php-cs-fixer] provider FAILED` + `[error] undefined`, файл
+   сохраняется неформатированным.
+
+**Механика (по исходнику junstyle 0.3.21 и php-cs-fixer 3.95):**
+
+- junstyle форматирует временную копию `/tmp/pcf-tmp0.<rand>/<Имя>.php`,
+  спавня фиксер с `cwd` = каталогу редактируемого файла. Проектный
+  `.php-cs-fixer.php` и корневой composer.json на это не влияют.
+- `ComposerJsonReader::processFile()` ищет `composer.json` по относительному
+  пути — строго от cwd, без walk-up к корню и без привязки к `--config` →
+  симптом 1 (предупреждение косметическое: правила задаёт `--config`).
+- Баг junstyle 0.3.21 (`format()`, else-ветка): при `files==0` и >1 непустой
+  строки в stderr промис форматирования реджектится → VS Code пишет
+  «provider FAILED». Баннер фиксерa (`PHP CS Fixer …` / `PHP runtime:` /
+  `Loaded config…` / `Running analysis…`) ВСЕГДА уходит в stderr — даже с
+  `--format=json` → каждое сохранение уже-чистого по правилам файла падало
+  (симптом 2). Вишка: `@PSR12` не включает `array_indentation`, поэтому
+  визуально кривые массивы фиксер считает «чистыми» (`files:[]`) и упирается
+  ровно в этот баг.
+
+**Доказанные НЕ-решения (не пытаться):**
+
+- `php-cs-fixer.ignorePHPVersion: true` → deprecated env
+  `PHP_CS_FIXER_IGNORE_ENV` (двойной шум), наш WARN не глушит.
+- Проектный `.php-cs-fixer.php` в корне — якорь cwd, а не конфиг.
+- cwd = корень проекта → вместо WARN появляется ДРУГОЙ («running on PHP X,
+  but the minimum … is Y») — неприемлемо для машинного сетапа.
+- `Config::setPhpVersion()` в 3.95 нет; CLI-флага `--php-version` нет.
+
+**Фикс — машинный wrapper** (шаблоны: `tools/machine/`, подключается user
+settings ключом `"php-cs-fixer.executablePath"`):
+
+1. `cd ~/.config/vscode-php-cs-fixer` + служебный `composer.json` с
+   `config.platform.php` = major.minor runtime → нет WARN. Только platform,
+   БЕЗ `require.php` (иначе `getMinSemVer()` возьмёт минимум из объединения
+   кандидатов и WARN вернётся).
+2. Фильтр баннера из stderr (grep -v по 4 сигнатурам) → при `files==0` stderr
+   пуст → провайдер резолвится. Настоящие ошибки проходят насквозь.
+3. Правило `array_indentation` в машинном/воркспейс/проектном конфигах —
+   кривые отступы массивов реально чинятся.
+
+**Обслуживание:** при апгрейде PHP обновить `config.platform.php` в служебном
+composer.json (`php -r 'echo PHP_MAJOR_VERSION,".",PHP_MINOR_VERSION;'`),
+иначе WARN вернётся (runtime новее минимума).
+
+**Регресс-чек** (реплика спавна расширения — из глубокого каталога без
+composer.json):
+
+```bash
+~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh fix --using-cache=no \
+	--format=json --config=~/.config/vscode-php-cs-fixer/.php-cs-fixer.php \
+	--path-mode=override <файл.php>
+```
+
+Ожидания: уже-чистый файл → `files:[]`, stderr ПУСТ, exit 0; кривой массив →
+`files:[1]`, отступы нормализованы; негатив-контроли — прямой бинарарь без
+wrapper даёт WARN, wrapper с битым `--config` → текст ошибки виден, exit 16.
 
 ## Инсталлы отдельным корнем (WP/Bitrix вне воркспейса)
 

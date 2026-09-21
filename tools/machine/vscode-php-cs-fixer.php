@@ -19,4 +19,5 @@ return (new PhpCsFixer\Config())
 	->setRules([
 		'@PSR12' => true,
 		'indentation_type' => true,
+		'array_indentation' => true,
 	]);
