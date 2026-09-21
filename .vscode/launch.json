@@ -1,0 +1,50 @@
+{
+	// Конфигурации отладки (F5) — всё бесплатное
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "PHP: слушать Xdebug (Laravel / WordPress / Bitrix)",
+			"type": "php",
+			"request": "launch",
+			"port": 9003,
+			// Сервер должен быть запущен с Xdebug (см. README), например:
+			//   php artisan serve          (Laravel)
+			//   php -S localhost:8000      (WordPress/Bitrix)
+			"pathMappings": {}
+		},
+		{
+			"name": "JS: сайт через Vite dev-server (localhost:5173)",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:5173",
+			"webRoot": "${workspaceFolder}",
+			"sourceMapPathOverrides": {
+				"webpack://./resources/*": "${workspaceFolder}/resources/*"
+			}
+		},
+		{
+			"name": "JS: сайт через artisan serve (localhost:8000)",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}",
+			"sourceMapPathOverrides": {
+				"webpack://./resources/*": "${workspaceFolder}/resources/*"
+			}
+		},
+		{
+			"name": "Rust: отладка бинарника (cargo run, CodeLLDB)",
+			"type": "lldb",
+			"request": "launch",
+			"cargo": {
+				"args": ["build"],
+				"filter": {
+					"name": "ИЗМЕНИТЕ_НА_ИМЯ_БИНАРЯ",
+					"kind": "bin"
+				}
+			},
+			"args": [],
+			"cwd": "${workspaceFolder}"
+		}
+	]
+}

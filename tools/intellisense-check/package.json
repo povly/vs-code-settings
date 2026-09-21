@@ -1,0 +1,15 @@
+{
+  "name": "intellisense-check",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Автопроверка IntelliSense воркспейса: CSS-подсказки (.css/.pcss), $style (Vue CSS Modules), var(--…) из внешних файлов, color provider. Запуск: npm test (см. docs/vue-css-intellisense.md)",
+  "scripts": {
+    "test": "node src/runTests.js",
+    "test:headless": "xvfb-run -a npm test",
+    "test:phpantom": "xvfb-run -a node src/runPhpantomTests.js"
+  },
+  "devDependencies": {
+    "@vscode/test-electron": "^2.5.2",
+    "mocha": "^11.7.0"
+  }
+}

@@ -1,0 +1,26 @@
+# Зависимости и сборочный вывод
+node_modules/
+dist/
+target/
+
+# Локальное состояние AI-инструментов (индексы, континуации)
+.codegraph/
+.omo/
+
+# AI Factory: планы — локальные рабочие документы с путями/именами машинных
+# проектов, в публичный репо не идут (политика санитизации)
+.ai-factory/plans/
+.ai-factory/archive/
+.ai-factory/patches/
+.ai-factory/evolutions/
+.ai-factory/evolution/
+.ai-factory/qa/
+
+# Кеш форматтеров
+.php-cs-fixer.cache
+
+# Артефакты прогонов @vscode/test-electron (внутри абсолютные пути машины)
+.vscode-test/
+
+# ОС
+.DS_Store

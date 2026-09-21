@@ -1,0 +1,174 @@
+{
+	// Live templates в стиле PhpStorm для Vue 3 (Composition API, <script setup>)
+	"vue_sfc": {
+		"prefix": "vsfc",
+		"body": [
+			"<script setup>",
+			"${1}",
+			"</script>",
+			"",
+			"<template>",
+			"\t<div>",
+			"\t\t${2}",
+			"\t</div>",
+			"</template>",
+			"",
+			"<style scoped>",
+			"${0}",
+			"</style>"
+		],
+		"description": "Каркас Vue SFC: script setup + template + style scoped"
+	},
+	"vue_script_setup": {
+		"prefix": "vscript",
+		"body": [
+			"<script setup>",
+			"${0}",
+			"</script>"
+		],
+		"description": "<script setup> блок"
+	},
+	"vue_ref": {
+		"prefix": "vref",
+		"body": [
+			"const ${1:name} = ref(${2:null})"
+		],
+		"description": "const name = ref(...)"
+	},
+	"vue_reactive": {
+		"prefix": "vreactive",
+		"body": [
+			"const ${1:state} = reactive({",
+			"\t${2:count: 0},",
+			"})"
+		],
+		"description": "const state = reactive({...})"
+	},
+	"vue_computed": {
+		"prefix": "vcompd",
+		"body": [
+			"const ${1:name} = computed(() => {",
+			"\treturn ${2:value}",
+			"})"
+		],
+		"description": "const name = computed(() => ...)"
+	},
+	"vue_watch": {
+		"prefix": "vwatch",
+		"body": [
+			"watch(${1:source}, (${2:newValue}) => {",
+			"\t${0}",
+			"})"
+		],
+		"description": "watch(source, (val) => {})"
+	},
+	"vue_watch_effect": {
+		"prefix": "vwatche",
+		"body": [
+			"watchEffect(() => {",
+			"\t${0}",
+			"})"
+		],
+		"description": "watchEffect(() => {})"
+	},
+	"vue_props": {
+		"prefix": "vprops",
+		"body": [
+			"const props = defineProps({",
+			"\t${1:prop}: {",
+			"\t\ttype: ${2|String,Number,Boolean,Array,Object,Function|},",
+			"\t\tdefault: ${3:null},",
+			"\t},",
+			"})"
+		],
+		"description": "defineProps с объектом"
+	},
+	"vue_emits": {
+		"prefix": "vemit",
+		"body": [
+			"const emit = defineEmits(['${1:event}'])"
+		],
+		"description": "defineEmits([...])"
+	},
+	"vue_expose": {
+		"prefix": "vexpose",
+		"body": [
+			"defineExpose({ ${1} })"
+		],
+		"description": "defineExpose({...})"
+	},
+	"vue_on_mounted": {
+		"prefix": "vmounted",
+		"body": [
+			"onMounted(() => {",
+			"\t${0}",
+			"})"
+		],
+		"description": "onMounted(() => {})"
+	},
+	"vue_on_unmounted": {
+		"prefix": "vunmounted",
+		"body": [
+			"onUnmounted(() => {",
+			"\t${0}",
+			"})"
+		],
+		"description": "onUnmounted(() => {})"
+	},
+	"vue_vfor": {
+		"prefix": "vfor",
+		"body": [
+			"v-for=\"${1:item} in ${2:items}\" :key=\"${1:item}.${3:id}\""
+		],
+		"description": "v-for с :key"
+	},
+	"vue_vmodel": {
+		"prefix": "vmodel",
+		"body": [
+			"v-model=\"${1:modelValue}\""
+		],
+		"description": "v-model"
+	},
+	"vue_slot": {
+		"prefix": "vslot",
+		"body": [
+			"<slot name=\"${1:default}\">${0}</slot>"
+		],
+		"description": "<slot name=...>"
+	},
+	"vue_pinia_store": {
+		"prefix": "vstore",
+		"body": [
+			"import { defineStore } from 'pinia'",
+			"",
+			"export const use${1:Counter}Store = defineStore('${2:counter}', {",
+			"\tstate: () => ({",
+			"\t\t${3:count: 0},",
+			"\t}),",
+			"\tgetters: {",
+			"\t\t${4:double: (state) => state.count * 2},",
+			"\t},",
+			"\tactions: {",
+			"\t\t${5:increment() {",
+			"\t\t\tthis.count++",
+			"\t\t}},",
+			"\t},",
+			"})"
+		],
+		"description": "Pinia store (options API)"
+	},
+	"vue_use_template_ref": {
+		"prefix": "useTplRef",
+		"body": [
+			"const ${1:root} = useTemplateRef('${2:name}')"
+		],
+		"description": "useTemplateRef('name') — refs на элементы шаблона без ref-переменных (Vue 3.5)"
+	},
+	"vue_use_id": {
+		"prefix": "useid",
+		"body": [
+			"const ${1:id} = useId()"
+		],
+		"description": "useId() — SSR-безопасный уникальный id (Vue 3.5)"
+	}
+}

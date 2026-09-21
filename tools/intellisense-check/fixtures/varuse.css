@@ -1,0 +1,5 @@
+/* Кейс 2: var(--…) из ДРУГОГО файла (vunguyentuan.vscode-css-variables).
+   Якорь запроса — сразу после «var(--». */
+.var-rule {
+	color: var(--);
+}

@@ -1,0 +1,239 @@
+{
+  // ═══════════════════════════════════════════════════════════════
+  // Настройки воркспейса: стабильные отступы в 2 пробела, подсказки,
+  // форматирование и дебаг для PHP/Laravel/Vue/Vite/Rust (+Alpine/WP/Bitrix)
+  // ═══════════════════════════════════════════════════════════════
+
+  // ── ОТСТУПЫ: табы шириной 2, стабильно ──
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false, // настоящие табы (width 2)
+  "editor.detectIndentation": false, // не угадывать — всегда табы из настроек
+  "editor.renderWhitespace": "none", // табы/пробелы НЕ отображаются — никаких точек/стрелок
+
+  // ── Подсказки (IntelliSense) ──
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true // подсказки в строках: классы, пути, значения атрибутов Alpine/Blade
+  },
+  "editor.suggest.preview": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.hover.delay": 150,
+  "editor.parameterHints.enabled": true,
+  "editor.wordBasedSuggestions": "currentDocument",
+  "editor.snippetSuggestions": "top", // live templates — первыми в списке
+
+  // ── Форматирование ──
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": true,
+  // Перенос атрибутов тега (Vue/HTML/JSX): тег, не влезающий в printWidth
+  // (80 по умолчанию), переносится — каждый атрибут на СВОЕЙ строке,
+  // а не по несколько в строку. Короткие теги остаются в одну строку.
+  "prettier.singleAttributePerLine": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "junstyle.php-cs-fixer"
+  },
+  // PHP — табы через конфиг .vscode/.php-cs-fixer.php (setIndent("\t") +
+  // indentation_type). ВАЖНО: настройка "php-cs-fixer.rules" табы НЕ даёт —
+  // символ отступа живёт в Config->setIndent (дефолт 4 пробела), правилами
+  // не переключается (проверено CLI: «Fixed 0» на файле с пробелами).
+  // Отдельные корни (WP/Bitrix вне воркспейса): копировать .php-cs-fixer.php
+  // в корень инсталла. Laravel CI: Pint + pint.json (то же правило).
+  // Схема phpantom [formatting] отпала: встроенный форматтер PER-CS 2.0 —
+  // 4 пробела без опций отступа. Подробности: docs/clean-problems-formatting.md
+  "php-cs-fixer.config": ".vscode/.php-cs-fixer.php",
+  "[blade]": {
+    "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+  },
+  // Blade — табы ×2 у самого форматтера (префикс настроек bladeFormatter.*,
+  // НЕ blade.* — иначе отступ по умолчанию 4 пробела)
+  "bladeFormatter.format.useTabs": true,
+  "bladeFormatter.format.indentSize": 2,
+  // Перенос атрибутов в blade-разметке: "auto" — переносить при превышении
+  // wrapLineLength (дефолт 120), каждый атрибут на своей строке. Хотите
+  // ВСЕГДА по атрибуту на строку — "force" (порог «атрибутов ≥ N» —
+  // wrapAttributesMinAttrs, дефолт 2). Прочие режимы: force-aligned /
+  // force-expand-multiline / aligned-multiple / preserve(-aligned)
+  "bladeFormatter.format.wrapAttributes": "auto",
+  // Rust — rustfmt через rust-analyzer; табы ×2 на любом cargo-проекте
+  // воркспейса (зеркало глобального сетапа из docs/rust-senior-setup.md)
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "rust-analyzer.rustfmt.extraArgs": [
+    "--config",
+    "hard_tabs=true,tab_spaces=2"
+  ],
+  // TOML — как JSON/YAML: 2 пробела (rustfmt.toml читается независимо)
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  // Явные prettier-блоки: ровно один форматтер на язык → нет диалога
+  // «Multiple Formatters», Ctrl+Shift+I (Format Document) ≡ Ctrl+S
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // JSON/YAML — единственное исключение из «табов везде»: 2 пробела (конвенция
+  // воркспейса). Без этих блоков Prettier с глобальным useTabs:true писал бы в JSON табы.
+  "[json]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "prettier.useTabs": false
+  },
+  "[jsonc]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "prettier.useTabs": false
+  },
+  "[yaml]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "prettier.useTabs": false
+  },
+
+  // ── Live templates в стиле PhpStorm: Tab разворачивает сниппет ──
+  "editor.tabCompletion": "onlySnippets",
+
+  // ── Emmet для Blade / Vue / PostCSS ──
+  "emmet.includeLanguages": {
+    "blade": "html",
+    "postcss": "css"
+  },
+  "emmet.triggerExpansionOnTab": true,
+
+  // ── Файлы ──
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "files.autoGuessEncoding": true, // старые файлы WP/Bitrix в cp1251 открываются корректно
+  "files.associations": {
+    "*.blade.php": "blade",
+    // ВНИМАНИЕ: .pcss/.postcss → scss, НЕ postcss! Язык «postcss» (csstools.postcss)
+    // не имеет language server — гасит встроенный CSS IntelliSense: подсказки свойств,
+    // color picker, переменные (csstools/postcss-language#12). scss возвращает всё
+    // и поддерживает nesting.
+    "*.pcss": "scss",
+    "*.postcss": "scss",
+    "*.wgsl": "wgsl",
+    "*.volt": "html"
+  },
+
+  // ── SCSS/PostCSS: директивы @tailwind/@apply/nesting в .pcss не ругаются ──
+  "scss.lint.unknownAtRules": "ignore",
+
+  // ── CSS-переменные (расширение vunguyentuan.vscode-css-variables) ──
+  // Встроенный CSS-сервис видит var(--…) только из текущего файла (microsoft/vscode#28459);
+  // расширение сканирует весь проект. + *.vue — переменные из SFC <style> тоже в индексе
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "**/*.vue"
+  ],
+
+  // ── Редактор ──
+  "editor.linkedEditing": true, // синхронное переименование парных HTML-тегов
+  "editor.colorDecorators": true, // color picker: клик по квадратику у цвета (css/scss/vue)
+  "editor.defaultColorDecorators": "auto", // квадратики цвета в ЛЮБЫХ файлах (#hex, rgb()…)
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.stickyScroll.enabled": true,
+  "editor.rulers": [120],
+  "editor.mouseWheelZoom": true,
+
+  // ── Тема по умолчанию (глобально для всех проектов воркспейса) ──
+  "workbench.colorTheme": "Rosé Pine",
+
+  // ── Скорость: без лишних подтверждений, честные диффы ──
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
+
+  // ── Телеметрия ──
+  "telemetry.telemetryLevel": "off",
+
+  // ── Сторонний код: из поиска и watcher — убираем зависимости и ядра CMS ──
+  // ВАЖНО: files.exclude для этих папок НЕ используем (осознанно): проводник
+  // и Quick Open остаются живыми, F12/go-to-def в vendor открывает файлы —
+  // переходы работают. Диагностику чужого кода гасит phpantom глобальными
+  // path-ignore (~/.config/phpantom_lsp/.phpantom.toml) — Problems только свой
+  // код. Подробности: docs/clean-problems-formatting.md
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/vendor": true,
+    "**/target": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/.vscode-test": true,
+    // Ядра CMS — чужой код (свой код Bitrix: local/**, WP: wp-content/themes|plugins свои)
+    "**/bitrix": true,
+    "**/upload": true,
+    "**/wp-admin": true,
+    "**/wp-includes": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/vendor/**": true,
+    "**/target/**": true,
+    "**/storage/framework/**": true,
+    "**/storage/logs/**": true,
+    "**/.vscode-test/**": true,
+    "**/bitrix/**": true,
+    "**/upload/**": true,
+    "**/wp-admin/**": true,
+    "**/wp-includes/**": true
+  },
+
+  // ── Todo Tree: системный ripgrep ──
+  // Arch-сборка code идёт без node_modules (встроенного rg нет), поэтому
+  // указываем системный бинарь. ВНИМАНИЕ: ключ с двойным "ripgrep" —
+  // так в расширении называется секция + параметр (текст ошибки про
+  // 'todo-tree.ripgrep' вводит в заблуждение — старое имя ключа)
+  "todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
+
+  // ── PHP: Xdebug + отключение builtin-линтера ──
+  "php.debug.idekey": "VSCODE",
+  // builtin-валидатор PHP выключен: он линтит каждый открытый файл, включая
+  // vendor и ядра WP/Bitrix (README это заявлял, но ключ отсутствовал).
+  // Единственный источник PHP-диагностики — phpantom с path-ignore
+  "php.validate.enable": false,
+
+  // ── Терминал ──
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "explorer.compactFolders": false
+}

@@ -1,0 +1,298 @@
+{
+	// Live templates в стиле PhpStorm для PHP (+ Laravel)
+	// Расширение по Tab: включите "editor.tabCompletion": "onlySnippets" в settings.json
+	"pubf": {
+		"prefix": "pubf",
+		"body": [
+			"public function ${1:name}(${2})",
+			"{",
+			"\t${0://}",
+			"}"
+		],
+		"description": "public function name() {}"
+	},
+	"pubfr": {
+		"prefix": "pubfr",
+		"body": [
+			"public function ${1:name}(${2}): ${3:ReturnType}",
+			"{",
+			"\t${0:return null;}",
+			"}"
+		],
+		"description": "public function name(): ReturnType {}"
+	},
+	"pubfs": {
+		"prefix": "pubfs",
+		"body": [
+			"public static function ${1:name}(${2}): ${3:ReturnType}",
+			"{",
+			"\t${0://}",
+			"}"
+		],
+		"description": "public static function"
+	},
+	"prif": {
+		"prefix": "prif",
+		"body": [
+			"private function ${1:name}(${2})",
+			"{",
+			"\t${0://}",
+			"}"
+		],
+		"description": "private function"
+	},
+	"prof": {
+		"prefix": "prof",
+		"body": [
+			"protected function ${1:name}(${2})",
+			"{",
+			"\t${0://}",
+			"}"
+		],
+		"description": "protected function"
+	},
+	"constructor_promotion": {
+		"prefix": "cstr",
+		"body": [
+			"public function __construct(",
+			"\t${1|public,protected,private|} readonly ${2:Type} \\$${3:prop},",
+			") {",
+			"\t${0://}",
+			"}"
+		],
+		"description": "конструктор с property promotion (PHP 8+)"
+	},
+	"class": {
+		"prefix": "cl",
+		"body": [
+			"class ${1:$TM_FILENAME_BASE}",
+			"{",
+			"\t${0://}",
+			"}"
+		],
+		"description": "class ClassName {}"
+	},
+	"interface": {
+		"prefix": "int",
+		"body": [
+			"interface ${1:$TM_FILENAME_BASE}",
+			"{",
+			"\t${0:public function ${2:name}(${3});}",
+			"}"
+		],
+		"description": "interface Name {}"
+	},
+	"trait": {
+		"prefix": "trt",
+		"body": [
+			"trait ${1:$TM_FILENAME_BASE}",
+			"{",
+			"\t${0://}",
+			"}"
+		],
+		"description": "trait Name {}"
+	},
+	"enum": {
+		"prefix": "enum",
+		"body": [
+			"enum ${1:$TM_FILENAME_BASE}",
+			"{",
+			"\t${0:case ${2:First};}",
+			"}"
+		],
+		"description": "enum Name {}"
+	},
+	"enum_backed": {
+		"prefix": "enumb",
+		"body": [
+			"enum ${1:$TM_FILENAME_BASE}: ${2|string,ind}",
+			"{",
+			"\t${0:case ${3:First} = ${4:1};}",
+			"}"
+		],
+		"description": "backed enum Name: string|int"
+	},
+	"fore": {
+		"prefix": "fore",
+		"body": [
+			"foreach (\\$${1:array} as \\$${2:item}) {",
+			"\t${0://}",
+			"}"
+		],
+		"description": "foreach ($array as $item)"
+	},
+	"forek": {
+		"prefix": "forek",
+		"body": [
+			"foreach (\\$${1:array} as \\$${2:key} => \\$${3:value}) {",
+			"\t${0://}",
+			"}"
+		],
+		"description": "foreach ($array as $key => $value)"
+	},
+	"tryc": {
+		"prefix": "tryc",
+		"body": [
+			"try {",
+			"\t${0://}",
+			"} catch (\\Throwable \\$e) {",
+			"\t${1:throw \\$e;}",
+			"}"
+		],
+		"description": "try / catch (\\Throwable)"
+	},
+	"thr": {
+		"prefix": "thr",
+		"body": [
+			"throw new ${1|RuntimeException,InvalidArgumentException,LogicException,DomainException|}(\\$${2:message});"
+		],
+		"description": "throw new Exception($message)"
+	},
+	"strict_types": {
+		"prefix": "strict",
+		"body": [
+			"declare(strict_types=1);"
+		],
+		"description": "declare(strict_types=1)"
+	},
+	"arrow_fn": {
+		"prefix": "afn",
+		"body": [
+			"fn (${1:Type \\$${2:param}}) => ${0:expression}"
+		],
+		"description": "arrow function: fn ($x) => expr"
+	},
+	"match": {
+		"prefix": "match",
+		"body": [
+			"\\$${1:result} = match (${2:true}) {",
+			"\t${3:cond} => ${4:value},",
+			"\tdefault => ${0:value},",
+			"};"
+		],
+		"description": "match expression (PHP 8+)"
+	},
+	"phpunit_test": {
+		"prefix": "test",
+		"body": [
+			"public function test_${1:something_works}(): void",
+			"{",
+			"\t${0:\\$this->assertTrue(true);}",
+			"}"
+		],
+		"description": "метод теста PHPUnit/Pest"
+	},
+	"laravel_dd": {
+		"prefix": "dd",
+		"body": [
+			"dd(${0:\\$${1:var}});"
+		],
+		"description": "Laravel: dd()"
+	},
+	"laravel_dump": {
+		"prefix": "dumpv",
+		"body": [
+			"dump(${0:\\$${1:var}});"
+		],
+		"description": "Laravel: dump()"
+	},
+	"laravel_log_info": {
+		"prefix": "logi",
+		"body": [
+			"Log::info('${1:message}', [${2:}]);"
+		],
+		"description": "Laravel: Log::info()"
+	},
+	"laravel_log_error": {
+		"prefix": "loge",
+		"body": [
+			"Log::error('${1:message}', [${2:}]);"
+		],
+		"description": "Laravel: Log::error()"
+	},
+	"laravel_route": {
+		"prefix": "route:",
+		"body": [
+			"Route::${1|get,post,put,patch,delete|}('${2:/uri}', [${3:HomeController}::class, '${4:index}'])->name('${5:name}');"
+		],
+		"description": "Laravel: Route::метод(...)->name(...)"
+	},
+	"laravel_validate": {
+		"prefix": "val:",
+		"body": [
+			"\\$validated = \\$request->validate([",
+			"\t'${1:field}' => ['${2|required}', '${3:string}'],",
+			"]);"
+		],
+		"description": "Laravel: $request->validate([...])"
+	},
+	"laravel_rel_hasmany": {
+		"prefix": "relhm",
+		"body": [
+			"public function ${1:posts}(): HasMany",
+			"{",
+			"\treturn \\$this->hasMany(${2:Post}::class);",
+			"}"
+		],
+		"description": "Laravel: отношение hasMany"
+	},
+	"laravel_rel_belongsto": {
+		"prefix": "relbo",
+		"body": [
+			"public function ${1:user}(): BelongsTo",
+			"{",
+			"\treturn \\$this->belongsTo(${2:User}::class);",
+			"}"
+		],
+		"description": "Laravel: отношение belongsTo"
+	},
+	"laravel_scope": {
+		"prefix": "scope:",
+		"body": [
+			"public function scope${1:Active}(Builder \\$query): Builder",
+			"{",
+			"\treturn \\$query->where('${2:active}', ${3:true});",
+			"}"
+		],
+		"description": "Laravel: локальный scope модели"
+	},
+	"laravel_migration_column": {
+		"prefix": "col:",
+		"body": [
+			"\\$table->${1|string,integer,boolean,date,text,foreignId|}('${2:name}')${0:};}"
+		],
+		"description": "Laravel: колонка миграции $table->тип()"
+	},
+	"laravel_invokable": {
+		"prefix": "invk",
+		"body": [
+			"public function __invoke(): ${1:Response}",
+			"{",
+			"\t${0:return response()->json(['ok' => true]);}",
+			"}"
+		],
+		"description": "Single-action контроллер: __invoke() (Laravel)"
+	},
+	"laravel_migration_anon": {
+		"prefix": "mig12",
+		"body": [
+			"return new class extends Migration",
+			"{",
+			"\tpublic function up(): void",
+			"\t{",
+			"\t\tSchema::table('${1:table}', function (Blueprint \\$table) {",
+			"\t\t\t\\$table->${2:id}();",
+			"\t\t});",
+			"\t}",
+			"",
+			"\tpublic function down(): void",
+			"\t{",
+			"\t\tSchema::table('${1:table}', function (Blueprint \\$table) {",
+			"\t\t\t\\$table->dropColumn('${3:column}');",
+			"\t\t});",
+			"\t}",
+			"};"
+		],
+		"description": "Миграция анонимным классом (Laravel 11/12; use-импорты добавить сверху)"
+	}
+}

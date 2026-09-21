@@ -1,0 +1,221 @@
+{
+	// Live templates в стиле PhpStorm для Rust (+ Bevy)
+	"pub_fn": {
+		"prefix": "pfn",
+		"body": [
+			"pub fn ${1:name}(${2}) -> ${3:()} {",
+			"\t${0}",
+			"}"
+		],
+		"description": "pub fn name() -> T {}"
+	},
+	"function": {
+		"prefix": "fn",
+		"body": [
+			"fn ${1:name}(${2}) -> ${3:()} {",
+			"\t${0}",
+			"}"
+		],
+		"description": "fn name() -> T {}"
+	},
+	"async_fn": {
+		"prefix": "asfn",
+		"body": [
+			"async fn ${1:name}(${2}) -> ${3:()} {",
+			"\t${0}",
+			"}"
+		],
+		"description": "async fn"
+	},
+	"main_fn": {
+		"prefix": "main",
+		"body": [
+			"fn main() {",
+			"\t${0}",
+			"}"
+		],
+		"description": "fn main()"
+	},
+	"tokio_main": {
+		"prefix": "tmain",
+		"body": [
+			"#[tokio::main]",
+			"async fn main() {",
+			"\t${0}",
+			"}"
+		],
+		"description": "#[tokio::main] async fn main()"
+	},
+	"pub_struct": {
+		"prefix": "pstruct",
+		"body": [
+			"pub struct ${1:Name} {",
+			"\tpub ${2:field}: ${3:Type},",
+			"}"
+		],
+		"description": "pub struct"
+	},
+	"pub_enum": {
+		"prefix": "penum",
+		"body": [
+			"pub enum ${1:Name} {",
+			"\t${2:Variant},",
+			"}"
+		],
+		"description": "pub enum"
+	},
+	"impl_block": {
+		"prefix": "pimpl",
+		"body": [
+			"impl ${1:Name} {",
+			"\t${0}",
+			"}"
+		],
+		"description": "impl Name {}"
+	},
+	"impl_trait": {
+		"prefix": "imptrait",
+		"body": [
+			"impl ${1:Trait} for ${2:Type} {",
+			"\t${0}",
+			"}"
+		],
+		"description": "impl Trait for Type {}"
+	},
+	"derive_attribute": {
+		"prefix": "derive",
+		"body": [
+			"#[derive(${1:Debug, Clone})]"
+		],
+		"description": "#[derive(...)]"
+	},
+	"println": {
+		"prefix": "pl",
+		"body": [
+			"println!(\"${1:{}}\", ${2});"
+		],
+		"description": "println!(\"{}\", ...)"
+	},
+	"dbg": {
+		"prefix": "pd",
+		"body": [
+			"dbg!(&${1});"
+		],
+		"description": "dbg!(&x)"
+	},
+	"test_fn": {
+		"prefix": "tfn",
+		"body": [
+			"#[test]",
+			"fn ${1:test_name}() {",
+			"\t${0}",
+			"}"
+		],
+		"description": "#[test] fn"
+	},
+	"tests_module": {
+		"prefix": "tmod",
+		"body": [
+			"#[cfg(test)]",
+			"mod tests {",
+			"\tuse super::*;",
+			"",
+			"\t${0}",
+			"}"
+		],
+		"description": "#[cfg(test)] mod tests"
+	},
+	"result_type": {
+		"prefix": "res",
+		"body": [
+			"Result<${1:Ok}, ${2:Err}>"
+		],
+		"description": "Result<Ok, Err>"
+	},
+	"thiserror_enum": {
+		"prefix": "errte",
+		"body": [
+			"#[derive(Debug, thiserror::Error)]",
+			"pub enum ${1:Error} {",
+			"\t#[error(\"${2:сообщение}\")]",
+			"\t${3:Variant},",
+			"}"
+		],
+		"description": "thiserror-перечисление ошибок"
+	},
+	"bevy_component": {
+		"prefix": "bcomp",
+		"body": [
+			"#[derive(Component)]",
+			"pub struct ${1:Name};"
+		],
+		"description": "Bevy: component"
+	},
+	"bevy_resource": {
+		"prefix": "bres",
+		"body": [
+			"#[derive(Resource)]",
+			"pub struct ${1:Name} {",
+			"\tpub ${2:field}: ${3:f32},",
+			"}"
+		],
+		"description": "Bevy: resource"
+	},
+	"bevy_event": {
+		"prefix": "bevent",
+		"body": [
+			"#[derive(Event)]",
+			"pub struct ${1:Name};"
+		],
+		"description": "Bevy: event"
+	},
+	"bevy_system": {
+		"prefix": "bsys",
+		"body": [
+			"fn ${1:name}(${2}) {",
+			"\t${0}",
+			"}"
+		],
+		"description": "Bevy: система"
+	},
+	"bevy_system_query": {
+		"prefix": "bsysq",
+		"body": [
+			"fn ${1:name}(",
+			"\tmut commands: Commands,",
+			"\tquery: Query<(Entity, &${2:Transform})>,",
+			") {",
+			"\t${0}",
+			"}"
+		],
+		"description": "Bevy: система с Commands + Query"
+	},
+	"bevy_plugin": {
+		"prefix": "bplugin",
+		"body": [
+			"pub struct ${1:Name}Plugin;",
+			"",
+			"impl Plugin for ${1:Name}Plugin {",
+			"\tfn build(&self, app: &mut App) {",
+			"\t\t${0}",
+			"\t}",
+			"}"
+		],
+		"description": "Bevy: Plugin impl"
+	},
+	"bevy_app": {
+		"prefix": "bapp",
+		"body": [
+			"use bevy::prelude::*;",
+			"",
+			"fn main() {",
+			"\tApp::new()",
+			"\t\t.add_plugins(DefaultPlugins)",
+			"\t\t.add_systems(Startup, ${1:setup})",
+			"\t\t.add_systems(Update, ${2:system})",
+			"\t\t.run();",
+			"}"
+		],
+		"description": "Bevy: каркас App"
+	}
+}

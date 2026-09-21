@@ -1,0 +1,60 @@
+{
+	// Live templates для WGSL-шейдеров (wgpu)
+	"vertex_shader": {
+		"prefix": "vs",
+		"body": [
+			"@vertex",
+			"fn vs_${1:main}(",
+			"\t@location(0) ${2:in_pos}: vec3<f32>,",
+			") -> @builtin(position) vec4<f32> {",
+			"\treturn vec4<f32>(${2:in_pos}, 1.0);",
+			"}"
+		],
+		"description": "vertex-шейдер"
+	},
+	"fragment_shader": {
+		"prefix": "fs",
+		"body": [
+			"@fragment",
+			"fn fs_${1:main}(",
+			"\t@location(0) ${2:in_color}: vec3<f32>,",
+			") -> @location(0) vec4<f32> {",
+			"\treturn vec4<f32>(${2:in_color}, 1.0);",
+			"}"
+		],
+		"description": "fragment-шейдер"
+	},
+	"struct": {
+		"prefix": "st",
+		"body": [
+			"struct ${1:Name} {",
+			"\t${2:field}: ${3:vec3<f32>},",
+			"}"
+		],
+		"description": "struct"
+	},
+	"uniform_binding": {
+		"prefix": "cbuf",
+		"body": [
+			"@group(0) @binding(0) var<uniform> ${1:name}: ${2:Globals};"
+		],
+		"description": "uniform-биндинг"
+	},
+	"texture_binding": {
+		"prefix": "texb",
+		"body": [
+			"@group(0) @binding(0) var ${1:tex}: texture_2d<f32>;",
+			"@group(0) @binding(1) var ${2:samp}: sampler;"
+		],
+		"description": "texture + sampler биндинги"
+	},
+	"entry_point": {
+		"prefix": "fn",
+		"body": [
+			"fn ${1:name}(${2}) -> ${3:f32} {",
+			"\t${0}",
+			"}"
+		],
+		"description": "fn name() -> T"
+	}
+}

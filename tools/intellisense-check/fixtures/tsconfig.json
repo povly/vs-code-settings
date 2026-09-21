@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "strict": false
+  },
+  "vueCompilerOptions": {
+    "strictCssModules": true,
+    "resolveStyleImports": true
+  },
+  "cmkOptions": {
+    "enabled": true
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules", ".vscode-test"]
+}

@@ -1,0 +1,100 @@
+{
+  // СНИМОК user settings Code OSS на 2026-09-21 (политика табов ×2).
+  // Источник правды — живой файл ~/.config/Code - OSS/User/settings.json;
+  // этот снимок — справочник переноса на новую машину. Путь машины — свой
+  // для каждого PC,Machine-specific ключи (todo-tree.ripgrep, executablePath)
+  // на новой машине проверить.
+
+  "workbench.startupEditor": "none",
+  "workbench.colorTheme": "Rosé Pine",
+  "workbench.iconTheme": "material-icon-theme",
+
+  // ═══ PHP: форматтер junstyle + машинный конфиг (табы ×2 + PSR12) ═══
+  // Анти-паттерн: laravel.vscode-laravel как [php]-форматтер (его Pint-поведение
+  // зависит от наличия vendor/bin/pint в корне проекта; Pint не умеет табы).
+  "[php]": {
+    "editor.defaultFormatter": "junstyle.php-cs-fixer"
+  },
+  "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
+  // CLI-бинарь: composer global (быстрее встроенного phar расширения)
+  "php-cs-fixer.executablePath": "~/.config/composer/vendor/bin/php-cs-fixer",
+  // Гасит ложный тост php-resolver «phpcs - Mismatch configuration provided»
+  // (PHPCS 4.x битовая маска) глобально — стиль держат php-cs-fixer, не PHPCS
+  "phpResolver.phpSnifferCommand": "",
+
+  // ═══ Blade: табы ×2 глобально (без ключей blade-formatter даёт 4 пробела) ═══
+  "[blade]": {
+    "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+  },
+  "bladeFormatter.format.useTabs": true,
+  "bladeFormatter.format.indentSize": 2,
+  "bladeFormatter.format.wrapAttributes": "auto",
+
+  // ═══ Prettier: табы ×2 по умолчанию (корни без проектного .prettierrc) ═══
+  "prettier.useTabs": true,
+  "prettier.tabWidth": 2,
+
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[css]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[scss]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[vue]": { "editor.defaultFormatter": "Vue.volar" },
+
+  // ═══ Ввод: табы ×2, не угадывать ═══
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false,
+  "editor.detectIndentation": false,
+  "editor.renderWhitespace": "none",
+
+  // ═══ JSON/YAML — единственное исключение из табов: 2 пробела ═══
+  "[json]": { "editor.insertSpaces": true, "editor.tabSize": 2, "prettier.useTabs": false },
+  "[jsonc]": { "editor.insertSpaces": true, "editor.tabSize": 2, "prettier.useTabs": false },
+  "[yaml]": { "editor.insertSpaces": true, "editor.tabSize": 2, "prettier.useTabs": false },
+
+  // ═══ Rust: rustfmt табы ×2 в любом проекте ═══
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true
+  },
+  "rust-analyzer.rustfmt.extraArgs": ["--config", "hard_tabs=true", "--config", "tab_spaces=2"],
+
+  // PHP: единственный LSP — PHPantom; builtin-валидатор выключен
+  "php.validate.enable": false,
+
+  // Шум: тяжёлые каталоги из поиска/watcher
+  "search.exclude": {
+    "**/vendor": true,
+    "**/node_modules": true,
+    "**/target": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/.vscode-test": true
+  },
+  "files.watcherExclude": {
+    "**/vendor/**": true,
+    "**/node_modules/**": true,
+    "**/target/**": true,
+    "**/dist/**": true,
+    "**/storage/framework/**": true,
+    "**/.vscode-test/**": true
+  },
+
+  // postcss-ловушка: .pcss/.postcss = scss (не «postcss»!)
+  "files.associations": {
+    "*.blade.php": "blade",
+    "*.pcss": "scss",
+    "*.postcss": "scss",
+    "*.wgsl": "wgsl"
+  },
+  "scss.lint.unknownAtRules": "ignore",
+
+  "editor.quickSuggestions": { "other": true, "comments": false, "strings": true },
+  "cssVariables.lookupFiles": ["**/*.css", "**/*.scss", "**/*.sass", "**/*.less", "**/*.vue"],
+  "editor.colorDecorators": true,
+  "editor.defaultColorDecorators": "auto",
+
+  "emmet.includeLanguages": { "vue": "html", "vue-html": "html", "blade": "html", "postcss": "css" },
+  "files.autoSave": "afterDelay",
+  "todo-tree.ripgrep.ripgrep": "/usr/bin/rg"
+}

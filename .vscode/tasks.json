@@ -1,0 +1,37 @@
+{
+	// Задачи воркспейса: Terminal → Run Task (или Ctrl+Shift+P → Tasks).
+	// npm-скрипты вложенных проектов (Vite, тесты) VS Code подхватывает
+	// автодетектом — здесь только задачи уровня воркспейса.
+	// Гайд по задачам и горячим клавишам: docs/power-ups.md
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Интелли-чек воркспейса",
+			"detail": "tools/intellisense-check: npm test (чистый инстанс VS Code)",
+			"type": "shell",
+			"command": "npm test",
+			"options": {
+				"cwd": "${workspaceFolder}/tools/intellisense-check"
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Rust doctor",
+			"detail": "PASS/FAIL-диагностика Rust-тулчейна (см. docs/rust-senior-setup.md)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/rust-doctor.sh",
+			"problemMatcher": []
+		},
+		{
+			"label": "Валидация JSONC-конфигов",
+			"detail": "settings/extensions/tasks/keybindings через tools/validate-jsonc.php",
+			"type": "shell",
+			"command": "php ${workspaceFolder}/tools/validate-jsonc.php ${workspaceFolder}/.vscode/settings.json ${workspaceFolder}/.vscode/extensions.json ${workspaceFolder}/.vscode/tasks.json ${workspaceFolder}/.vscode/keybindings.json",
+			"problemMatcher": []
+		}
+	]
+}

@@ -1,0 +1,7 @@
+/* Глобальные CSS-переменные проекта — симуляция resources/css/app.css,
+   который в реальном Laravel-проекте подключается через JS-import (Vite),
+   поэтому встроенный CSS-сервис его переменные НЕ видит (microsoft/vscode#28459). */
+:root {
+	--brand-color: #3b82f6;
+	--brand-danger: #ef4444;
+}

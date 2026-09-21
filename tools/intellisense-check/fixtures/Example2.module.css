@@ -1,0 +1,8 @@
+.ext-card {
+	border: 1px solid #ccc;
+}
+
+/* Класс с дефисами: css-modules-kit не делает camelCase-конверсию (ограничение) */
+.ext-item--active {
+	font-weight: 700;
+}

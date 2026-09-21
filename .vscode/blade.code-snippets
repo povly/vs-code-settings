@@ -1,0 +1,185 @@
+{
+	// Live templates в стиле PhpStorm для Blade-шаблонов Laravel
+	"blade_extends": {
+		"prefix": "bext",
+		"body": [
+			"@extends('${1:layouts.app}')",
+			"",
+			"@section('${2:content}')",
+			"\t${0}",
+			"@endsection"
+		],
+		"description": "@extends + @section"
+	},
+	"blade_section": {
+		"prefix": "bsec",
+		"body": [
+			"@section('${1:name}')",
+			"\t${0}",
+			"@endsection"
+		],
+		"description": "@section ... @endsection"
+	},
+	"blade_yield": {
+		"prefix": "byield",
+		"body": [
+			"@yield('${1:content}')"
+		],
+		"description": "@yield('section')"
+	},
+	"blade_if": {
+		"prefix": "bif",
+		"body": [
+			"@if (\\$${1:condition})",
+			"\t${0}",
+			"@endif"
+		],
+		"description": "@if ... @endif"
+	},
+	"blade_if_else": {
+		"prefix": "bifel",
+		"body": [
+			"@if (\\$${1:condition})",
+			"\t${2}",
+			"@else",
+			"\t${0}",
+			"@endif"
+		],
+		"description": "@if ... @else ... @endif"
+	},
+	"blade_foreach": {
+		"prefix": "bfore",
+		"body": [
+			"@foreach (\\$${1:items} as \\$${2:item})",
+			"\t${0}",
+			"@endforeach"
+		],
+		"description": "@foreach ... @endforeach"
+	},
+	"blade_forelse": {
+		"prefix": "bforelse",
+		"body": [
+			"@forelse (\\$${1:items} as \\$${2:item})",
+			"\t${3}",
+			"@empty",
+			"\t${0:<p>Ничего не найдено.</p>}",
+			"@endforelse"
+		],
+		"description": "@forelse ... @empty ... @endforelse"
+	},
+	"blade_component_tag": {
+		"prefix": "bxcomp",
+		"body": [
+			"<x-${1:component.name} ${2::prop=\"\\$${3:value}}\" />"
+		],
+		"description": "<x-component />"
+	},
+	"blade_slot": {
+		"prefix": "bxslot",
+		"body": [
+			"<x-slot name=\"${1:name}\">",
+			"\t${0}",
+			"</x-slot>"
+		],
+		"description": "<x-slot name=...>"
+	},
+	"blade_props": {
+		"prefix": "bprops",
+		"body": [
+			"@props(['${1:prop}' => ${2:null}])"
+		],
+		"description": "@props([...])"
+	},
+	"blade_csrf": {
+		"prefix": "bcsrf",
+		"body": [
+			"@csrf"
+		],
+		"description": "@csrf"
+	},
+	"blade_method": {
+		"prefix": "bmethod",
+		"body": [
+			"@method('${1|PUT,PATCH,DELETE|}')"
+		],
+		"description": "@method('PUT')"
+	},
+	"blade_echo": {
+		"prefix": "bech",
+		"body": [
+			"{{ \\$${1:variable} }}"
+		],
+		"description": "{{ $variable }}"
+	},
+	"blade_raw_echo": {
+		"prefix": "braw",
+		"body": [
+			"{!! \\$${1:variable} !!}"
+		],
+		"description": "{!! $variable !!}"
+	},
+	"blade_json": {
+		"prefix": "bjson",
+		"body": [
+			"@json(\\$${1:data})"
+		],
+		"description": "@json($data)"
+	},
+	"blade_error": {
+		"prefix": "berror",
+		"body": [
+			"@error('${1:field}')",
+			"\t<span class=\"${2:text-red-600}\">{{ \\$message }}</span>",
+			"@enderror"
+		],
+		"description": "@error ... @enderror"
+	},
+	"blade_auth": {
+		"prefix": "bauth",
+		"body": [
+			"@auth",
+			"\t${0}",
+			"@endauth"
+		],
+		"description": "@auth ... @endauth"
+	},
+	"blade_guest": {
+		"prefix": "bguest",
+		"body": [
+			"@guest",
+			"\t${0}",
+			"@endguest"
+		],
+		"description": "@guest ... @endguest"
+	},
+	"blade_include": {
+		"prefix": "binc",
+		"body": [
+			"@include('${1:partials.${2:name}}')"
+		],
+		"description": "@include('partials...')"
+	},
+	"blade_push": {
+		"prefix": "bpush",
+		"body": [
+			"@push('${1:scripts}')",
+			"\t${0}",
+			"@endpush"
+		],
+		"description": "@push ... @endpush"
+	},
+	"blade_vite": {
+		"prefix": "bvite",
+		"body": [
+			"@vite(${1:['resources/js/app.js', 'resources/css/app.css']})"
+		],
+		"description": "@vite([...]) — подключение ассетов Vite"
+	},
+	"blade_lang": {
+		"prefix": "blang",
+		"body": [
+			"{{ __('${1:translation.key}') }}"
+		],
+		"description": "{{ __('key') }}"
+	}
+}

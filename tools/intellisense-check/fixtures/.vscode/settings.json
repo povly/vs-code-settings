@@ -1,0 +1,10 @@
+{
+	// Зеркало ассоциаций из основного .vscode/settings.json воркспейса —
+	// тестовый инстанс открывает fixtures/ как корень, без них .pcss = plain text
+	"files.associations": {
+		"*.pcss": "scss"
+	},
+	// Диагностика загрузки плагинов во встроенный tsserver (vue-typescript-plugin,
+	// @css-modules-kit/ts-plugin): лог-файл печатается в Output → TypeScript
+	"typescript.tsserver.log": "verbose"
+}

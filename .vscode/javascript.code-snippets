@@ -1,0 +1,177 @@
+{
+	// Live templates в стиле PhpStorm для JavaScript
+	"console_log": {
+		"prefix": "cl",
+		"body": [
+			"console.log(${1})"
+		],
+		"description": "console.log()"
+	},
+	"console_error": {
+		"prefix": "ce",
+		"body": [
+			"console.error(${1})"
+		],
+		"description": "console.error()"
+	},
+	"console_warn": {
+		"prefix": "cw",
+		"body": [
+			"console.warn(${1})"
+		],
+		"description": "console.warn()"
+	},
+	"arrow_function": {
+		"prefix": "afn",
+		"body": [
+			"const ${1:fn} = (${2:params}) => {",
+			"\t${0}",
+			"}"
+		],
+		"description": "const fn = (...) => {}"
+	},
+	"arrow_function_expression": {
+		"prefix": "afnr",
+		"body": [
+			"const ${1:fn} = (${2:params}) => ${0:expression}"
+		],
+		"description": "const fn = (...) => expression"
+	},
+	"function": {
+		"prefix": "nfn",
+		"body": [
+			"function ${1:name}(${2:params}) {",
+			"\t${0}",
+			"}"
+		],
+		"description": "function name() {}"
+	},
+	"async_function": {
+		"prefix": "asfn",
+		"body": [
+			"async function ${1:name}(${2:params}) {",
+			"\t${0}",
+			"}"
+		],
+		"description": "async function name() {}"
+	},
+	"export_function": {
+		"prefix": "expf",
+		"body": [
+			"export function ${1:name}(${2:params}) {",
+			"\t${0}",
+			"}"
+		],
+		"description": "export function name() {}"
+	},
+	"try_catch": {
+		"prefix": "tryc",
+		"body": [
+			"try {",
+			"\t${1}",
+			"} catch (e) {",
+			"\tconsole.error(e${2:, e.stack})",
+			"}"
+		],
+		"description": "try / catch"
+	},
+	"import_named": {
+		"prefix": "imp",
+		"body": [
+			"import { ${2:name} } from '${1:module}'"
+		],
+		"description": "import { name } from 'module'"
+	},
+	"import_default": {
+		"prefix": "impd",
+		"body": [
+			"import ${2:name} from '${1:module}'"
+		],
+		"description": "import name from 'module'"
+	},
+	"export_default": {
+		"prefix": "expd",
+		"body": [
+			"export default ${1}"
+		],
+		"description": "export default ..."
+	},
+	"promise": {
+		"prefix": "prom",
+		"body": [
+			"return new Promise((resolve, reject) => {",
+			"\t${0}",
+			"})"
+		],
+		"description": "new Promise((resolve, reject) => ...)"
+	},
+	"for_each": {
+		"prefix": "fe",
+		"body": [
+			"${1:arr}.forEach((${2:item}) => {",
+			"\t${0}",
+			"})"
+		],
+		"description": "arr.forEach((item) => {})"
+	},
+	"map": {
+		"prefix": "mapr",
+		"body": [
+			"${1:arr}.map((${2:item}) => ${0:item})"
+		],
+		"description": "arr.map((item) => item)"
+	},
+	"filter": {
+		"prefix": "filtr",
+		"body": [
+			"${1:arr}.filter((${2:item}) => ${0:true})"
+		],
+		"description": "arr.filter((item) => ...)"
+	},
+	"for_of": {
+		"prefix": "forof",
+		"body": [
+			"for (const ${1:item} of ${2:iterable}) {",
+			"\t${0}",
+			"}"
+		],
+		"description": "for...of"
+	},
+	"set_timeout": {
+		"prefix": "st",
+		"body": [
+			"setTimeout(() => {",
+			"\t${1}",
+			"}, ${2:0})"
+		],
+		"description": "setTimeout(() => {}, ms)"
+	},
+	"switch": {
+		"prefix": "sw",
+		"body": [
+			"switch (${1:value}) {",
+			"\tcase ${2:variant}:",
+			"\t\t${3}",
+			"\t\tbreak",
+			"\tdefault:",
+			"\t\t${0}",
+			"}"
+		],
+		"description": "switch / case"
+	},
+	"vue_composable": {
+		"prefix": "composable",
+		"body": [
+			"import { ref } from 'vue'",
+			"",
+			"export function use${1:Name}() {",
+			"\tconst ${2:data} = ref(${3:null})",
+			"",
+			"\t${4}",
+			"",
+			"\treturn { ${2:data} }",
+			"}"
+		],
+		"description": "Vue composable: useXxx()"
+	}
+}

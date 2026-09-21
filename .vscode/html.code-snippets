@@ -1,0 +1,83 @@
+{
+	// Live templates в стиле PhpStorm для HTML (Emmet покрывает теги — тут каркасы)
+	"html5_boilerplate": {
+		"prefix": "html5",
+		"body": [
+			"<!DOCTYPE html>",
+			"<html lang=\"${1|ru,en|}\">",
+			"<head>",
+			"\t<meta charset=\"UTF-8\">",
+			"\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+			"\t<title>${2:Document}</title>",
+			"</head>",
+			"<body>",
+			"\t${0}",
+			"</body>",
+			"</html>"
+		],
+		"description": "HTML5 каркас страницы"
+	},
+	"link_stylesheet": {
+		"prefix": "linkcss",
+		"body": [
+			"<link rel=\"stylesheet\" href=\"${1:style.css}\">"
+		],
+		"description": "<link rel=stylesheet>"
+	},
+	"script_module": {
+		"prefix": "scriptm",
+		"body": [
+			"<script type=\"module\" src=\"${1:main.js}\"></script>"
+		],
+		"description": "<script type=module src=...>"
+	},
+	"meta_viewport": {
+		"prefix": "mvp",
+		"body": [
+			"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+		],
+		"description": "meta viewport"
+	},
+	"picture_source": {
+		"prefix": "picture",
+		"body": [
+			"<picture>",
+			"\t<source srcset=\"${1:image.webp}\" type=\"image/webp\">",
+			"\t<img src=\"${2:image.jpg}\" alt=\"${3:описание}\" loading=\"lazy\">",
+			"</picture>"
+		],
+		"description": "<picture> + webp + lazy"
+	},
+	"alpine_data": {
+		"prefix": "alpdata",
+		"body": [
+			"<div x-data=\"{ ${1:open: false} }\">",
+			"\t${0}",
+			"</div>"
+		],
+		"description": "Alpine.js: x-data блок"
+	},
+	"alpine_click": {
+		"prefix": "alpclick",
+		"body": [
+			"x-on:click=\"${1:open = !open}\""
+		],
+		"description": "Alpine.js: x-on:click"
+	},
+	"alpine_show": {
+		"prefix": "alpshow",
+		"body": [
+			"x-show=\"${1:open}\""
+		],
+		"description": "Alpine.js: x-show"
+	},
+	"alpine_for": {
+		"prefix": "alpfor",
+		"body": [
+			"<template x-for=\"${1:item} in ${2:items}\" :key=\"${1:item}.id\">",
+			"\t<div x-text=\"${1:item}.${3:name}\"></div>",
+			"</template>"
+		],
+		"description": "Alpine.js: x-for (template)"
+	}
+}

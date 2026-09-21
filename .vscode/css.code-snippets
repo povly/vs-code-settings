@@ -1,0 +1,146 @@
+{
+	// Live templates в стиле PhpStorm для CSS / PostCSS
+	"position_relative": {
+		"prefix": "psrel",
+		"body": [
+			"position: relative;"
+		],
+		"description": "position: relative"
+	},
+	"position_absolute": {
+		"prefix": "psab",
+		"body": [
+			"position: absolute;",
+			"top: ${1:0};",
+			"left: ${2:0};"
+		],
+		"description": "position: absolute + top/left"
+	},
+	"flex_center": {
+		"prefix": "flexcc",
+		"body": [
+			"display: flex;",
+			"align-items: center;",
+			"justify-content: center;"
+		],
+		"description": "flex по центру (обе оси)"
+	},
+	"flex_between": {
+		"prefix": "flexbb",
+		"body": [
+			"display: flex;",
+			"align-items: center;",
+			"justify-content: space-between;"
+		],
+		"description": "flex space-between"
+	},
+	"grid_auto_fit": {
+		"prefix": "dgrid",
+		"body": [
+			"display: grid;",
+			"grid-template-columns: repeat(auto-fit, minmax(${1:220px}, 1fr));",
+			"gap: ${2:1rem};"
+		],
+		"description": "grid auto-fit + gap"
+	},
+	"media_query": {
+		"prefix": "mq",
+		"body": [
+			"@media (${1|min-width,max-width}: ${2:768px}) {",
+			"\t${3:selector} {",
+			"\t\t${0}",
+			"\t}",
+			"}"
+		],
+		"description": "media query"
+	},
+	"custom_property": {
+		"prefix": "varc",
+		"body": [
+			"var(--${1:name})"
+		],
+		"description": "var(--custom-property)"
+	},
+	"absolute_center": {
+		"prefix": "centerabs",
+		"body": [
+			"position: absolute;",
+			"top: 50%;",
+			"left: 50%;",
+			"transform: translate(-50%, -50%);"
+		],
+		"description": "абсолютное центрирование"
+	},
+	"transition": {
+		"prefix": "trans",
+		"body": [
+			"transition: ${1:all} ${2:0.2s} ${3|ease,ease-in,ease-out,ease-in-out,linear|};"
+		],
+		"description": "transition"
+	},
+	"truncate": {
+		"prefix": "trunc",
+		"body": [
+			"overflow: hidden;",
+			"text-overflow: ellipsis;",
+			"white-space: nowrap;"
+		],
+		"description": "обрезка текста с многоточием"
+	},
+	"visually_hidden": {
+		"prefix": "vishid",
+		"body": [
+			"position: absolute;",
+			"width: 1px;",
+			"height: 1px;",
+			"margin: -1px;",
+			"border: 0;",
+			"padding: 0;",
+			"white-space: nowrap;",
+			"clip-path: inset(100%);",
+			"overflow: hidden;"
+		],
+		"description": "скрытый, но доступный для скринридеров"
+	},
+	"postcss_import": {
+		"prefix": "pcssimp",
+		"body": [
+			"@import \"${1:partial}\";"
+		],
+		"description": "PostCSS: @import"
+	},
+	"fluid_type": {
+		"prefix": "fluid",
+		"body": [
+			"clamp(${1:14px}, calc(${1:14px} + (${5:4}) * (100vw - ${3:320px}) / (${6:880})), ${2:18px})"
+		],
+		"description": "Fluid Type: как fluid-type(minVw,maxVw,minVal,maxVal) из bronber-store. $5 = maxVal−minVal (числом), $6 = maxVw−minVw (числом)"
+	},
+	"fluid_var": {
+		"prefix": "fvar",
+		"body": [
+			"--${1:fs-fluid}: clamp(${2:14px}, calc(${2:14px} + (${3:4}) * (100vw - ${4:320px}) / (${5:880})), ${6:18px});"
+		],
+		"description": "Fluid-переменная: --name: clamp(...) — формула один раз, переиспользование через var()"
+	},
+	"fluid_type_precomputed": {
+		"prefix": "fluidc",
+		"body": [
+			"clamp(${1:0.875rem}, ${2:0.85rem} + ${3:0.71}vw, ${4:1.125rem})"
+		],
+		"description": "Fluid Type предрассчитанный (slope-форма): удобен с калькулятором fluid-type-scale.com / utopia.fyi"
+	},
+	"postcss_nesting": {
+		"prefix": "pcssnest",
+		"body": [
+			"${1:.selector} {",
+			"\t${2}",
+			"",
+			"\t& ${3:.modifier} {",
+			"\t\t${0}",
+			"\t}",
+			"}"
+		],
+		"description": "PostCSS-нестинг & {}"
+	}
+}

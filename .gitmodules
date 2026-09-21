@@ -1,0 +1,3 @@
+[submodule "tools/vscode-vue-css-jump"]
+	path = tools/vscode-vue-css-jump
+	url = https://github.com/povly/vscode-vue-css-jump

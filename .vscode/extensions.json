@@ -1,0 +1,78 @@
+{
+	// Рекомендуемые расширения — ТОЛЬКО полностью бесплатные (без платных функций)
+	// Установка: откройте панель Extensions → фильтр "Recommended" → Install All
+	// Политика исключений стороннего кода и матрица форматтеров:
+	//   docs/clean-problems-formatting.md
+	// Обзор расширений-2026 (вердикты/даты релизов): docs/power-ups.md
+	"recommendations": [
+		// ── PHP / Laravel / WordPress / Bitrix (10) ──
+		"phpantom.phpantom",                // PHP LSP (Rust, MIT): типизация, Laravel + Blade. Path-ignore чужой диагностики — ~/.config/phpantom_lsp/.phpantom.toml (vendor/**, ядра WP/Bitrix). Заменил phpactor 18.09.2026. НЕ Intelephense/DEVSENSE — freemium
+		"laravel.vscode-laravel",            // ОФИЦИАЛЬНОЕ Laravel-расширение (MIT): completions/links для @include, view(), route(), config(), env, переводов (см. docs/vue-css-intellisense.md)
+		"onecentlin.laravel-blade",          // Подсветка и сниппеты Blade
+		"shufo.vscode-blade-formatter",      // Форматтер Blade (табы заданы в settings.json: bladeFormatter.format.useTabs)
+		"xdebug.php-debug",                  // Отладка PHP через Xdebug (порт 9003)
+		"junstyle.php-cs-fixer",             // Форматирование PHP — единый [php]-форматтер; табы глобально через .vscode/.php-cs-fixer.php (setIndent "\t"); в Laravel-проектах CI — Pint (pint.json)
+		"stoildobreff.php-resolver",         // PHP-инструменты (goto, hierarchy, inlay hints). ⚠ phpcs-сниффер ложно ругается на PHPCS 4.x — в проектах на Pint: "phpResolver.phpSnifferCommand": "" (docs/phpactor-indexer-phpcs-fix.md)
+		"Recca0120.vscode-phpunit",          // Запуск тестов PHPUnit/Pest из редактора
+		"johnbillion.vscode-wordpress-hooks",// WordPress: автодополнение хуков/экшенов/фильтров
+		"mikestead.dotenv",                  // Подсветка .env (Laravel): ключи/значения не сливаются (MIT, стабильная)
+
+		// ── Alpine.js / Vue / Vite / JS / CSS (11) ──
+		"connorontheweb.alpinejs-tools",     // Alpine.js IntelliSense + подсветка
+		"Vue.volar",                          // Vue — официальный (Volar)
+		"mizdra.css-modules-kit-vscode",      // TS-плагин: типизация *.module.css → подсказки $style (нужен resolveStyleImports + cmkOptions.enabled — docs/vue-css-intellisense.md)
+		"dbaeumer.vscode-eslint",            // ESLint: диагностика + автофиксы
+		"esbenp.prettier-vscode",            // Prettier: JS/TS/Vue/CSS/HTML/JSON/MD — один форматтер на язык (settings.json)
+		"csstools.postcss",                  // Подсветка совр. CSS-синтаксиса. ⚠ язык «postcss» глушит CSS IntelliSense — .pcss/.postcss ассоциированы со scss
+		"vunguyentuan.vscode-css-variables", // CSS-переменные var(--…) по всему проекту (Node ≥ 20; MIT)
+		"bradlc.vscode-tailwindcss",         // Tailwind CSS IntelliSense (дефолт Laravel)
+		"antfu.vite",                        // Vite: статус dev-сервера, npm-скрипты
+		"christian-kohler.npm-intellisense", // Автокомплит npm-модулей в import-стейтментах (MIT)
+		"vitest.explorer",                   // Vitest: гуттер-раннер тестов Vue/JS, панель Testing (официальный, релизы 2026)
+
+		// ── Rust / wgpu / Bevy (5) ──
+		"rust-lang.rust-analyzer",           // rust-analyzer: LSP + форматирование rustfmt (табы ×2 — rust-analyzer.rustfmt.extraArgs)
+		"vadimcn.vscode-lldb",               // CodeLLDB: отладка Rust
+		"tamasfe.even-better-toml",          // TOML (Cargo.toml, phpantom.toml) + форматтер
+		"serayuzgur.crates",                 // Версии крейтов в Cargo.toml
+		"polyMeilex.wgsl",                   // WGSL-шейдеры (wgpu)
+
+		// ── Инструменты и данные (11) ──
+		"usernamehw.errorlens",              // Ошибки прямо в строке (шум от vendor погашен path-ignore)
+		"editorconfig.editorconfig",         // Поддержка .editorconfig (стабильные отступы)
+		"christian-kohler.path-intellisense", // Автодополнение путей
+		"gruntfuggly.todo-tree",             // Дерево TODO/FIXME проекта (ripgrep — системный)
+		"humao.rest-client",                 // REST Client: тесты API в .http-файлах, переменные @name — Postman не нужен (MIT)
+		"mhutchie.git-graph",                // Git Graph: визуализация веток/коммитов — GitLens-free (MIT; стабилен)
+		"alefragnani.Bookmarks",             // Bookmarks: метки-строки и прыжки — навигация по большим базам Bitrix/WP (GPL-3.0; v14 «Fully Open Source again»)
+		"mechatroner.rainbow-csv",           // Rainbow CSV: подсветка колонок + SQL-подобные запросы (RBQL) к CSV/TSV (MIT)
+		"timonwong.shellcheck",              // ShellCheck: линтинг bash-скриптов (MIT; бинарь: sudo pacman -S --needed shellcheck)
+		"DavidAnson.vscode-markdownlint",    // markdownlint: качество docs (MIT; релизы 2026)
+		"bierner.markdown-mermaid",          // Mermaid-диаграммы/флоучарты в markdown-preview (MIT)
+
+		// ── Тема (по умолчанию — закреплена в workbench.colorTheme) ──
+		"mvllow.rose-pine"                   // Rosé Pine — основная тема воркспейса
+	],
+
+	// ── Опциональные (косметика/комфорт — НЕ база; поставить при желании вручную) ──
+	// "naumovs.color-highlight",         // подсветка web-цветов; интерактивный пикер — встроенный VS Code
+	// "pkief.material-icon-theme",       // иконки файлов/папок
+	// "oderwat.indent-rainbow",          // цветная подсветка отступов
+	// "pranaygp.vscode-css-peek",        // прыжок от класса в HTML к CSS-правилу
+	// "aaron-bond.better-comments",      // цветные комментарии
+	// "wix.vscode-import-cost",          // размер JS-пакетов рядом с import
+	// "ms-vscode.live-server",           // Live Preview (официальный MS): превью HTML в встроенном браузере — замена заброшенного ritwickdey.liveserver
+	// "donjayamanne.githistory",         // Git History: история файла/сравнение веток (основной сценарий уже покрыт git-graph)
+	// "yzhang.markdown-all-in-one",      // Markdown All in One: TOC и шорткаты (markdownlint уже в базе)
+
+	// НЕ рекомендуем (freemium / платные функции / конфликты):
+	// bmewburn.vscode-intelephense-client — rename/organize imports платные
+	// devsense.phptools — DEVSENSE PHP Tools, значительная часть платная
+	// eamodio.gitlens — часть функций платных
+	// octref.vetur — Vetur конфликтует с Volar (ломает подсказки в .vue)
+	"unwantedRecommendations": [
+		"bmewburn.vscode-intelephense-client",
+		"devsense.phptools",
+		"octref.vetur"
+	]
+}
