@@ -25,7 +25,10 @@ WordPress, Bitrix) и Rust-графики (winit + wgpu + Bevy). Никаких 
 5. IntelliSense CSS/Vue/Laravel: подсказки свойств, `$style`, `var(--…)`,
    color picker, Blade `@include` — гайд [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)
    (для отдельного проекта — раздел «Проектный уровень настроек»);
-   автопроверка: `cd tools/intellisense-check && npm test`.
+   автопроверка: `cd tools/intellisense-check && npm test`; диагностика любого
+   инсталла (WP-тема / корень WP-инсталла / laravel — язык, property-подсказки,
+   var(--…) в чистом инстансе VS Code): `npm run diag:wp -- --theme=<корень>
+   [--workspace=<корень окна>] [--files=<css-пути через запятую>]`.
 6. Продуктивность: **Alt+R / Alt+A / Alt+M / Alt+L** — роуты / artisan /
    `@property`-аннотации / логи (phpantom); Terminal → Run Task — интелли-чек,
    rust-doctor, JSONC-валидация. REST-тесты — в `.http`-файлах (REST Client).
@@ -163,7 +166,7 @@ workspace-члены. Гайд: [docs/rust-navigation-fix.md](docs/rust-navigati
 | Bitrix | отдельного расширения нет — покрывается PHP-стеком; сниппеты добавляйте в `php.code-snippets` |
 | Vue / Vite | vuejs.volar (подсказки `$style`: inline `<style module>` — jsconfig/tsconfig + `vueCompilerOptions`; внешние CSS-модули — `*.module.css` + `mizdra.css-modules-kit-vscode` + `resolveStyleImports`/`cmkOptions.enabled` — см. [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)), **povly.vscode-vue-css-jump ≥ 0.1.2** (своё расширение: hover/Ctrl+Click по `<style src>`, прыжки и подсказки `$style.` без tsserver-цепочки; исходники `tools/vscode-vue-css-jump/`, установка из VSIX), antfu.vite, ESLint, Prettier |
 | Alpine.js | connorontheweb.alpinejs-tools + сниппеты `alp*` в html.code-snippets |
-| CSS / PostCSS | csstools.postcss (только подсветка; `.pcss`→`scss` для IntelliSense), vunguyentuan.vscode-css-variables (var(--) по проекту), Tailwind IntelliSense, naumovs.color-highlight + встроенный color picker |
+| CSS / PostCSS | csstools.postcss (только подсветка; `.pcss`→`scss` для IntelliSense), vunguyentuan.vscode-css-variables (var(--) по проекту), Tailwind IntelliSense, naumovs.color-highlight + встроенный color picker. Ловушка: при `postcss.config.js` в корне инсталла plain `*.css` перехватывается языком `postcss` (подсказки отключаются) — в `.vscode` проекта добавить `"*.css": "scss"`; WP-инсталл, открытый от корня WP, `.vscode` темы не применяет — зеркалить настройки в `.vscode` корня инсталла; известное ограничение: в файлах из одних `@define-mixin`-блоков списка свойств нет (`var(--)` работает) |
 | Rust / Bevy | rust-analyzer, CodeLLDB, crates, Even Better TOML |
 | wgpu / WGSL | polyMeilex.wgsl + сниппеты в wgsl.code-snippets |
 | Продуктивность | REST Client (.http-тесты API), Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint + Mermaid, npm Intellisense, DotENV — вердикты и гайды: [docs/power-ups.md](docs/power-ups.md) |
@@ -186,7 +189,7 @@ Intelephense…»).
 | Гайд | Что внутри |
 |---|---|
 | [docs/live-templates-and-css.md](docs/live-templates-and-css.md) | Live templates в стиле PhpStorm: каталог префиксов по 8 языкам, Emmet-трюки, PostCSS-миксины |
-| [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md) | Матрица «симптом → фикс»: подсказки CSS-свойств, `$style` (inline + внешние `*.module.css`), `var(--…)`, color picker, Blade `@include`; автотест `tools/intellisense-check` |
+| [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md) | Матрица «симптом → фикс»: подсказки CSS-свойств, `$style` (inline + внешние `*.module.css`), `var(--…)`, color picker, Blade `@include`; автотест `tools/intellisense-check`; диагностика инсталлов `npm run diag:wp` (WP: корень темы vs корень инсталла — зеркалирование `.vscode`, машинно-локально) |
 | [docs/clean-problems-formatting.md](docs/clean-problems-formatting.md) | Политика «анализ — только свой код»: исключения vendor/ядра Bitrix/WP из поиска и диагностик, матрица форматтеров «один на язык», машинный php-cs-fixer с табами, почему не Intelephense/PHP Tools |
 | [docs/phpantom-wordpress.md](docs/phpantom-wordpress.md) | Полный IntelliSense для WP-инсталлов (Sage/Acorn, ACF, WP-CLI): открытие от корня WP, `.ignore` для vendor, editor-стабы, регресс-чеки `phpantom_lsp analyze`, глобальные path-ignore |
 | [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md) | История миграции с phpactor: падение индексатора на `storage/`, ложный тост php-resolver/phpcs (PHPCS 4.x и битовая маска), шаблон конфига для Laravel-проектов |
@@ -228,7 +231,9 @@ skills-lock.json       — фиксация версий внешних скил
 .opencode/skills/      — скиллы OpenCode: aif*, vscode-dev-setup, winit-wgpu-bevy
 opencode.json          — Playwright MCP для AI-агента (проверка сайтов)
 tools/intellisense-check/ — автотест IntelliSense (@vscode/test-electron,
-                           чистый инстанс VS Code; npm test)
+                           чистый инстанс VS Code; npm test; кейсы 9/9a —
+                           postcss-диалект; диагностика инсталлов:
+                           npm run diag:wp -- --theme=… [--workspace/--files])
 tools/vscode-vue-css-jump/ — исходники расширения povly.vscode-vue-css-jump
                            (git submodule → github.com/povly/vscode-vue-css-jump;
                            hover/Ctrl+Click по <style src>, $style-подсказки;
