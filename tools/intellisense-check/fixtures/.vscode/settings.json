@@ -2,8 +2,14 @@
 	// Зеркало ассоциаций из основного .vscode/settings.json воркспейса —
 	// тестовый инстанс открывает fixtures/ как корень, без них .pcss = plain text
 	"files.associations": {
-		"*.pcss": "scss"
+		"*.pcss": "scss",
+		// Кейс 9/9a: postcss-диалект (@define-mixin/$vars/nesting) в plain .css —
+		// сценарий WP-темы с postcss-конфигом; scope по имени файла, чтобы не трогать
+		// кейсы 1/2/7 на чистом .css
+		"dialect.css": "scss"
 	},
+	// @define-mixin (postcss-mixins) — неизвестная SCSS at-rule, не ругаться
+	"scss.lint.unknownAtRules": "ignore",
 	// Диагностика загрузки плагинов во встроенный tsserver (vue-typescript-plugin,
 	// @css-modules-kit/ts-plugin): лог-файл печатается в Output → TypeScript
 	"typescript.tsserver.log": "verbose"

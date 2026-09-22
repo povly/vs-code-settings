@@ -1,0 +1,17 @@
+/* Кейс 9/9a: postcss-диалект WP-темы (@define-mixin из postcss-mixins, $vars
+   из postcss-simple-vars, nesting) в plain .css — ассоциация dialect.css → scss
+   (fixtures/.vscode/settings.json). Якоря запросов: '{\n\tcol' и 'var(--card'. */
+@define-mixin card {
+	display: flex;
+	background: var(--brand-color, #3b82f6);
+}
+
+.dialect-card {
+	col
+	$pad: 12px;
+	padding: $pad;
+
+	&:hover {
+		background: var(--card);
+	}
+}

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node src/runTests.js",
     "test:headless": "xvfb-run -a npm test",
-    "test:phpantom": "xvfb-run -a node src/runPhpantomTests.js"
+    "test:phpantom": "xvfb-run -a node src/runPhpantomTests.js",
+    "diag:wp": "xvfb-run -a node src/runDiagWpTheme.js"
   },
   "devDependencies": {
     "@vscode/test-electron": "^2.5.2",

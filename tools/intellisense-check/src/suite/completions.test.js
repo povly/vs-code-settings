@@ -9,6 +9,8 @@
 //   8) vue-css-jump: DefinitionProvider по src-пути self-closing <style/> (Ctrl+Click)
 //   8b) vue-css-jump: HoverProvider по src-пути (абсолютный путь + ✓ exists)
 //   8c) exploratory: vue-css-jump CompletionProvider — классы $style. (независимо от tsserver)
+//   9)  postcss-диалект (@define-mixin/$vars/nesting) в plain .css — ассоциация dialect.css → scss
+//   9a) var(--…) из соседнего файла в postcss-диалекте (css-variables поверх scss-ассоциации)
 const assert = require('assert');
 const path = require('path');
 
@@ -253,7 +255,17 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 		if (labels.includes('selfcard')) {
 			console.log('INFO [baseline] кейс 8c: vue-css-jump дополняет классы $style. из внешнего CSS ✓');
 		} else {
-			console.log(`WARN [baseline] кейс 8c: классы $style. не получены (получено: ${labels.slice(0, 15).join(', ') || 'пусто'}) — проверить активацию povly.vscode-vue-css-jump в тестовом инстансе (vendor VSIX)`);
+			console.log(`WARN [baseline] кейс 8c: классы $style. не получены (получено ${labels.slice(0, 15).join(', ') || 'пусто'}) — проверить активацию povly.vscode-vue-css-jump в тестовом инстансе (vendor VSIX)`);
 		}
+	});
+
+	it('кейс 9: postcss-диалект .css — property-completion (ассоциация dialect.css → scss)', async function () {
+		const { labels } = await completionsAfter('dialect.css', '{\n\tcol', 4000, 6);
+		assert.ok(labels.includes('color'), `нет «color» в postcss-диалекте (scss-ассоциация); получено: ${labels.slice(0, 10).join(', ')}`);
+	});
+
+	it('кейс 9a: postcss-диалект .css — var(--…) из соседнего файла (css-variables + scss)', async function () {
+		const { labels } = await completionsAfter('dialect.css', 'var(--card', 4000, 6);
+		assert.ok(labels.includes('--card-green'), `нет «--card-green»; var-подсказки: ${labels.filter(l => l.startsWith('--')).slice(0, 10).join(', ') || 'нет'}`);
 	});
 });

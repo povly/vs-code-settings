@@ -90,6 +90,7 @@ _var-www-_vscode/
 
 ## Правила для агентов
 
+- Анонимизация (обязательно): никаких реальных названий тем/проектов/клиентов и их доменов в именах файлов, содержимом, коммит-сообщениях и AI-артефактах — только плейсхолдеры `<тема>`, `<wp-инсталл>`, `<проект>`, `[CLIENT_NAME]`; пути инсталлов — через env (напр. `THEME_DIR`), не хардкодом (см. `.ai-factory/RULES.md`)
 - Отступы: табы шириной 2 в любом генерируемом коде (в JSON/YAML — 2 пробела); символы пробелов не рендерятся (`renderWhitespace: "none"`)
 - PHP-стиль — php-cs-fixer: проектный `.php-cs-fixer.php` в корне (`setIndent("\t")` + PSR12 + `indentation_type`), CLI/CI — `php-cs-fixer fix [--dry-run]`, dev-зависимость `friendsofphp/php-cs-fixer`. Laravel Pint НЕ использовать — не умеет табы (`indentation_type` берёт отступ из `Config->getIndent()`, который Pint не экспонирует). Глобальный машинный конфиг + снимок user settings — `tools/machine/`
 - НИКОГДА не ассоциировать `.pcss`/`.postcss` с языком `postcss` — он глушит CSS IntelliSense (только `scss`; см. docs/vue-css-intellisense.md)
