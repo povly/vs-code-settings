@@ -1,25 +1,25 @@
 [
-	// Горячие клавиши воркспейса — быстрые вызовы phpantom-бонусов.
-	// ID команд — из contributes.commands расширения phpantom.phpantom-0.6.1.
-	// Комбинации Alt+R/A/M/L свободны от дефолтных биндингов VS Code.
-	// Обзор: docs/power-ups.md
-	{
-		"key": "alt+r",
-		"command": "phpantom.showRouteList",
-		"when": "editorLangId == php || editorLangId == blade"
-	},
-	{
-		"key": "alt+a",
-		"command": "phpantom.runArtisanCommand",
-		"when": "editorLangId == php || editorLangId == blade"
-	},
-	{
-		"key": "alt+m",
-		"command": "phpantom.generateModelAnnotations",
-		"when": "editorLangId == php"
-	},
-	{
-		"key": "alt+l",
-		"command": "phpantom.showLogViewer"
-	}
+  // Горячие клавиши воркспейса — быстрые вызовы phpantom-бонусов.
+  // ID команд — из contributes.commands расширения phpantom.phpantom-0.6.1.
+  // Комбинации Alt+R/A/M/L свободны от дефолтных биндингов VS Code.
+  // Обзор: docs/power-ups.md
+  {
+    "key": "alt+r",
+    "command": "phpantom.showRouteList",
+    "when": "editorLangId == php || editorLangId == blade"
+  },
+  {
+    "key": "alt+a",
+    "command": "phpantom.runArtisanCommand",
+    "when": "editorLangId == php || editorLangId == blade"
+  },
+  {
+    "key": "alt+m",
+    "command": "phpantom.generateModelAnnotations",
+    "when": "editorLangId == php"
+  },
+  {
+    "key": "alt+l",
+    "command": "phpantom.showLogViewer"
+  }
 ]

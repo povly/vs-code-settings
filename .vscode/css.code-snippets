@@ -114,7 +114,7 @@
 		"body": [
 			"clamp(${1:14px}, calc(${1:14px} + (${5:4}) * (100vw - ${3:320px}) / (${6:880})), ${2:18px})"
 		],
-		"description": "Fluid Type: как fluid-type(minVw,maxVw,minVal,maxVal) из bronber-store. $5 = maxVal−minVal (числом), $6 = maxVw−minVw (числом)"
+		"description": "Fluid Type: как fluid-type(minVw,maxVw,minVal,maxVal). $5 = maxVal−minVal (числом), $6 = maxVw−minVw (числом)"
 	},
 	"fluid_var": {
 		"prefix": "fvar",

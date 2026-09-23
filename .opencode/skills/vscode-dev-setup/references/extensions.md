@@ -26,8 +26,6 @@
 | `dbaeumer.vscode-eslint` | ESLint: диагностика + `source.fixAll.eslint` на сохранении |
 | `esbenp.prettier-vscode` | Prettier: JS/Vue/CSS/HTML/JSON/MD |
 | `csstools.postcss` | Синтаксис `.pcss` |
-| `bradlc.vscode-tailwindcss` | Tailwind IntelliSense (дефолт Laravel-старткитов) |
-| `antfu.vite` | Статус Vite dev-сервера в статус-баре, npm-скрипты |
 
 ## Rust / wgpu / Bevy
 

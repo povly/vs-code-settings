@@ -73,7 +73,7 @@
 		"description": "class ClassName {}"
 	},
 	"interface": {
-		"prefix": "int",
+		"prefix": "intf",
 		"body": [
 			"interface ${1:$TM_FILENAME_BASE}",
 			"{",

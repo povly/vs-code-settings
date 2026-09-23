@@ -23,6 +23,10 @@
   "editor.wordBasedSuggestions": "currentDocument",
   "editor.snippetSuggestions": "top", // live templates — первыми в списке
 
+  // ── Перенос/переименование файлов: автообновление import (TS/JS) ──
+  "typescript.updateImportsOnFileMove.enabled": "always", // import-пути чинятся сами при drag&drop/rename
+  "javascript.updateImportsOnFileMove.enabled": "always", // то же для JS ("prompt" — если нужен контроль)
+
   // ── Форматирование ──
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
@@ -174,6 +178,7 @@
   "editor.stickyScroll.enabled": true,
   "editor.rulers": [120],
   "editor.mouseWheelZoom": true,
+  "workbench.editor.revealIfOpen": true, // F12/Ctrl+Click переиспользуют открытый таб, а не плодят дубли («Smart open» vue-css-jump)
 
   // ── Тема по умолчанию (глобально для всех проектов воркспейса) ──
   "workbench.colorTheme": "Rosé Pine",
@@ -219,6 +224,20 @@
     "**/wp-includes/**": true
   },
 
+  // ── Чужой код — read-only (чтение/F12 доступны, случайная правка запрещена) ──
+  // Та же философия «только свой код», что path-ignore phpantom и search.exclude.
+  // Снять защиту на файл — палитра: «Files: Toggle Active File Read Only in Session» /
+  // «Make Editor/Files Writable» (VS Code ≥ 1.85; старые версии ключ молча игнорируют)
+  "files.readonlyInclude": {
+    "**/vendor/**": true,
+    "**/node_modules/**": true,
+    "**/bitrix/**": true,
+    "**/wp-admin/**": true,
+    "**/wp-includes/**": true,
+    "**/target/**": true,
+    "**/dist/**": true
+  },
+
   // ── Todo Tree: системный ripgrep ──
   // Arch-сборка code идёт без node_modules (встроенного rg нет), поэтому
   // указываем системный бинарь. ВНИМАНИЕ: ключ с двойным "ripgrep" —
@@ -235,5 +254,13 @@
 
   // ── Терминал ──
   "terminal.integrated.defaultProfile.linux": "bash",
-  "explorer.compactFolders": false
+  "explorer.compactFolders": false,
+
+  // ── File nesting: lock/конфиг-файлы сворачиваются под основной манифест ──
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "package-lock.json, bun.lockb, pnpm-lock.yaml, yarn.lock, .prettierrc*, .eslintrc*",
+    "Cargo.toml": "Cargo.lock, rustfmt.toml",
+    "composer.json": "composer.lock, .php-cs-fixer.php, pint.json"
+  }
 }
