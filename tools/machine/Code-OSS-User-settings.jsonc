@@ -1,103 +1,216 @@
+// Снимок user settings Code OSS — 2026-09-23
+// Источник правды — живой файл: /home/povly/.config/Code - OSS/User/settings.json
+// Обновлено скриптом tools/machine/export-user-settings.sh (не править руками)
+
 {
-  // СНИМОК user settings Code OSS на 2026-09-21 (политика табов ×2).
-  // Источник правды — живой файл ~/.config/Code - OSS/User/settings.json;
-  // этот снимок — справочник переноса на новую машину. Путь машины — свой
-  // для каждого PC,Machine-specific ключи (todo-tree.ripgrep, executablePath)
-  // на новой машине проверить.
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Rosé Pine",
+    "workbench.iconTheme": "material-icon-theme",
+    "[php]": {
+        "editor.defaultFormatter": "junstyle.php-cs-fixer"
+    },
+    // PHP-форматтер junstyle: машинный конфиг (табы ×2 + PSR12 + indentation_type).
+    // "~/" поддерживается расширением → действует в любом открытом корне; воркспейс
+    // _vscode перекрывает своим .vscode/.php-cs-fixer.php на workspace-уровне.
+    // Анти-паттерн: laravel.vscode-laravel как [php]-форматтер (его Pint-поведение
+    // зависит от наличия vendor/bin/pint в корне проекта).
+    "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
+    // CLI-бинарь composer global (v3.95.26) — через wrapper: junstyle спавнит фиксер
+    // с cwd каталога редактируемого файла, а php-cs-fixer ищет composer.json строго
+    // в cwd (без walk-up) → WARN «Unable to determine minimum PHP version…» на каждом
+    // сохранении. Wrapper ставит cwd = ~/.config/vscode-php-cs-fixer (там служебный
+    // composer.json с config.platform.php). Шаблоны: tools/machine/ в воркспейсе _vscode.
+    "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
+    // Гасим ложный тост php-resolver «phpcs - Mismatch configuration provided»
+    // (PHPCS 4.x битовая маска) глобально — стиль держат pint/junstyle, не PHPCS
+    "phpResolver.phpSnifferCommand": "",
+    "security.workspace.trust.untrustedFiles": "open",
+    "chat.disableAIFeatures": true,
+    "kilo-code.allowedCommands": [
+        "git log",
+        "git diff",
+        "git show"
+    ],
+    "kilo-code.deniedCommands": [],
+    "editor.minimap.enabled": false,
+    "terminal.integrated.stickyScroll.enabled": false,
+    "editor.stickyScroll.enabled": false,
+    "workbench.editor.revealIfOpen": true,
+    "typescript.tsserver.log": "verbose",
+    "vue.trace.server": "verbose",
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+    },
+    // Blade — табы ×2 глобально (как в воркспейсе _vscode; без этих ключей
+    // blade-formatter по умолчанию делает 4 пробела)
+    "bladeFormatter.format.useTabs": true,
+    "bladeFormatter.format.indentSize": 2,
+    "bladeFormatter.format.wrapAttributes": "auto",
+    // Prettier: табы ×2 по умолчанию (в корнях без проектного .prettierrc);
+    // JSON/YAML — исключение в [lang]-блоках ниже (2 пробела)
+    "prettier.useTabs": true,
+    "prettier.tabWidth": 2,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "terminal.integrated.commandsToSkipShell": [
+        "kilo-code.new.agentManagerOpen",
+        "kilo-code.new.agentManager.showTerminal",
+        "kilo-code.new.agentManager.previousTerminal",
+        "kilo-code.new.agentManager.nextTerminal"
+    ],
 
-  "workbench.startupEditor": "none",
-  "workbench.colorTheme": "Rosé Pine",
-  "workbench.iconTheme": "material-icon-theme",
+    // PHP: единственный LSP — PHPantom
+    "php.validate.enable": false,
+    // Бинарник НЕ закрепляем в serverPath: расширение само владеет жизненным
+    // циклом (globalStorage/phpantom.phpantom/bin + autoUpdate). Политика:
+    // LSP берём из расширения Code OSS; нет расширения — системный пакет.
 
-  // ═══ PHP: форматтер junstyle + машинный конфиг (табы ×2 + PSR12) ═══
-  // Анти-паттерн: laravel.vscode-laravel как [php]-форматтер (его Pint-поведение
-  // зависит от наличия vendor/bin/pint в корне проекта; Pint не умеет табы).
-  "[php]": {
-    "editor.defaultFormatter": "junstyle.php-cs-fixer"
-  },
-  "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
-  // CLI-бинарь composer global через wrapper: cwd = ~/.config/vscode-php-cs-fixer
-  // (служебный composer.json с config.platform.php) → нет WARN «Unable to determine
-  // minimum PHP version…»; фильтр баннера из stderr чинит баг junstyle 0.3.21
-  // «provider FAILED» на уже-чистых файлах. Шаблоны: tools/machine/ в _vscode
-  "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
-  // Гасит ложный тост php-resolver «phpcs - Mismatch configuration provided»
-  // (PHPCS 4.x битовая маска) глобально — стиль держат php-cs-fixer, не PHPCS
-  "phpResolver.phpSnifferCommand": "",
+    // Не индексировать тяжёлые директории
+    "search.exclude": {
+        "**/vendor": true,
+        "**/node_modules": true,
+        "**/target": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/.git": true,
+        "**/.vscode-test": true
+    },
+    "files.watcherExclude": {
+        "**/vendor/**": true,
+        "**/node_modules/**": true,
+        "**/target/**": true,
+        "**/dist/**": true,
+        "**/storage/framework/**": true,
+        "**/.vscode-test/**": true
+    },
 
-  // ═══ Blade: табы ×2 глобально (без ключей blade-formatter даёт 4 пробела) ═══
-  "[blade]": {
-    "editor.defaultFormatter": "shufo.vscode-blade-formatter"
-  },
-  "bladeFormatter.format.useTabs": true,
-  "bladeFormatter.format.indentSize": 2,
-  "bladeFormatter.format.wrapAttributes": "auto",
+    // Emmet в Vue-шаблонах
+    "emmet.includeLanguages": {
+        "vue": "html",
+        "vue-html": "html",
+        "blade": "html",
+        "postcss": "css"
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "Vue.volar"
+    },
+    "explorer.confirmDelete": false,
+    "files.autoSave": "afterDelay",
 
-  // ═══ Prettier: табы ×2 по умолчанию (корни без проектного .prettierrc) ═══
-  "prettier.useTabs": true,
-  "prettier.tabWidth": 2,
+    // Todo Tree: путь к системному ripgrep (в Arch-сборке code нет встроенного;
+    // правильный ключ — с двойным "ripgrep", текст ошибки называет старый)
+    "todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
+    "redhat.telemetry.enabled": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    // Rust: форматтер — rust-analyzer (rustfmt через LSP), действует в любом проекте;
+    // форматирование при сохранении — только для [rust], веб-проекты не затронуты
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+        "editor.formatOnSave": true
+    },
+    // Rust (глобально, любой проект): clippy-диагностики на сохранении вместо cargo check
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.check.allTargets": true,
+    // Run/Debug-лензы над функциями и тестами
+    "rust-analyzer.lens.enable": true,
+    "rust-analyzer.lens.debug.enable": true,
+    "rust-analyzer.lens.run.enable": true,
+    // Меньше шума: без подсказок закрывающей скобки у многострочных блоков
+    "rust-analyzer.inlayHints.closingBraceHints.enable": false,
+    // Табы ×2 при форматировании в ЛЮБОМ проекте без rustfmt.toml (конвенция воркспейса);
+    // CLI cargo fmt читает проектный rustfmt.toml (шаблон — rust-study)
+    "rust-analyzer.rustfmt.extraArgs": ["--config", "hard_tabs=true", "--config", "tab_spaces=2"],
+    // Логи LSP: Output → Rust Analyzer (при проблемах переключать в "verbose")
+    "rust-analyzer.trace.server": "messages",
 
-  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[css]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[scss]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[vue]": { "editor.defaultFormatter": "Vue.volar" },
+    // ═══ IntelliSense CSS/Vue/Laravel — глобально (источник: воркспейс _vscode,
+    //      гайд: docs/vue-css-intellisense.md в _vscode) ═══
 
-  // ═══ Ввод: табы ×2, не угадывать ═══
-  "editor.tabSize": 2,
-  "editor.insertSpaces": false,
-  "editor.detectIndentation": false,
-  "editor.renderWhitespace": "none",
+    // Отступы: табы шириной 2, символы пробелов не отображаются (без точек)
+    "editor.tabSize": 2,
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false,
+    "editor.renderWhitespace": "none",
 
-  // ═══ JSON/YAML — единственное исключение из табов: 2 пробела ═══
-  "[json]": { "editor.insertSpaces": true, "editor.tabSize": 2, "prettier.useTabs": false },
-  "[jsonc]": { "editor.insertSpaces": true, "editor.tabSize": 2, "prettier.useTabs": false },
-  "[yaml]": { "editor.insertSpaces": true, "editor.tabSize": 2, "prettier.useTabs": false },
+    // Подсказки в строках: классы, пути, значения атрибутов
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+    },
 
-  // ═══ Rust: rustfmt табы ×2 в любом проекте ═══
-  "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer",
-    "editor.formatOnSave": true
-  },
-  "rust-analyzer.rustfmt.extraArgs": ["--config", "hard_tabs=true", "--config", "tab_spaces=2"],
+    // postcss-ловушка: язык «postcss» глушит CSS IntelliSense → .pcss/.postcss = scss
+    "files.associations": {
+        "*.blade.php": "blade",
+        "*.pcss": "scss",
+        "*.postcss": "scss",
+        "*.wgsl": "wgsl"
+    },
+    "scss.lint.unknownAtRules": "ignore",
 
-  // PHP: единственный LSP — PHPantom; builtin-валидатор выключен
-  "php.validate.enable": false,
+    // CSS-переменные var(--…) по всему проекту (нужно расширение vunguyentuan.vscode-css-variables)
+    "cssVariables.lookupFiles": [
+        "**/*.css",
+        "**/*.scss",
+        "**/*.sass",
+        "**/*.less",
+        "**/*.vue"
+    ],
 
-  // Шум: тяжёлые каталоги из поиска/watcher
-  "search.exclude": {
-    "**/vendor": true,
-    "**/node_modules": true,
-    "**/target": true,
-    "**/dist": true,
-    "**/build": true,
-    "**/.git": true,
-    "**/.vscode-test": true
-  },
-  "files.watcherExclude": {
-    "**/vendor/**": true,
-    "**/node_modules/**": true,
-    "**/target/**": true,
-    "**/dist/**": true,
-    "**/storage/framework/**": true,
-    "**/.vscode-test/**": true
-  },
+    // Color picker: встроенный (клик по квадратику) + квадратики во ВСЕХ языках
+    "editor.colorDecorators": true,
+    "editor.defaultColorDecorators": "auto",
 
-  // postcss-ловушка: .pcss/.postcss = scss (не «postcss»!)
-  "files.associations": {
-    "*.blade.php": "blade",
-    "*.pcss": "scss",
-    "*.postcss": "scss",
-    "*.wgsl": "wgsl"
-  },
-  "scss.lint.unknownAtRules": "ignore",
+    // JSON/YAML — единственное исключение из табов: 2 пробела
+    "[json]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "prettier.useTabs": false
+    },
+    "[jsonc]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "prettier.useTabs": false
+    },
+    "[yaml]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "prettier.useTabs": false
+    },
+    "security.promptForLocalFileProtocolHandling": false,
+    "[scss]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
 
-  "editor.quickSuggestions": { "other": true, "comments": false, "strings": true },
-  "cssVariables.lookupFiles": ["**/*.css", "**/*.scss", "**/*.sass", "**/*.less", "**/*.vue"],
-  "editor.colorDecorators": true,
-  "editor.defaultColorDecorators": "auto",
+    // ═══ Глобальные фишки (2026-09-23, источник: воркспейс _vscode) ═══
 
-  "emmet.includeLanguages": { "vue": "html", "vue-html": "html", "blade": "html", "postcss": "css" },
-  "files.autoSave": "afterDelay",
-  "todo-tree.ripgrep.ripgrep": "/usr/bin/rg"
+    // Чужой код — read-only: случайная правка vendor/ядер CMS невозможна
+    // (чтение/F12 доступны; снять — «Files: Toggle Active File Read Only in Session»)
+    "files.readonlyInclude": {
+        "**/vendor/**": true,
+        "**/node_modules/**": true,
+        "**/bitrix/**": true,
+        "**/wp-admin/**": true,
+        "**/wp-includes/**": true,
+        "**/target/**": true,
+        "**/dist/**": true
+    },
+
+    // File nesting: lock/конфиг-файлы сворачиваются под основной манифест
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "package.json": "package-lock.json, bun.lockb, pnpm-lock.yaml, yarn.lock, .prettierrc*, .eslintrc*",
+        "Cargo.toml": "Cargo.lock, rustfmt.toml",
+        "composer.json": "composer.lock, .php-cs-fixer.php, pint.json"
+    },
+
+    // Перенос/переименование файлов: import-пути обновляются сами
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.updateImportsOnFileMove.enabled": "always"
 }

@@ -1,6 +1,7 @@
 # Машинный уровень форматирования (одна настройка на машину)
 
-> Разворётывание на новой машине: 3 шага ниже. Политика и матрица форматтеров —
+> Развёртывание на новой машине: `tools/machine/install.sh` + 2 шага ниже.
+> Политика и матрица форматтеров —
 > [docs/clean-problems-formatting.md](../../docs/clean-problems-formatting.md).
 > Воркспейс-уровень (`.vscode/` этого репо) — отдельно, см. [README](../../README.md).
 
@@ -8,6 +9,8 @@
 
 | Файл | Назначение |
 |---|---|
+| `install.sh` | Развёртывание машинного уровня **одной командой**: mkdir `~/.config/vscode-php-cs-fixer/` + копия конфигов + wrapper (755). Идемпотентен, логирует каждый шаг |
+| `export-user-settings.sh` | Анти-дрейф снимка: перезаписывает `Code-OSS-User-settings.jsonc` из живого user settings (запускать после изменения глобальных ключей) |
 | `vscode-php-cs-fixer.php` | Машинный конфиг php-cs-fixer: табы ×2 + PSR12 + `array_indentation`. Копируется в `~/.config/vscode-php-cs-fixer/.php-cs-fixer.php` |
 | `php-cs-fixer-wrapper.sh` | Silent-wrapper (обязателен): cwd = `~/.config/vscode-php-cs-fixer` — гасит WARN «Unable to determine minimum PHP version…» и фильтрует баннер fixer'а из stderr (баг junstyle 0.3.21: `files==0` + непустой stderr → «provider FAILED» — падало каждое сохранение уже-чистого файла). Настоящие ошибки проходят насквозь. Механика — docs/clean-problems-formatting.md |
 | `composer.json` | Служебный composer.json для wrapper'а: `config.platform.php` = major.minor runtime. Копируется в `~/.config/vscode-php-cs-fixer/composer.json` |
@@ -19,15 +22,14 @@
    проекты ничего не должны настраивать и не спрашивают форматтер):
 
    ```bash
-   mkdir -p ~/.config/vscode-php-cs-fixer
-   cp tools/machine/vscode-php-cs-fixer.php ~/.config/vscode-php-cs-fixer/.php-cs-fixer.php
-   cp tools/machine/composer.json ~/.config/vscode-php-cs-fixer/composer.json
-   install -m 755 tools/machine/php-cs-fixer-wrapper.sh ~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh
+   tools/machine/install.sh
    ```
 
-   Wrapper обязателен: устраняет WARN «Unable to determine minimum PHP
-   version…» на каждом сохранении и баг junstyle 0.3.21 «provider FAILED» на
-   уже-чистых файлах (механика и регресс-чек —
+   Скрипт создаёт `~/.config/vscode-php-cs-fixer/`, копирует конфиг и служебный
+   composer.json, ставит wrapper с правами 755. Wrapper обязателен: устраняет WARN
+   «Unable to determine minimum PHP version…» на каждом сохранении и баг
+   junstyle 0.3.21 «provider FAILED» на уже-чистых файлах (механика и
+   регресс-чек —
    [docs/clean-problems-formatting.md](../../docs/clean-problems-formatting.md),
    раздел «WARN `composer.json` / provider FAILED при format-on-save»).
 
