@@ -20,6 +20,7 @@
 |---|---|---|
 | Поиск + Quick Open | `search.exclude` (settings.json) | `node_modules`, `vendor`, `target`, `dist`, `build`, `.git`, `.vscode-test`, `bitrix`, `upload`, `wp-admin`, `wp-includes` |
 | File watcher | `files.watcherExclude` (settings.json) | то же + `storage/framework/**`, `storage/logs/**` |
+| Правка файлов | `files.readonlyInclude` (settings.json + машинные user settings) | `vendor`, `node_modules`, ядра WP/Bitrix, `target`, `dist` — read-only: случайная правка невозможна, чтение/F12 доступны (снять: «Files: Toggle Active File Read Only in Session») |
 | Диагностика PHP | phpantom `[[diagnostics.ignore]]` — глобальный toml | `vendor/**`, `wp-includes/**`, `wp-admin/**`, `wp-content/plugins/**`, `wp-content/mu-plugins/**`, `bitrix/**`, `upload/**` + message-правило WP_Post |
 | Builtin PHP-линтер | `php.validate.enable: false` | весь builtin-валидатор (линтил каждый открытый файл, включая vendor) |
 | Телеметрия | `telemetry.telemetryLevel: "off"` | отправка usage-данных |

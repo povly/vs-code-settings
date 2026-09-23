@@ -7,8 +7,9 @@ WordPress, Bitrix) и Rust-графики (winit + wgpu + Bevy). Никаких 
 ## Быстрый старт
 
 1. Откройте этот воркспейс в VS Code (Remote-SSH, если работаете на сервере).
-2. Панель **Extensions** → фильтр **Recommended** (рекомендованные) →
-   **Install All** (установить все рекомендации из `.vscode/extensions.json`).
+2. Установите рекомендации: одной командой `tools/install-extensions.sh`
+   (CLI Code OSS, идемпотентен; `--force` — обновить) или через UI:
+   панель **Extensions** → фильтр **Recommended** → **Install All**.
    Code OSS тоже подходит — все рекомендации есть на Open VSX
    (см. [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)).
 3. Live templates (сниппеты как в PhpStorm) уже в `.vscode/*.code-snippets` —
@@ -31,7 +32,7 @@ WordPress, Bitrix) и Rust-графики (winit + wgpu + Bevy). Никаких 
    [--workspace=<корень окна>] [--files=<css-пути через запятую>]`.
 6. Продуктивность: **Alt+R / Alt+A / Alt+M / Alt+L** — роуты / artisan /
    `@property`-аннотации / логи (phpantom); Terminal → Run Task — интелли-чек,
-   rust-doctor, JSONC-валидация. REST-тесты — в `.http`-файлах (REST Client).
+   rust-doctor / workspace-doctor, JSONC-валидация. REST-тесты — в `.http`-файлах (REST Client).
    Обзор: [docs/power-ups.md](docs/power-ups.md).
 
 ## Требует одной установки на машину (всё бесплатно)
@@ -137,8 +138,9 @@ settings.json: `useTabs: true`, `tabWidth: 2`).
 rustup component add rust-analyzer clippy rustfmt
 ```
 
-Отладка: F5 → **«Rust: отладка бинарника»** (в `launch.json` замените
-`ИЗМЕНИТЕ_НА_ИМЯ_БИНАРЯ` на имя из `[[bin]]` / имени пакета).
+Отладка: F5 → **«Rust: отладка бинарника»** (kind-only фильтр CodeLLDB:
+единственный `[[bin]]` подхватывается автоматически; при нескольких `[[bin]]`
+вернуть `"name"` в `launch.json`).
 
 Навигация/подсказки во вложенных крейтах: корневой `Cargo.toml` обязан
 объявлять `[workspace] members = [...]` — rust-analyzer индексирует только
@@ -164,9 +166,9 @@ workspace-члены. Гайд: [docs/rust-navigation-fix.md](docs/rust-navigati
 | Laravel | официальное расширение laravel.vscode-laravel — Laravel LSP: completions/links для @include, view(), route(), config(), env, переводов, middleware, валидации |
 | WordPress | johnbillion.vscode-wordpress-hooks (хуки до WP 7.1) |
 | Bitrix | отдельного расширения нет — покрывается PHP-стеком; сниппеты добавляйте в `php.code-snippets` |
-| Vue / Vite | vuejs.volar (подсказки `$style`: inline `<style module>` — jsconfig/tsconfig + `vueCompilerOptions`; внешние CSS-модули — `*.module.css` + `mizdra.css-modules-kit-vscode` + `resolveStyleImports`/`cmkOptions.enabled` — см. [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)), **povly.vscode-vue-css-jump ≥ 0.1.2** (своё расширение: hover/Ctrl+Click по `<style src>`, прыжки и подсказки `$style.` без tsserver-цепочки; исходники `tools/vscode-vue-css-jump/`, установка из VSIX), antfu.vite, ESLint, Prettier |
+| Vue / Vite | vuejs.volar (подсказки `$style`: inline `<style module>` — jsconfig/tsconfig + `vueCompilerOptions`; внешние CSS-модули — `*.module.css` + `mizdra.css-modules-kit-vscode` + `resolveStyleImports`/`cmkOptions.enabled` — см. [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)), **povly.vscode-vue-css-jump ≥ 0.1.2** (своё расширение: hover/Ctrl+Click по `<style src>`, прыжки и подсказки `$style.` без tsserver-цепочки; исходники `tools/vscode-vue-css-jump/`, установка из VSIX), ESLint, Prettier |
 | Alpine.js | connorontheweb.alpinejs-tools + сниппеты `alp*` в html.code-snippets |
-| CSS / PostCSS | csstools.postcss (только подсветка; `.pcss`→`scss` для IntelliSense), vunguyentuan.vscode-css-variables (var(--) по проекту), Tailwind IntelliSense, naumovs.color-highlight + встроенный color picker. Ловушка: при `postcss.config.js` в корне инсталла plain `*.css` перехватывается языком `postcss` (подсказки отключаются) — в `.vscode` проекта добавить `"*.css": "scss"`; WP-инсталл, открытый от корня WP, `.vscode` темы не применяет — зеркалить настройки в `.vscode` корня инсталла; известное ограничение: в файлах из одних `@define-mixin`-блоков списка свойств нет (`var(--)` работает) |
+| CSS / PostCSS | csstools.postcss (только подсветка; `.pcss`→`scss` для IntelliSense), vunguyentuan.vscode-css-variables (var(--) по проекту), встроенный color picker (naumovs.color-highlight — опционально, в комментариях extensions.json). Ловушка: при `postcss.config.js` в корне инсталла plain `*.css` перехватывается языком `postcss` (подсказки отключаются) — в `.vscode` проекта добавить `"*.css": "scss"`; WP-инсталл, открытый от корня WP, `.vscode` темы не применяет — зеркалить настройки в `.vscode` корня инсталла; известное ограничение: в файлах из одних `@define-mixin`-блоков списка свойств нет (`var(--)` работает) |
 | Rust / Bevy | rust-analyzer, CodeLLDB, crates, Even Better TOML |
 | wgpu / WGSL | polyMeilex.wgsl + сниппеты в wgsl.code-snippets |
 | Продуктивность | REST Client (.http-тесты API), Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint + Mermaid, npm Intellisense, DotENV — вердикты и гайды: [docs/power-ups.md](docs/power-ups.md) |
@@ -218,7 +220,8 @@ Intelephense…»).
   extensions.json      — рекомендуемые расширения (все бесплатные)
   settings.json        — табы ×2, подсказки, форматирование, исключения шума
   .php-cs-fixer.php    — форматтер PHP: табы + PSR12 (setIndent "\t")
-  tasks.json           — задачи: интелли-чек / rust-doctor / JSONC-валидация
+  tasks.json           — задачи: интелли-чек / rust-doctor / workspace-doctor /
+                         JSONC-валидация
   keybindings.json     — Alt+R/A/M/L: phpantom-роуты/artisan/аннотации/логи
   launch.json          — отладка: Xdebug / Chrome+Vite / CodeLLDB (Rust)
   *.code-snippets      — live templates в стиле PhpStorm:
@@ -238,10 +241,14 @@ tools/vscode-vue-css-jump/ — исходники расширения povly.vsc
                            (git submodule → github.com/povly/vscode-vue-css-jump;
                            hover/Ctrl+Click по <style src>, $style-подсказки;
                            npm run package → VSIX → code-oss --install-extension)
-tools/machine/            — глобальный машинный сетап: снимок user settings
-                           Code OSS + php-cs-fixer (README внутри)
+tools/machine/            — глобальный машинный сетап: install.sh (развёртывание
+                           одной командой), снимок user settings (анти-дрейф —
+                           export-user-settings.sh), php-cs-fixer (README внутри)
 tools/validate-jsonc.php — валидатор .vscode/*.json (задача «JSONC»)
 tools/rust-doctor.sh     — PASS/FAIL диагностика Rust-тулчейна
+tools/workspace-doctor.sh — PASS/FAIL диагностика веб-стека (phpantom, xdebug,
+                           машинный php-cs-fixer, расширения)
+tools/install-extensions.sh — CLI-установка всех рекомендаций extensions.json
 docs/                  — гайды: 8 рецептов настройки — см. раздел «Документация»
 .ai-factory/           — контекст AI Factory (описание, правила, архитектура)
 ```

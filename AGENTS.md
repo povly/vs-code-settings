@@ -41,8 +41,11 @@ _var-www-_vscode/
 ├── tools/
 │   ├── intellisense-check/     # автотест IntelliSense (@vscode/test-electron, npm test)
 │   │                           #   кейсы 8/8b/8c: vue-css-jump из vendor/*.vsix
-│   ├── machine/                # глобальный машинный сетап: снимок user settings
-│   │                           #   Code OSS + php-cs-fixer (развёртывание — по своему README)
+│   ├── machine/                # глобальный машинный сетап: install.sh (развёртывание
+│   │                           #   одной командой), снимок user settings (анти-дрейф —
+│   │                           #   export-user-settings.sh), php-cs-fixer — по README внутри
+│   ├── install-extensions.sh   # CLI-установка всех рекомендаций extensions.json
+│   ├── workspace-doctor.sh     # PASS/FAIL-диагностика веб-стека (phpantom/xdebug/fixer)
 │   └── vscode-vue-css-jump/    # исходники povly.vscode-vue-css-jump (MIT):
 │                               #   hover/Ctrl+Click по <style src>, $style-подсказки;
 │                               #   npm run package → dist/*.vsix → code-oss --install-extension --force

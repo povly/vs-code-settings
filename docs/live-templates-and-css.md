@@ -36,7 +36,7 @@
 | `pubf` / `pubfr` / `pubfs` | `public function` / с return type / static |
 | `prif` / `prof` | `private function` / `protected function` |
 | `cstr` | конструктор с property promotion (`public readonly`-свойства) |
-| `cl` / `int` / `trt` | `class` / `interface` / `trait` (имя из имени файла) |
+| `cl` / `intf` / `trt` | `class` / `interface` / `trait` (имя из имени файла; `intf`, не `int` — конфликт с тайпхинтом) |
 | `enum` / `enumb` | enum / backed enum (`: string\|int`) |
 | `fore` / `forek` | `foreach ($arr as $item)` / `as $key => $value` |
 | `tryc` / `thr` | `try {} catch (\Throwable)` / `throw new` (выбор исключения) |

@@ -68,10 +68,34 @@ sudo pacman -S --needed shellcheck
 - **Интелли-чек воркспейса** — `npm test` в tools/intellisense-check (дефолтная
   test-задача: Ctrl+Shift+; → Tasks: Run Test Task)
 - **Rust doctor** — PASS/FAIL-диагностика тулчейна
-- **Валидация JSONC-конфигов** — `tools/validate-jsonc.php` по settings /
-  extensions / tasks / keybindings
+- **Workspace doctor** — PASS/FAIL-диагностика веб-стека: phpantom + path-ignore,
+  xdebug, машинный php-cs-fixer + wrapper, ключевые расширения, свежесть снимка
+  user settings (`tools/workspace-doctor.sh`)
+- **Валидация JSONC-конфигов** — `tools/validate-jsonc.php` по 6 файлам:
+  settings / extensions / tasks / keybindings / launch + opencode.json
 
 npm-скрипты вложенных проектов подхватываются автодетектом отдельно.
+
+## Фишки редактора (2026-09-23)
+
+Действуют глобально (машинные user settings → любой открытый корень) и в
+воркспейсе `_vscode`:
+
+| Фишка | Ключ | Что даёт |
+|---|---|---|
+| Read-only чужой код | `files.readonlyInclude` | vendor / ядра WP/Bitrix / target / dist нельзя случайно отредактировать — чтение и F12 работают; снять — палитра: «Files: Toggle Active File Read Only in Session». Философия та же, что path-ignore phpantom и search.exclude |
+| File nesting | `explorer.fileNesting.*` | lock-файлы и rc-конфиги сворачиваются под package.json / Cargo.toml / composer.json — проводник без мусора |
+| Автообновление import | `typescript.updateImportsOnFileMove.enabled` + `javascript…` | перенос/переименование файла чинит import-пути само (`"always"`; `"prompt"` — если нужен контроль) |
+| Переиспользование табов | `workbench.editor.revealIfOpen` | F12/Ctrl+Click переоткрывают уже открытый редактор, а не плодят дубли («Smart open» vue-css-jump) |
+
+Скрипты автоматизации (tools/):
+
+- `install-extensions.sh` — CLI-установка всех рекомендаций
+  `.vscode/extensions.json` (`--force` — обновить до свежих VSIX). Новая
+  машина: один запуск вместо UI «Install All».
+- `machine/install.sh` — машинный php-cs-fixer-уровень одной командой
+  (идемпотентен); `machine/export-user-settings.sh` — обновить снимок user
+  settings из живого файла (анти-дрейф, прогоняет workspace-doctor как чек).
 
 ## Горячие клавиши phpantom (.vscode/keybindings.json)
 
