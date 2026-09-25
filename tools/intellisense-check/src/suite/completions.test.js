@@ -11,6 +11,8 @@
 //   8c) exploratory: vue-css-jump CompletionProvider — классы $style. (независимо от tsserver)
 //   9)  postcss-диалект (@define-mixin/$vars/nesting) в plain .css — ассоциация dialect.css → scss
 //   9a) var(--…) из соседнего файла в postcss-диалекте (css-variables поверх scss-ассоциации)
+//   10)  vue-css-jump ≥ 0.2.0: hover по тегу компонента — карточка props/emits/v-model/expose (строгий)
+//   10a) exploratory: нативный Volar — completions атрибутов внутри тега компонента
 const assert = require('assert');
 const path = require('path');
 
@@ -116,7 +118,7 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 		// Прогрев: заранее открываем по одному .css и .vue (+ внешний css-модуль),
 		// чтобы встроенный CSS-сервер, TS-сторона Volar и ts-плагин css-modules-kit
 		// успели инициализироваться ДО первых кейсов
-		for (const f of ['consumer.css', 'Example.vue', 'Example2.vue', 'Example2.module.css', 'Example3.vue', 'Example3.module.css']) {
+		for (const f of ['consumer.css', 'Example.vue', 'Example2.vue', 'Example2.module.css', 'Example3.vue', 'Example3.module.css', 'Example4.vue', 'Widget.vue']) {
 			const doc = await vscode.workspace.openTextDocument(
 				vscode.Uri.file(path.join(FIXTURES, f))
 			);
@@ -267,5 +269,46 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 	it('кейс 9a: postcss-диалект .css — var(--…) из соседнего файла (css-variables + scss)', async function () {
 		const { labels } = await completionsAfter('dialect.css', 'var(--card', 4000, 6);
 		assert.ok(labels.includes('--card-green'), `нет «--card-green»; var-подсказки: ${labels.filter(l => l.startsWith('--')).slice(0, 10).join(', ') || 'нет'}`);
+	});
+
+	it('кейс 10: vue-css-jump ≥ 0.2.0 — hover по тегу компонента: карточка props/emits (строгий)', async function () {
+		const vscode = require('vscode');
+		const uri = vscode.Uri.file(path.join(FIXTURES, 'Example4.vue'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+		const at = doc.getText().indexOf('<Widget');
+		assert.ok(at >= 0, 'тег <Widget не найден в Example4.vue');
+		await sleep(1500);
+		const hovers = await vscode.commands.executeCommand(
+			'vscode.executeHoverProvider',
+			uri,
+			doc.positionAt(at + 3)
+		);
+		const text = (hovers || []).map(h => h.contents.map(c => c.value || '').join(' ')).join(' | ');
+		console.log(`DEBUG [test] кейс 10 hover: ${text.slice(0, 400)}`);
+		assert.ok(
+			text.includes('vue-css-jump') && text.includes('`label`') && text.includes('save'),
+			`hover по тегу компонента не содержит карточку vue-css-jump (props/emits); получено: ${text.slice(0, 300) || 'пусто'}`
+		);
+		const defs = await vscode.commands.executeCommand(
+			'vscode.executeDefinitionProvider',
+			uri,
+			doc.positionAt(at + 3)
+		);
+		const targets = (defs || []).map(d => (d.uri && d.uri.fsPath) || String(d));
+		console.log(`DEBUG [test] кейс 10 definitions: ${JSON.stringify(targets)}`);
+		assert.ok(
+			targets.some(p => p.endsWith('Widget.vue')),
+			`DefinitionProvider по тегу <Widget> не ведёт в Widget.vue; получено: ${JSON.stringify(targets)}`
+		);
+	});
+
+	it('кейс 10a (exploratory): нативный Volar — completions атрибутов внутри тега компонента', async function () {
+		const { labels } = await completionsAfter('Example4.vue', '<Widget ', 4000, 6);
+		if (labels.includes('label')) {
+			console.log('INFO [baseline] кейс 10a: Volar дополняет props внутри тега компонента ✓');
+		} else {
+			console.log(`WARN [baseline] кейс 10a: программно props-completions не получены (${labels.slice(0, 15).join(', ') || 'пусто'}) — известное ограничение test-host (template → inferred project, раунд 3); в реальном редакторе проверяется чек-листом (docs/vue-css-intellisense.md, п. 11)`);
+		}
 	});
 });

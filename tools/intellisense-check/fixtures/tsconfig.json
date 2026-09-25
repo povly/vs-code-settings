@@ -4,7 +4,13 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "preserve",
-    "strict": false
+    "strict": false,
+    "baseUrl": ".",
+    "paths": {
+      /* Алиас как в реальных проектах; значения "…/*" содержат "/*" —
+         регресс-охрана строково-чувствительного стриппера vue-css-jump */
+      "@/*": ["./*"]
+    }
   },
   "vueCompilerOptions": {
     "strictCssModules": true,

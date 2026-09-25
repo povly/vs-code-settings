@@ -26,6 +26,7 @@
 | 7 | Hover/Ctrl+Click по пути в `src="…"` (`<style>`, вк. самозакрытый `<style … />`) молчат | Volar не предоставляет links/definitions/hover на src-атрибутах SFC-блоков; path-intellisense — completions-only | расширение `povly.vscode-vue-css-jump` ≥ 0.1.2 (Definition + Hover; самозакрытые блоки поддержаны); см. раздел vue-css-jump |
 | 8 | TS: `File '…​.css' is not a module` на внешние стили | `resolveStyleImports: true` генерирует `typeof import('./x.css')`; css-modules-kit типизирует строго `*.module.css` — plain `.css` остаётся без типа модуля | именовать ВСЕ внешние CSS-модули `*.module.css` (конвенция, см. «Дисциплина именования»); fallback — ambient-стаб `declare module '*.css'` (PR #5136) |
 | 9 | Blade: `Undefined variable '$page'` (Inertia) | `$page` приходит в runtime из Inertia-middleware — статически не резолвит ни один LSP | `@var`-докблок в app.blade.php (тип в hover) + `@see`-тропинка для навигации к источникам (пример ниже); заглушка — `[[diagnostics.ignore]]` identifier+message-regex в `~/.config/phpantom_lsp/.phpantom.toml` |
+| 10 | Hover по тегу компонента — стена генериков + import, пропсов не видно | Нативный Volar не строит читаемую сводку public API компонента | расширение `povly.vscode-vue-css-jump` ≥ 0.2.0 (карточка props/emits/v-model/expose); нативно — Ctrl+Space внутри тега; см. раздел «Компоненты» |
 
 ## Быстрая диагностика на машине (2 минуты)
 
@@ -200,6 +201,8 @@ Window` пересоздаёт порядок активации.
 | **Подсказки `$style.` / `$style['`** (с 0.1.2) | CompletionItemProvider: имена классов из css-модулей компонента, фильтр по префиксу (camelCase тоже матчится) |
 | **Живая диагностика src-путей** (с 0.1.3) | несуществующий файл (регистр имени! Linux case-sensitive) — красная ошибка; `module` без суффикса `.module.css` — жёлтое предупреждение; в любом открытом .vue, нулевой конфигурации |
 | Hover по `$style.класс` (с 0.1.2) | список совпавших селекторов с file:line / inline-позицией |
+| **Карточка компонента по hover** (с 0.2.0) | hover по тегу компонента в template: таблица props (тип/required/default), emits с сигнатурами, `defineModel`-v-model, `defineExpose` + путь к файлу; PascalCase и kebab-case, алиасы `@/` из tsconfig paths |
+| **Ctrl+Click по тегу компонента** (с 0.2.0) | DefinitionProvider: открывает файл компонента напрямую (нативный Volar ведёт на import-строку — оба результата мержатся в peek-списке) |
 
 Установка (на Open VSX расширение не публикуется):
 
@@ -363,6 +366,55 @@ User-настройки работают во всех окнах, но прое
   *(18.09.2026: phpactor заменён на PHPantom — пункт сохранён как история;
   `.phpactor.json` в проектах инертен.)*
 
+## Компоненты: props/emits/expose по hover
+
+Симптом: наведение на тег компонента в template показывает стену генериков
+(`DefineComponent<…>`) + строку import — читать пропсы из неё невозможно;
+нужен «как в WebStorm» список параметров.
+
+Нативно (Volar) работают:
+
+- **Ctrl+Space внутри тега** (`<Button ` + Ctrl+Space) → список всех props
+  с типами и JSDoc; основной способ «что сюда можно передать»;
+- hover на **атрибуте** prop → тип значения;
+- диагностика «обязательный prop не передан» — из коробки.
+
+Читаемая карточка — расширение `povly.vscode-vue-css-jump` **≥ 0.2.0**:
+hover по тегу любого локально импортированного компонента (PascalCase и
+kebab-case) → таблица PROPS (имя/тип/required/default), EMITS с сигнатурами,
+v-model (`defineModel`), EXPOSE (`defineExpose`) + путь к файлу; Ctrl+Click
+по тегу открывает сам компонент, а не import-строку. Резолвятся относительные
+импорты и алиасы tsconfig (`@/…`), спецификатор без `.vue` тоже. Библиотечные
+компоненты (bare-импорты, напр. `@inertiajs/vue3`) остаются на нативном Volar.
+Парсинг текстовый (не TS AST): типы длиннее 64 символов усекаются,
+`defineProps<NamedInterface>` (не литерал) даёт «нет объявленного API».
+
+**Как описывать компоненты** — обычный JSDoc, работает без настройки везде:
+
+```vue
+<script setup lang="ts">
+/** Карточка товара в каталоге */
+defineProps<{
+	/** Текст на кнопке */
+	text: string;
+	/** Вариант отображения */
+	type?: 'default' | 'border';
+}>();
+defineEmits<{
+	/** Отправляется при сохранении */
+	(e: 'save', id: number): void;
+}>();
+</script>
+```
+
+- JSDoc члена → в карточке vue-css-jump ≥ 0.3.0 (описания под таблицей
+  props, у emits) и нативно в Ctrl+Space внутри тега + hover на атрибуте;
+- JSDoc над `defineProps`/`withDefaults` → описание компонента в заголовке
+  карточки.
+
+Лог: Output → «Vue CSS Jump» (нерезолвленные локальные импорты — WARN раз на
+файл; `VUE_CSS_JUMP_DEBUG=1` — трассировка). Регресс: кейс 10 автотеста.
+
 ## Автотест: `tools/intellisense-check`
 
 Харнесс на `@vscode/test-electron` поднимает **чистый** инстанс VS Code
@@ -382,7 +434,9 @@ npm test            # есть дисплей; на headless-сервере: npm
 (exploratory), DocumentColorProvider (пайплайн пикера), **кейсы 8/8b/8c
 (раунд 4): vue-css-jump — DefinitionProvider по src-пути самозакрытого
 `<style … />` (строгий), HoverProvider по src-пути (строгий), completions
-`$style.` (exploratory)**. VSIX vue-css-jump ставится в тестовый инстанс из
+`$style.` (exploratory)**, **кейсы 10/10a (0.2.0): карточка props/emits по
+hover тега компонента (строгий) и нативные completions атрибутов внутри
+тега (exploratory)**. VSIX vue-css-jump ставится в тестовый инстанс из
 `vendor/` (обновляется при релизе расширения). Особенности харнесса
 (не баги воркспейса):
 
@@ -427,6 +481,9 @@ npm test            # есть дисплей; на headless-сервере: npm
    `$style.` в template → классы (vue-css-jump и/или cmk).
 10. app.blade.php: подсветка `Undefined variable '$page'` ушла после
     `@var`-докблока (если нет — см. матрицу, строка 9).
+11. `.vue` template: hover по тегу компонента → карточка vue-css-jump
+    (таблица props/emits/v-model/expose + путь); Ctrl+Click по тегу → файл
+    компонента; Ctrl+Space внутри тега (`<Button `) → нативный список props.
 
 ---
 
