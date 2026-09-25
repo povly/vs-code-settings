@@ -48,7 +48,8 @@ _var-www-_vscode/
 │   ├── workspace-doctor.sh     # PASS/FAIL-диагностика веб-стека (phpantom/xdebug/fixer)
 │   └── vscode-vue-css-jump/    # исходники povly.vscode-vue-css-jump (MIT):
 │                               #   hover/Ctrl+Click по <style src>, $style-подсказки,
-│                               #   props/emits-карточки по hover компонента (0.2.0);
+│                               #   props/emits-карточки по hover компонента (0.4.0:
+│                               #   ts-подсветка, переходы к типам, превью типов);
 │                               #   npm run package → dist/*.vsix → code-oss --install-extension --force
 ├── docs/
 │   ├── live-templates-and-css.md # гайд: live templates, Emmet, PostCSS-миксины
@@ -76,7 +77,7 @@ _var-www-_vscode/
 | Архитектура | .ai-factory/ARCHITECTURE.md | Структура воркспейса и правила зависимостей |
 | Live templates и CSS | docs/live-templates-and-css.md | Гайд: сниппеты в стиле PhpStorm, Emmet, PostCSS-миксины |
 | Фикс phpactor/phpcs | docs/phpactor-indexer-phpcs-fix.md | Диагностика и фикс: indexer + storage/, exit-коды PHPCS 4.x, шаблон `.phpactor.json` для Laravel-проектов |
-| IntelliSense CSS/Vue/Laravel | docs/vue-css-intellisense.md | Матрица «симптом → фикс»: подсказки CSS, `$style` (inline + внешние `*.module.css` через css-modules-kit; member-list также от vue-css-jump ≥ 0.1.2), hover/Ctrl+Click по `<style src>`, карточки props/emits компонентов (vue-css-jump ≥ 0.2.0), «is not a module», `var(--…)`, пикер, отступы, Blade `@include`/Inertia `$page`; автотест tools/intellisense-check |
+| IntelliSense CSS/Vue/Laravel | docs/vue-css-intellisense.md | Матрица «симптом → фикс»: подсказки CSS, `$style` (inline + внешние `*.module.css` через css-modules-kit; member-list также от vue-css-jump ≥ 0.1.2), hover/Ctrl+Click по `<style src>`, карточки props/emits компонентов (vue-css-jump ≥ 0.4.0 — с ts-подсветкой и переходами к типам), «is not a module», `var(--…)`, пикер, отступы, Blade `@include`/Inertia `$page`; автотест tools/intellisense-check |
 | PHPantom + WordPress | docs/phpantom-wordpress.md | Паттерн полного IntelliSense для WP-инсталлов: открытие от корня WP, `.ignore` для vendor темы, editor-стабы (Acorn/WP-CLI), конфиги phpantom, регресс-чеки analyze; политика LSP-бинарников (расширение Code OSS → системный пакет) |
 | Rust-навигация (rust-analyzer) | docs/rust-navigation-fix.md | Фикс навигации для вложенных крейтов: `[workspace] members` в корневом Cargo.toml (glob `"*"` неприменим — cargo требует манифест от каждого совпавшего каталога), механика discovery rust-analyzer (корневой манифест / 1 уровень подкаталогов), linkedProjects-фолбэк, глобальный уровень (машинные расширения, `[rust]`-форматтер), чек-лист проверки |
 | Rust-сеньор-сетап | docs/rust-senior-setup.md | Всё глобально: user-settings Code OSS (clippy на сохранении, ленз, табы ×2 через rustfmt.extraArgs), алиасы `~/.cargo/config.toml` (c/t/cl/f/fc), `~/.justfile` (`just -g`), bacon без конфига, `tools/rust-doctor.sh` (PASS/FAIL-диагностика), рецепт «новый проект за 30 секунд» |

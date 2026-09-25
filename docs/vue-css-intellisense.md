@@ -26,7 +26,7 @@
 | 7 | Hover/Ctrl+Click по пути в `src="…"` (`<style>`, вк. самозакрытый `<style … />`) молчат | Volar не предоставляет links/definitions/hover на src-атрибутах SFC-блоков; path-intellisense — completions-only | расширение `povly.vscode-vue-css-jump` ≥ 0.1.2 (Definition + Hover; самозакрытые блоки поддержаны); см. раздел vue-css-jump |
 | 8 | TS: `File '…​.css' is not a module` на внешние стили | `resolveStyleImports: true` генерирует `typeof import('./x.css')`; css-modules-kit типизирует строго `*.module.css` — plain `.css` остаётся без типа модуля | именовать ВСЕ внешние CSS-модули `*.module.css` (конвенция, см. «Дисциплина именования»); fallback — ambient-стаб `declare module '*.css'` (PR #5136) |
 | 9 | Blade: `Undefined variable '$page'` (Inertia) | `$page` приходит в runtime из Inertia-middleware — статически не резолвит ни один LSP | `@var`-докблок в app.blade.php (тип в hover) + `@see`-тропинка для навигации к источникам (пример ниже); заглушка — `[[diagnostics.ignore]]` identifier+message-regex в `~/.config/phpantom_lsp/.phpantom.toml` |
-| 10 | Hover по тегу компонента — стена генериков + import, пропсов не видно | Нативный Volar не строит читаемую сводку public API компонента | расширение `povly.vscode-vue-css-jump` ≥ 0.2.0 (карточка props/emits/v-model/expose); нативно — Ctrl+Space внутри тега; см. раздел «Компоненты» |
+| 10 | Hover по тегу компонента — стена генериков + import, пропсов не видно | Нативный Volar не строит читаемую сводку public API компонента | расширение `povly.vscode-vue-css-jump` ≥ 0.4.0 (карточка props/emits/v-model/expose с ts-подсветкой, ссылками на типы и их превью); нативно — Ctrl+Space внутри тега; см. раздел «Компоненты» |
 
 ## Быстрая диагностика на машине (2 минуты)
 
@@ -381,15 +381,22 @@ User-настройки работают во всех окнах, но прое
 - hover на **атрибуте** prop → тип значения;
 - диагностика «обязательный prop не передан» — из коробки.
 
-Читаемая карточка — расширение `povly.vscode-vue-css-jump` **≥ 0.2.0**:
+Читаемая карточка — расширение `povly.vscode-vue-css-jump` **≥ 0.4.0**:
 hover по тегу любого локально импортированного компонента (PascalCase и
-kebab-case) → таблица PROPS (имя/тип/required/default), EMITS с сигнатурами,
-v-model (`defineModel`), EXPOSE (`defineExpose`) + путь к файлу; Ctrl+Click
+kebab-case) → секции PROPS (имя/тип/required/default), EMITS с сигнатурами,
+v-model (`defineModel`), EXPOSE (`defineExpose`) + путь к файлу. Секции
+рендерятся как ```ts-блоки — VS Code подсвечивает их цветами активной темы
+(тёмной/светлой), карточка больше не одноцветно-серая. Именованные типы
+(`Tag`, `Record<string, Item>`, интерфейсы, объявленные прямо в SFC)
+превращаются в кликабельные ссылки в строке «Типы:» — Ctrl+Click открывает
+декларацию (`.ts`/`.tsx`/`.d.ts`/`.vue`) на её строке; в конце карточки —
+секция «Типы» с превью деклараций (до 5 типов, полностью). Ctrl+Click
 по тегу открывает сам компонент, а не import-строку. Резолвятся относительные
 импорты и алиасы tsconfig (`@/…`), спецификатор без `.vue` тоже. Библиотечные
 компоненты (bare-импорты, напр. `@inertiajs/vue3`) остаются на нативном Volar.
-Парсинг текстовый (не TS AST): типы длиннее 64 символов усекаются,
-`defineProps<NamedInterface>` (не литерал) даёт «нет объявленного API».
+Парсинг текстовый (не TS AST): `defineProps<NamedInterface>` (не литерал)
+даёт «нет объявленного API»; re-export'ы (`export type { A } from …`) для
+ссылок на типы не разворачиваются.
 
 **Как описывать компоненты** — обычный JSDoc, работает без настройки везде:
 
@@ -409,7 +416,7 @@ defineEmits<{
 </script>
 ```
 
-- JSDoc члена → в карточке vue-css-jump ≥ 0.3.0 (описания под таблицей
+- JSDoc члена → в карточке vue-css-jump ≥ 0.3.0 (описания списком под блоком
   props, у emits) и нативно в Ctrl+Space внутри тега + hover на атрибуте;
 - JSDoc над `defineProps`/`withDefaults` → описание компонента в заголовке
   карточки.
