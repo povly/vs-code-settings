@@ -5,14 +5,13 @@
   //   docs/clean-problems-formatting.md
   // Обзор расширений-2026 (вердикты/даты релизов): docs/power-ups.md
   "recommendations": [
-    // ── PHP / Laravel / WordPress / Bitrix (10) ──
+    // ── PHP / Laravel / WordPress / Bitrix (9) ──
     "phpantom.phpantom",                // PHP LSP (Rust, MIT): типизация, Laravel + Blade. Path-ignore чужой диагностики — ~/.config/phpantom_lsp/.phpantom.toml (vendor/**, ядра WP/Bitrix). Заменил phpactor 18.09.2026. НЕ Intelephense/DEVSENSE — freemium
     "laravel.vscode-laravel",            // ОФИЦИАЛЬНОЕ Laravel-расширение (MIT): completions/links для @include, view(), route(), config(), env, переводов (см. docs/vue-css-intellisense.md)
     "onecentlin.laravel-blade",          // Подсветка и сниппеты Blade
     "shufo.vscode-blade-formatter",      // Форматтер Blade (табы заданы в settings.json: bladeFormatter.format.useTabs)
     "xdebug.php-debug",                  // Отладка PHP через Xdebug (порт 9003)
     "junstyle.php-cs-fixer",             // Форматирование PHP — единый [php]-форматтер; табы глобально через .vscode/.php-cs-fixer.php (setIndent "\t"); в Laravel-проектах CI — Pint (pint.json)
-    "stoildobreff.php-resolver",         // PHP-инструменты (goto, hierarchy, inlay hints). ⚠ phpcs-сниффер ложно ругается на PHPCS 4.x — в проектах на Pint: "phpResolver.phpSnifferCommand": "" (docs/phpactor-indexer-phpcs-fix.md)
     "Recca0120.vscode-phpunit",          // Запуск тестов PHPUnit/Pest из редактора
     "johnbillion.vscode-wordpress-hooks",// WordPress: автодополнение хуков/экшенов/фильтров
     "mikestead.dotenv",                  // Подсветка .env (Laravel): ключи/значения не сливаются (MIT, стабильная)
@@ -68,9 +67,19 @@
   // devsense.phptools — DEVSENSE PHP Tools, значительная часть платная
   // eamodio.gitlens — часть функций платных
   // octref.vetur — Vetur конфликтует с Volar (ломает подсказки в .vue)
+  // stoildobreff.php-resolver — убран из рекомендаций 25.09.2026 (дубль
+  //   возможностей phpantom + ложный phpcs-тост; история: docs/phpactor-indexer-phpcs-fix.md)
+  // bradlc.vscode-tailwindcss — Tailwind не используется (проекты на CSS
+  //   Modules). В панели Recommended рисуется ДИНАМИЧЕСКОЙ подсказкой VS Code
+  //   по содержимому воркспейса (не из extensions.json) — прятать крестиком
+  //   на карточке; extensions.ignoreRecommendations не включать (гасит все)
+  // «Vite» / vite-browser — тоже не из наших рекомендаций: vite-browser —
+  //   CLI-тул диагностики Vite (npm @presto1314w/vite-devtools-browser),
+  //   а не расширение; «Vite» в Recommended — динамический tip по vite.config.ts
   "unwantedRecommendations": [
     "bmewburn.vscode-intelephense-client",
     "devsense.phptools",
-    "octref.vetur"
+    "octref.vetur",
+    "bradlc.vscode-tailwindcss"
   ]
 }

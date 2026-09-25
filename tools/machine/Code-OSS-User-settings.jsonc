@@ -21,9 +21,6 @@
     // сохранении. Wrapper ставит cwd = ~/.config/vscode-php-cs-fixer (там служебный
     // composer.json с config.platform.php). Шаблоны: tools/machine/ в воркспейсе _vscode.
     "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
-    // Гасим ложный тост php-resolver «phpcs - Mismatch configuration provided»
-    // (PHPCS 4.x битовая маска) глобально — стиль держат pint/junstyle, не PHPCS
-    "phpResolver.phpSnifferCommand": "",
     "security.workspace.trust.untrustedFiles": "open",
     "chat.disableAIFeatures": true,
     "kilo-code.allowedCommands": [

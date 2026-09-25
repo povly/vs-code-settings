@@ -346,7 +346,9 @@ User-настройки работают во всех окнах, но прое
     `resources/**/*.css` + `resources/**/*.vue`, чтобы `var(--…)` подсказывались
     исключительно из исходников проекта (массив на проектном уровне заменяет
     глобальный);
-  - `"phpResolver.phpSnifferCommand": ""` для проектов на Pint (ложный тост phpcs).
+  - ~~`"phpResolver.phpSnifferCommand": ""`~~ — php-resolver убран из
+    рекомендаций 25.09.2026 (дубль phpantom + ложный тост); ключ в проектах
+    больше не нужен (история: docs/phpactor-indexer-phpcs-fix.md).
 - `.vscode/extensions.json` — рекомендации проекта: volar, laravel.vscode-laravel,
   css-variables, blade-formatter, editorconfig, prettier, path-intellisense.
 - `tsconfig.json`: `vueCompilerOptions.strictCssModules` — опция language-core

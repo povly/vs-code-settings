@@ -74,10 +74,10 @@ Language Basics оставить для подсветки).
   `phpantom_lsp analyze`. Problems — только свой код: глобальные path-ignore
   (`vendor/**`, ядро WP, плагины) гасят чужую диагностику, не трогая
   индексацию/F12 (конфиг — только `~/.config/phpantom_lsp/.phpantom.toml`).
-- Тост «phpcs - Mismatch configuration provided» от php-resolver — ложный:
-  PHPCS 4.x возвращает битовую маску (3 = fixable + non-fixable). В проектах
-  на Pint отключать: `"phpResolver.phpSnifferCommand": ""`
-   в `.vscode/settings.json` проекта (история: [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md)).
+- php-resolver убран из рекомендаций (25.09.2026): дубль возможностей phpantom
+  + ложный тост «phpcs - Mismatch configuration provided» (PHPCS 4.x возвращает
+  битовую маску — 3 = fixable + non-fixable; история: [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md)).
+  Ключ `"phpResolver.phpSnifferCommand": ""` в проектах больше не нужен.
   PHPCS-прокси самого phpantom (source `phpcs` в Problems) тоже выключен
   глобально — `[phpcs] command = ""` в `~/.config/phpantom_lsp/.phpantom.toml`,
   иначе на каждом сохранении сыплет PSR12-стилем.

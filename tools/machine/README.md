@@ -47,7 +47,6 @@
    "[php]": { "editor.defaultFormatter": "junstyle.php-cs-fixer" },
    "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
    "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
-   "phpResolver.phpSnifferCommand": "",
    "bladeFormatter.format.useTabs": true,
    "bladeFormatter.format.indentSize": 2,
    "bladeFormatter.format.wrapAttributes": "auto",
