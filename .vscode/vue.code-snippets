@@ -170,5 +170,43 @@
 			"const ${1:id} = useId()"
 		],
 		"description": "useId() — SSR-безопасный уникальный id (Vue 3.5)"
+	},
+	"vue_define_model": {
+		"prefix": "dmod",
+		"body": [
+			"const ${1:model} = defineModel<${2:T}>()"
+		],
+		"description": "defineModel<T>() — two-way binding без props+emit (Vue 3.4+)"
+	},
+	"vue_provide": {
+		"prefix": "vprov",
+		"body": [
+			"provide('${1:key}', ${2:value})"
+		],
+		"description": "provide('key', value) — прокинуть значение вниз по дереву компонентов"
+	},
+	"vue_inject": {
+		"prefix": "vinj",
+		"body": [
+			"const ${1:value} = inject<${2:T}>('${3:key}', ${4:undefined})"
+		],
+		"description": "inject<T>('key', default) — получить provide-значение"
+	},
+	"vue_sfc_module": {
+		"prefix": "vsfcm",
+		"body": [
+			"<script setup lang=\"ts\">",
+			"${1}",
+			"</script>",
+			"",
+			"<template>",
+			"\t<div :class=\"\\$style.${2:root}\">",
+			"\t\t${3}",
+			"\t</div>",
+			"</template>",
+			"",
+			"<style module src=\"./${4:$TM_FILENAME_BASE}.module.css\"></style>"
+		],
+		"description": "Каркас SFC с внешним CSS-модулем (*.module.css → подсказки $style)"
 	}
 }

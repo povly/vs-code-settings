@@ -294,5 +294,30 @@
 			"};"
 		],
 		"description": "Миграция анонимным классом (Laravel 11/12; use-импорты добавить сверху)"
+	},
+	"laravel_form_request": {
+		"prefix": "freq",
+		"body": [
+			"class ${1:StoreThing}Request extends FormRequest",
+			"{",
+			"\tpublic function authorize(): bool",
+			"\t{",
+			"\t\treturn ${2|false,true|};",
+			"\t}",
+			"",
+			"\tpublic function rules(): array",
+			"\t{",
+			"\t\treturn [",
+			"\t\t\t'${3:field}' => ['${4|required}', '${5:string}'],",
+			"\t\t];",
+			"\t}",
+			"",
+			"\tprotected function prepareForValidation(): void",
+			"\t{",
+			"\t\t${0:// \\$this->merge([]);}",
+			"\t}",
+			"}"
+		],
+		"description": "Laravel: класс FormRequest — authorize/rules/prepareForValidation"
 	}
 }
