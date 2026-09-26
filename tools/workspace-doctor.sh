@@ -78,8 +78,8 @@ else
 	bad "CLI php-cs-fixer не в PATH (composer global require friendsofphp/php-cs-fixer)"
 fi
 
-# 7. Ключевые расширения веб-стека
-for ext in junstyle.php-cs-fixer xdebug.php-debug vue.volar laravel.vscode-laravel povly.vscode-vue-css-jump; do
+# 7. Ключевые расширения веб-стека: LSP, форматтеры, IntelliSense-звено
+for ext in junstyle.php-cs-fixer xdebug.php-debug vue.volar laravel.vscode-laravel povly.vscode-vue-css-jump shufo.vscode-blade-formatter mizdra.css-modules-kit-vscode vunguyentuan.vscode-css-variables dbaeumer.vscode-eslint esbenp.prettier-vscode; do
 	if has_ext "$ext"; then
 		ok "расширение: $ext"
 	else
