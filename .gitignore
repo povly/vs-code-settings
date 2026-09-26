@@ -22,5 +22,9 @@ target/
 # Артефакты прогонов @vscode/test-electron (внутри абсолютные пути машины)
 .vscode-test/
 
+# Постоянный Chrome-профиль js-debug (launch.json userDataDir):
+# внутри куки/сессии авторизации — в репозиторий не попадает
+.vscode/chrome-debug-profile/
+
 # ОС
 .DS_Store

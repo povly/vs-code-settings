@@ -154,6 +154,8 @@
     "*.wgsl": "wgsl",
     "*.volt": "html"
   },
+  // Папки в проводнике не схлопываются в одну строку пути
+  "explorer.compactFolders": false,
 
   // ── SCSS/PostCSS: директивы @tailwind/@apply/nesting в .pcss не ругаются ──
   "scss.lint.unknownAtRules": "ignore",
@@ -178,6 +180,9 @@
   "editor.stickyScroll.enabled": true,
   "editor.rulers": [120],
   "editor.mouseWheelZoom": true,
+  // Миникарта выключена: постоянный рендер справа — лишняя работа и шум.
+  // Реверсивно: вернуть true, если привыкли к ней
+  "editor.minimap.enabled": false,
   "workbench.editor.revealIfOpen": true, // F12/Ctrl+Click переиспользуют открытый таб, а не плодят дубли («Smart open» vue-css-jump)
 
   // ── Тема по умолчанию (глобально для всех проектов воркспейса) ──
@@ -187,6 +192,9 @@
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
+  // Обновлять только включённые расширения — меньше фоновых обновлений и
+  // перезапусков окна (неиспользуемые builtin/отключённые не качаются)
+  "extensions.autoUpdate": "onlyEnabledExtensions",
 
   // ── Телеметрия ──
   "telemetry.telemetryLevel": "off",
@@ -254,7 +262,16 @@
 
   // ── Терминал ──
   "terminal.integrated.defaultProfile.linux": "bash",
-  "explorer.compactFolders": false,
+  // Alt+R/A/M/L работают и из терминала: phpantom-команды перехватываются
+  // Code, а не уходят в shell. Дефолтный список commandsToSkipShell
+  // сохраняется (убрать дефолт — префиксом '-commandId'); при добавлении
+  // новых phpantom-команд — синхронизировать список
+  "terminal.integrated.commandsToSkipShell": [
+    "phpantom.showRouteList",
+    "phpantom.runArtisanCommand",
+    "phpantom.generateModelAnnotations",
+    "phpantom.showLogViewer"
+  ],
 
   // ── File nesting: lock/конфиг-файлы сворачиваются под основной манифест ──
   "explorer.fileNesting.enabled": true,

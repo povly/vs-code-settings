@@ -20,6 +20,27 @@
       "problemMatcher": []
     },
     {
+      "label": "Интелли-чек: PHPantom",
+      "detail": "tools/intellisense-check: npm run test:phpantom — PHPantom в чистом инстансе VS Code (F12, completion, Problems)",
+      "type": "shell",
+      "command": "npm run test:phpantom",
+      "options": {
+        "cwd": "${workspaceFolder}/tools/intellisense-check"
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Диагностика WP-инсталла (intellisense-check)",
+      "detail": "npm run diag:wp -- --theme=<корень WP-инсталла/темы> — languageId, completions, var(--…), диагностики",
+      "type": "shell",
+      "command": "npm run diag:wp -- --theme=${input:wpThemeRoot}",
+      "options": {
+        "cwd": "${workspaceFolder}/tools/intellisense-check"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Rust doctor",
       "detail": "PASS/FAIL-диагностика Rust-тулчейна (см. docs/rust-senior-setup.md)",
       "type": "shell",
@@ -35,10 +56,17 @@
     },
     {
       "label": "Валидация JSONC-конфигов",
-      "detail": "6 файлов: settings/extensions/tasks/keybindings/launch + opencode.json — tools/validate-jsonc.php",
+      "detail": "14 файлов: settings/extensions/tasks/keybindings/launch + opencode.json + 8 *.code-snippets — tools/validate-jsonc.php",
       "type": "shell",
-      "command": "php ${workspaceFolder}/tools/validate-jsonc.php ${workspaceFolder}/.vscode/settings.json ${workspaceFolder}/.vscode/extensions.json ${workspaceFolder}/.vscode/tasks.json ${workspaceFolder}/.vscode/keybindings.json ${workspaceFolder}/.vscode/launch.json ${workspaceFolder}/opencode.json",
+      "command": "php ${workspaceFolder}/tools/validate-jsonc.php ${workspaceFolder}/.vscode/settings.json ${workspaceFolder}/.vscode/extensions.json ${workspaceFolder}/.vscode/tasks.json ${workspaceFolder}/.vscode/keybindings.json ${workspaceFolder}/.vscode/launch.json ${workspaceFolder}/opencode.json ${workspaceFolder}/.vscode/php.code-snippets ${workspaceFolder}/.vscode/blade.code-snippets ${workspaceFolder}/.vscode/vue.code-snippets ${workspaceFolder}/.vscode/javascript.code-snippets ${workspaceFolder}/.vscode/html.code-snippets ${workspaceFolder}/.vscode/css.code-snippets ${workspaceFolder}/.vscode/rust.code-snippets ${workspaceFolder}/.vscode/wgsl.code-snippets",
       "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "wpThemeRoot",
+      "type": "promptString",
+      "description": "Корень WP-инсталла или темы (локальный путь, напр. /var/www/<wp-инсталл>)"
     }
   ]
 }

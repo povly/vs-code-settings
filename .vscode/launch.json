@@ -19,14 +19,20 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      // Постоянный профиль: логины сохраняются между сессиями дебага
+      // (по умолчанию js-debug создаёт временный — авторизация заново).
+      // Каталог исключён из git через .gitignore (куки/сессии не коммитим).
+      "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-profile"
     },
     {
       "name": "JS: сайт через artisan serve (localhost:8000)",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:8000",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      // Постоянный профиль — тот же, что у Vite-конфигурации (см. комментарий выше)
+      "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-profile"
     },
     {
       // kind-only фильтр: CodeLLDB запускает единственный bin-таргет проекта
@@ -43,6 +49,25 @@
       },
       "args": [],
       "cwd": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      // Одна F5 — оба дебаггера сразу: PHP (Xdebug) + JS (Chrome).
+      // ВАЖНО: сервер (php artisan serve / npm run dev) должен быть уже
+      // запущен — compound подключается к процессам, но не стартует их.
+      "name": "Fullstack: Xdebug + Chrome (Vite)",
+      "configurations": [
+        "PHP: слушать Xdebug (Laravel / WordPress / Bitrix)",
+        "JS: сайт через Vite dev-server (localhost:5173)"
+      ]
+    },
+    {
+      "name": "Fullstack: Xdebug + Chrome (artisan)",
+      "configurations": [
+        "PHP: слушать Xdebug (Laravel / WordPress / Bitrix)",
+        "JS: сайт через artisan serve (localhost:8000)"
+      ]
     }
   ]
 }
