@@ -31,8 +31,10 @@ WordPress, Bitrix) и Rust-графики (winit + wgpu + Bevy). Никаких 
    var(--…) в чистом инстансе VS Code): `npm run diag:wp -- --theme=<корень>
    [--workspace=<корень окна>] [--files=<css-пути через запятую>]`.
 6. Продуктивность: **Alt+R / Alt+A / Alt+M / Alt+L** — роуты / artisan /
-   `@property`-аннотации / логи (phpantom); Terminal → Run Task — интелли-чек,
-   rust-doctor / workspace-doctor, JSONC-валидация. REST-тесты — в `.http`-файлах (REST Client).
+   `@property`-аннотации / логи (phpantom; работают и из терминала —
+   `commandsToSkipShell`); Terminal → Run Task — интелли-чек (отдельно:
+   PHPantom-чек, диагностика WP-инсталла), rust-doctor / workspace-doctor,
+   JSONC-валидация (6 конфигов + 8 сниппет-файлов). REST-тесты — в `.http`-файлах (REST Client).
    Обзор: [docs/power-ups.md](docs/power-ups.md).
 
 ## Требует одной установки на машину (всё бесплатно)
@@ -156,7 +158,12 @@ workspace-члены. Гайд: [docs/rust-navigation-fix.md](docs/rust-navigati
 1. Запустите dev-сервер: `npm run dev` (Vite, порт 5173) или
    `php artisan serve` (порт 8000).
 2. F5 → «JS: сайт через …» — откроется Chrome с подключённым дебаггером:
-   брейкпоинты в `.js`/`.vue`, DevTools не нужен.
+   брейкпоинты в `.js`/`.vue`, DevTools не нужен. Профиль Chrome постоянный
+   (`userDataDir` → `.vscode/chrome-debug-profile`, каталог в `.gitignore`) —
+   логины сохраняются между сессиями дебага.
+3. Fullstack одной клавишей: F5 → «Fullstack: Xdebug + Chrome (Vite/artisan)» —
+   compound запускает PHP- и JS-дебаггеры одновременно (сервер должен уже
+   работать: compound подключается к процессам, но не стартует их).
 
 ## Стек и покрытие
 
@@ -204,8 +211,8 @@ Intelephense…»).
 - [tools/machine/README.md](tools/machine/README.md) — развёртывание машинного
   (глобального) сетапа: снимок user settings Code OSS + php-cs-fixer
 - [tools/vscode-vue-css-jump/README.md](tools/vscode-vue-css-jump/README.md) —
-  README собственного расширения (git submodule:
-  [github.com/povly/vscode-vue-css-jump](https://github.com/povly/vscode-vue-css-jump))
+  README собственного расширения (git submodule; адрес репозитория —
+  в `.gitmodules`, в доках воркспейса не дублируется)
 - [AGENTS.md](AGENTS.md) — карта проекта для AI-агентов и разработчиков
   (структура, таблица документации, правила)
 - [.ai-factory/DESCRIPTION.md](.ai-factory/DESCRIPTION.md) — спецификация
@@ -220,13 +227,15 @@ Intelephense…»).
   extensions.json      — рекомендуемые расширения (все бесплатные)
   settings.json        — табы ×2, подсказки, форматирование, исключения шума
   .php-cs-fixer.php    — форматтер PHP: табы + PSR12 (setIndent "\t")
-  tasks.json           — задачи: интелли-чек / rust-doctor / workspace-doctor /
-                         JSONC-валидация
+  tasks.json           — задачи: интелли-чек (+PHPantom-чек, WP-диагностика) /
+                         rust-doctor / workspace-doctor / JSONC-валидация
   keybindings.json     — Alt+R/A/M/L: phpantom-роуты/artisan/аннотации/логи
-  launch.json          — отладка: Xdebug / Chrome+Vite / CodeLLDB (Rust)
+  launch.json          — отладка: Xdebug / Chrome+Vite / CodeLLDB (Rust);
+                         compounds «Fullstack: Xdebug + Chrome»
   *.code-snippets      — live templates в стиле PhpStorm:
                          php, blade, vue, javascript, html, css, rust, wgsl
 .editorconfig          — стабильные отступы для любых редакторов
+.gitignore             — исключения git: зависимости, AI-планы, chrome-профиль дебага
 AGENTS.md              — карта проекта для AI-агентов (структура, доки, правила)
 .ai-factory.json       — манифест agent-skills (какие скиллы установлены)
 skills-lock.json       — фиксация версий внешних скиллов (.agents/skills)
@@ -238,7 +247,7 @@ tools/intellisense-check/ — автотест IntelliSense (@vscode/test-electr
                            postcss-диалект; диагностика инсталлов:
                            npm run diag:wp -- --theme=… [--workspace/--files])
 tools/vscode-vue-css-jump/ — исходники расширения povly.vscode-vue-css-jump
-                           (git submodule → github.com/povly/vscode-vue-css-jump;
+                           (git submodule; адрес репозитория — .gitmodules;
                            hover/Ctrl+Click по <style src>, $style-подсказки,
                            props/emits-карточки (0.4.0 — ts-подсветка, переходы к типам);
                            npm run package → VSIX → code-oss --install-extension)

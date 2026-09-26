@@ -37,6 +37,7 @@ _var-www-_vscode/
 │                               #   bevy-ecs, analyse-with-phpstan, laravel-best-practices,
 │                               #   alpine-js, wordpress-pro
 ├── .editorconfig               # табы шириной 2 для любых редакторов
+├── .gitignore                  # исключения git: зависимости, AI-планы, chrome-профиль дебага
 ├── opencode.json               # Playwright MCP (браузерная проверка сайтов агентом)
 ├── tools/
 │   ├── intellisense-check/     # автотест IntelliSense (@vscode/test-electron, npm test)

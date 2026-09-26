@@ -27,9 +27,9 @@
 | `$TM_FILENAME_BASE` | имя текущего файла без расширения |
 | одинаковые `${1:...}` в двух местах | редактируются синхронно |
 
-### Каталог префиков (138 шаблонов)
+### Каталог префиксов (150 шаблонов)
 
-#### PHP + Laravel — `php.code-snippets` (29)
+#### PHP + Laravel — `php.code-snippets` (32)
 
 | Префикс | Результат |
 |---|---|
@@ -51,6 +51,8 @@
 | `relhm` / `relbo` | отношение Eloquent `hasMany` / `belongsTo` |
 | `scope:` | локальный scope модели |
 | `col:` | колонка миграции `$table->тип(...)` |
+| `invk` / `mig12` | single-action контроллер `__invoke()` / миграция анонимным классом (Laravel 11/12) |
+| `freq` | класс FormRequest: authorize / rules / prepareForValidation |
 
 #### Blade — `blade.code-snippets` (22)
 
@@ -59,11 +61,14 @@
 `bech` (`{{ $var }}`), `braw` (`{!! !!}`), `bjson`, `berror`, `bauth`, `bguest`, `binc`,
 `bpush`, **`bvite`** (`@vite([...])`), `blang`.
 
-#### Vue 3 — `vue.code-snippets` (16)
+#### Vue 3 — `vue.code-snippets` (22)
 
-`vsfc` (полный SFC: script setup + template + style), `vscript`, `vref`, `vreactive`,
+`vsfc` (полный SFC: script setup + template + style), **`vsfcm`** (SFC + внешний
+`*.module.css` → подсказки `$style`), `vscript`, `vref`, `vreactive`,
 `vcompd` (computed), `vwatch`, `vwatche`, `vprops` (defineProps), `vemit`, `vexpose`,
-`vmounted`, `vunmounted`, `vfor`, `vmodel`, `vslot`, `vstore` (Pinia store).
+`vmounted`, `vunmounted`, `vfor`, `vmodel`, `vslot`, `vstore` (Pinia store),
+`useTplRef`/`useid` (Vue 3.5), **`dmod`** (`defineModel<T>()`, Vue 3.4+),
+**`vprov`/`vinj`** (provide/inject).
 
 #### JavaScript — `javascript.code-snippets` (20)
 
@@ -77,11 +82,12 @@
 `picture` (webp+lazy), `alpdata` (x-data блок), `alpclick` (x-on:click), `alpshow`,
 `alpfor` (x-for + template).
 
-#### CSS / PostCSS — `css.code-snippets` (13)
+#### CSS / PostCSS — `css.code-snippets` (16)
 
 `psrel`, `psab`, `flexcc` (flex-центрирование), `flexbb`, `dgrid` (grid auto-fit),
 `mq` (media query), `varc`, `centerabs`, `trans`, `trunc`, `vishid`
-(скрытый для скринридеров), `pcssimp`, `pcssnest` (PostCSS-нестинг `& {}`).
+(скрытый для скринридеров), `pcssimp`, `pcssnest` (PostCSS-нестинг `& {}`),
+`fluid`/`fvar`/`fluidc` (Fluid Type: clamp-типографика — раздел 5).
 
 #### Rust + Bevy — `rust.code-snippets` (23)
 

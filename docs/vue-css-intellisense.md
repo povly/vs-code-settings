@@ -190,7 +190,8 @@ Window` пересоздаёт порядок активации.
 ## vue-css-jump — навигация и подсказки `$style` без tsserver-цепочки
 
 Свободное расширение воркспейса (`povly.vscode-vue-css-jump`, MIT; исходники:
-`tools/vscode-vue-css-jump/` этого воркспейса, зеркало github.com/povly/vscode-vue-css-jump).
+`tools/vscode-vue-css-jump/` этого воркспейса — git submodule, адрес репозитория
+в `.gitmodules`).
 Закрывает дыры Volar собственными провайдерами — **независимо от tsserver/плагинов**:
 
 | Фича | Как работает |

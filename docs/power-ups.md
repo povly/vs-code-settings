@@ -71,8 +71,15 @@ sudo pacman -S --needed shellcheck
 - **Workspace doctor** — PASS/FAIL-диагностика веб-стека: phpantom + path-ignore,
   xdebug, машинный php-cs-fixer + wrapper, ключевые расширения, свежесть снимка
   user settings (`tools/workspace-doctor.sh`)
-- **Валидация JSONC-конфигов** — `tools/validate-jsonc.php` по 6 файлам:
-  settings / extensions / tasks / keybindings / launch + opencode.json
+- **Интелли-чек: PHPantom** — `npm run test:phpantom` в tools/intellisense-check:
+  PHPantom в чистом инстансе VS Code на WP-инсталле (env `WP_ROOT` + `WP_THEME`;
+  полигон — Sage-тема с editor-стабами, см. docs/phpantom-wordpress.md)
+- **Диагностика WP-инсталла (intellisense-check)** — `npm run diag:wp`; корень
+  темы/инсталла вводится через promptString (input `wpThemeRoot`)
+- **Валидация JSONC-конфигов** — `tools/validate-jsonc.php` по 14 файлам:
+  settings / extensions / tasks / keybindings / launch + opencode.json +
+  все 8 `*.code-snippets` (битая запятая в сниппетах ловится до того, как
+  молча отключит шаблоны языка)
 
 npm-скрипты вложенных проектов подхватываются автодетектом отдельно.
 
@@ -109,14 +116,22 @@ npm-скрипты вложенных проектов подхватывают�
 ## Микро-скорость (settings.json)
 
 `explorer.confirmDelete/confirmDragAndDrop: false` — без подтверждений;
-`diffEditor.ignoreTrimWhitespace: false` — честные git-диффы.
+`diffEditor.ignoreTrimWhitespace: false` — честные git-диффы;
+`extensions.autoUpdate: "onlyEnabledExtensions"` — не обновлять неиспользуемые
+расширения в фоне; `editor.minimap.enabled: false` — миникарта не рендерится
+(реверсивно: `true` вернёт); `terminal.integrated.commandsToSkipShell` —
+Alt+R/A/M/L работают и при фокусе в терминале (phpantom-команды перехватывает
+Code, а не shell; дефолтный список сохраняется).
 
 ## Новые live templates
 
 - php: `invk` — single-action контроллер `__invoke()`; `mig12` — миграция
-  анонимным классом (Laravel 11/12). Уже были: `enum`/`enumb`, `scope:`, `col:`.
+  анонимным классом (Laravel 11/12); `freq` — класс FormRequest
+  (authorize/rules/prepareForValidation). Уже были: `enum`/`enumb`, `scope:`, `col:`.
 - vue: `useTplRef` — `useTemplateRef('name')` (Vue 3.5); `useid` — `useId()`
-  (Vue 3.5, SSR-безопасные id).
+  (Vue 3.5, SSR-безопасные id); `dmod` — `defineModel<T>()` (Vue 3.4+,
+  two-way binding без props+emit); `vprov`/`vinj` — provide/inject;
+  `vsfcm` — каркас SFC с внешним `*.module.css` (подсказки `$style`).
 - rust: без изменений — семейство `bsys`/`bsysq`/`bres`/`bevent`/`bplugin`/
   `bapp`/`bcomp` уже покрывает Bevy.
 
@@ -134,7 +149,7 @@ graph LR
 
 1. `cd tools/intellisense-check && npm test`
 2. `php tools/validate-jsonc.php .vscode/*.json` (задача «Валидация JSONC»)
-3. Чек-лист: Command Palette видит phpantom-команды; Run Task — 3 задачи;
+3. Чек-лист: Command Palette видит phpantom-команды; Run Task — 6 задач;
    Alt+R/A/M/L не перехвачены другими расширениями (Keyboard Shortcuts UI);
    Problems по-прежнему чист.
 
