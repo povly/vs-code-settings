@@ -165,10 +165,12 @@
     },
 
     // Подсказки: превью в списке, параметры вызовов, сниппеты первыми,
-    // форматирование при вставке (глобально, любой корень)
+    // Tab разворачивает сниппет (onlySnippets), форматирование при вставке
+    // (глобально, любой корень)
     "editor.suggest.preview": true,
     "editor.parameterHints.enabled": true,
     "editor.snippetSuggestions": "top",
+    "editor.tabCompletion": "onlySnippets",
     "editor.formatOnPaste": true,
 
     // postcss-ловушка: язык «postcss» глушит CSS IntelliSense → .pcss/.postcss = scss
