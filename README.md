@@ -79,7 +79,7 @@ Language Basics оставить для подсветки).
   (`vendor/**`, ядро WP, плагины) гасят чужую диагностику, не трогая
   индексацию/F12 (конфиг — только `~/.config/phpantom_lsp/.phpantom.toml`).
 - php-resolver убран из рекомендаций (25.09.2026): дубль возможностей phpantom
-  + ложный тост «phpcs - Mismatch configuration provided» (PHPCS 4.x возвращает
+  и ложный тост «phpcs - Mismatch configuration provided» (PHPCS 4.x возвращает
   битовую маску — 3 = fixable + non-fixable; история: [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md)).
   Ключ `"phpResolver.phpSnifferCommand": ""` в проектах больше не нужен.
   PHPCS-прокси самого phpantom (source `phpcs` в Problems) тоже выключен
@@ -207,6 +207,7 @@ Intelephense…»).
 | [docs/rust-navigation-fix.md](docs/rust-navigation-fix.md) | Навигация во вложенных крейтах: `[workspace] members` в корневом Cargo.toml (без glob `"*"`), механика discovery rust-analyzer, linkedProjects-фолбэк, чек-лист проверки |
 | [docs/rust-senior-setup.md](docs/rust-senior-setup.md) | Сеньор-сетап «всё глобально»: clippy + rustfmt (табы ×2) на сохранении, Run/Debug-лензы, bacon, just, алиасы `cargo c/t/cl/f/fc`, health-check `tools/rust-doctor.sh`, рецепт «новый проект за 30 секунд» |
 | [docs/power-ups.md](docs/power-ups.md) | Расширения-2026 с вердиктами Open VSX (REST Client, Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint + Mermaid, DotENV), задачи tasks.json, keybindings Alt+R/A/M/L, live templates invk/mig12/useTplRef/useid |
+| [docs/themes.md](docs/themes.md) | Темы для Code OSS (Open VSX): проверенный список из 11 тем (Catppuccin, Tokyo Night, Kanagawa Flavors, Ayu…), исключения (deprecated / MS-only), top-5 рядом с Rosé Pine, установка и закрепление `workbench.colorTheme` |
 | [docs/js-standalone-root.md](docs/js-standalone-root.md) | Паттерн «отдельный JS-корень» (Vite vanilla JS): jsconfig (checkJs + strict:false) + @webgpu/types (WebGPU во встроенном lib.dom нет), vite-env.d.ts, JSDoc-касты, Prettier табы ×2, ESLint 9 flat, зеркалирование .vscode — подсказки/переходы/форматирование вне воркспейса |
 | [docs/github-ci.md](docs/github-ci.md) | GitHub CI «всё везде»: JS-проект (матрица 3 ОС + alpine/arch/fedora-контейнеры, vitest-каркас), воркспейс (intellisense-check/shellcheck/JSONC), шаблоны templates/ для Laravel и WordPress (тема + e2e с wp-cli/Playwright) |
 
@@ -226,7 +227,7 @@ Intelephense…»).
 
 ## Структура
 
-```
+```text
 .vscode/
   extensions.json      — рекомендуемые расширения (все бесплатные)
   settings.json        — табы ×2, подсказки, форматирование, исключения шума
@@ -239,6 +240,7 @@ Intelephense…»).
   *.code-snippets      — live templates в стиле PhpStorm:
                          php, blade, vue, javascript, html, css, rust, wgsl
 .editorconfig          — стабильные отступы для любых редакторов
+.markdownlint-cli2.jsonc — конфиг markdownlint (CI-job «markdownlint» на README/AGENTS/docs)
 .gitignore             — исключения git: зависимости, AI-планы, chrome-профиль дебага
 AGENTS.md              — карта проекта для AI-агентов (структура, доки, правила)
 .ai-factory.json       — манифест agent-skills (какие скиллы установлены)
@@ -264,7 +266,9 @@ tools/rust-doctor.sh     — PASS/FAIL диагностика Rust-тулчей�
 tools/workspace-doctor.sh — PASS/FAIL диагностика веб-стека (phpantom, xdebug,
                            машинный php-cs-fixer, расширения)
 tools/install-extensions.sh — CLI-установка всех рекомендаций extensions.json
-docs/                  — гайды: 10 рецептов настройки — см. раздел «Документация»
+templates/             — CI-шаблоны для Laravel- и WordPress-проектов
+                           (templates/{laravel,wordpress}-ci.yml; гайд — docs/github-ci.md)
+docs/                  — гайды: 11 рецептов настройки — см. раздел «Документация»
 .ai-factory/           — контекст AI Factory (описание, правила, архитектура)
+                           (.omo/ и .codegraph/ — локальные AI-артефакты, в git не идут)
 ```
-# vs-code-settings

@@ -21,7 +21,7 @@ PhpStorm, отладка (Xdebug / Chrome поверх Vite / CodeLLDB).
 
 ## Структура проекта
 
-```
+```text
 _var-www-_vscode/
 ├── .vscode/                    # сердце воркспейса: конфигурация VS Code
 │   ├── extensions.json         #   рекомендуемые бесплатные расширения (+чёрный список freemium)
@@ -40,6 +40,8 @@ _var-www-_vscode/
 ├── .gitignore                  # исключения git: зависимости, AI-планы, chrome-профиль дебага
 ├── .github/workflows/ci.yml    # CI: intellisense-check (3 ОС) + vue-css-jump (submodule)
 │                               #   + shellcheck + JSONC-валидация
+├── templates/                  # CI-шаблоны для Laravel-/WordPress-проектов
+│                               #   (laravel-ci.yml, wordpress-ci.yml; гайд docs/github-ci.md)
 ├── opencode.json               # Playwright MCP (браузерная проверка сайтов агентом)
 ├── tools/
 │   ├── intellisense-check/     # автотест IntelliSense (@vscode/test-electron, npm test)
@@ -60,7 +62,9 @@ _var-www-_vscode/
 ├── docs/
 │   ├── live-templates-and-css.md # гайд: live templates, Emmet, PostCSS-миксины
 │   ├── phpactor-indexer-phpcs-fix.md # фикс: падение индексатора phpactor на storage/, тост php-resolver/phpcs
-│   └── vue-css-intellisense.md # гайд: подсказки CSS/$style/var(--)/пикер/Blade @include
+│   ├── vue-css-intellisense.md # гайд: подсказки CSS/$style/var(--)/пикер/Blade @include
+│   ├── themes.md # гайд: темы Code OSS (Open VSX) — проверенный список, топ-5, закрепление colorTheme
+│   └── … # остальные гайды — полная таблица в разделе «Документация» ниже
 └── README.md                   # инструкция по установке и настройке (PHPantom, Xdebug, отладка)
 ```
 
@@ -89,6 +93,7 @@ _var-www-_vscode/
 | Rust-сеньор-сетап | docs/rust-senior-setup.md | Всё глобально: user-settings Code OSS (clippy на сохранении, ленз, табы ×2 через rustfmt.extraArgs), алиасы `~/.cargo/config.toml` (c/t/cl/f/fc), `~/.justfile` (`just -g`), bacon без конфига, `tools/rust-doctor.sh` (PASS/FAIL-диагностика), рецепт «новый проект за 30 секунд» |
 | Чистые Problems + форматирование | docs/clean-problems-formatting.md | Политика «анализ — только свой код»: исключения search/watcher/diagnostics/telemetry (vendor, node_modules, ядра Bitrix/WP), `php.validate.enable: false`, глобальные path-ignore phpantom; матрица форматтеров «один на язык» (Ctrl+Shift+I ≡ Ctrl+S), табы ×2: машинный `~/.config/vscode-php-cs-fixer/` + проектный `.php-cs-fixer.php` (Pint табы не умеет), Rector-конвейер; почему не Intelephense/PHP Tools |
 | Productivity Power-Ups | docs/power-ups.md | Расширения-2026 с вердиктами Open VSX API (REST Client, Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint, Mermaid, npm Intellisense, DotENV), задачи tasks.json (интелли-чек/rust-doctor/JSONC), keybindings Alt+R/A/M/L для phpantom-бонусов, live templates invk/mig12/useTplRef/useid |
+| Темы для Code OSS | docs/themes.md | Проверенный список тем Open VSX (11: Catppuccin, Tokyo Night, Kanagawa Flavors, Ayu…), исключения (deprecated / MS-marketplace-only), top-5 рядом с Rosé Pine, установка (`code-oss --install-extension`), переключение Ctrl+K Ctrl+T, закрепление `workbench.colorTheme` |
 | Отдельный JS-корень | docs/js-standalone-root.md | Паттерн «JS-проект вне воркспейса» (Vite vanilla): jsconfig (checkJs + strict:false для TS 7) + @webgpu/types (WebGPU во встроенном lib.dom отсутствует), vite-env.d.ts для import css, JSDoc-касты, Prettier табы ×2 (overrides для JSON), ESLint 9 flat, зеркалирование .vscode отдельного корня — рецепт «симптом → фикс» |
 | GitHub CI | docs/github-ci.md | CI «всё везде»: JS-проекты (матрица ubuntu/windows/macos + контейнеры alpine/arch/fedora, vitest-каркас, генератор tools/new-js-project.sh — CI-ready по умолчанию), воркспейс (intellisense-check + shellcheck + JSONC), шаблоны templates/{laravel,wordpress}-ci.yml (тема + e2e: mysql + wp-cli + Playwright Chromium) |
 
