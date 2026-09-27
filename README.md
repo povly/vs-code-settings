@@ -14,8 +14,8 @@ WordPress, Bitrix) и Rust-графики (winit + wgpu + Bevy). Никаких 
    (см. [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)).
 3. Live templates (сниппеты как в PhpStorm) уже в `.vscode/*.code-snippets` —
    наберите префикс (например `pubf`, `fore`, `bfore`, `vsfc`, `vref`, `cl`,
-   `bcomp`, `pfn`) и нажмите **Tab**. Каталог префиксов и CSS-приёмы —
-   в [docs/live-templates-and-css.md](docs/live-templates-and-css.md).
+   `bcomp`, `pfn`, `cs` — WGSL compute-шейдер) и нажмите **Tab**. Каталог
+   префиксов и CSS-приёмы — в [docs/live-templates-and-css.md](docs/live-templates-and-css.md).
    В окнах других проектов — после `tools/machine/install.sh` (user-уровень;
    без него workspace-сниппеты в чужих окнах не действуют — детали в гайде).
 4. Отступы: везде **табы шириной 2** (settings.json + .editorconfig),
@@ -179,7 +179,7 @@ workspace-члены. Гайд: [docs/rust-navigation-fix.md](docs/rust-navigati
 | Alpine.js | connorontheweb.alpinejs-tools + сниппеты `alp*` в html.code-snippets |
 | CSS / PostCSS | csstools.postcss (только подсветка; `.pcss`→`scss` для IntelliSense), vunguyentuan.vscode-css-variables (var(--) по проекту), встроенный color picker (naumovs.color-highlight — опционально, в комментариях extensions.json). Ловушка: при `postcss.config.js` в корне инсталла plain `*.css` перехватывается языком `postcss` (подсказки отключаются) — в `.vscode` проекта добавить `"*.css": "scss"`; WP-инсталл, открытый от корня WP, `.vscode` темы не применяет — зеркалить настройки в `.vscode` корня инсталла; известное ограничение: в файлах из одних `@define-mixin`-блоков списка свойств нет (`var(--)` работает) |
 | Rust / Bevy | rust-analyzer, CodeLLDB, crates, Even Better TOML |
-| wgpu / WGSL | polyMeilex.wgsl + сниппеты в wgsl.code-snippets |
+| wgpu / WGSL | wgsl-analyzer (LSP: completion, signature help по пользовательским fn, inlay-подсказки типов/параметров, диагностика naga, go-to-def; бинарь сервера в комплекте; подсветка WGSL и в строках Rust/Markdown; hover и сигнатуры builtin-функций — upstream в разработке, 09.2026) + форматтер wgslfmt (стиль фиксирован — 4 пробела, [wgsl]-блок выравнивает редактор) + сниппеты в wgsl.code-snippets (16) |
 | Продуктивность | REST Client (.http-тесты API), Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint + Mermaid, npm Intellisense, DotENV — вердикты и гайды: [docs/power-ups.md](docs/power-ups.md) |
 
 ## Чего НЕ ставим (платные функции)

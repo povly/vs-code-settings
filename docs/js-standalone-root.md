@@ -113,8 +113,9 @@ export default [
 ```
 
 3. WGSL-шейдеры — в `src/*.wgsl` (`import src from "./x.wgsl?raw"`, тип
-`string` из `vite/client`); подсветка — расширение `polyMeilex.wgsl`
-(установлено машинно из воркспейса), ассоциация `*.wgsl → wgsl` — глобально.
+`string` из `vite/client`); подсветка и LSP — расширение
+`wgsl-analyzer.wgsl-analyzer` (установлено машинно из воркспейса; сервер
+бандлит сам — внешних бинарей не нужно), ассоциация `*.wgsl → wgsl` — глобально.
 
 ## Чек-лист проверки
 

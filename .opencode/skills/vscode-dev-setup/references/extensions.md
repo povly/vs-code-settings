@@ -35,7 +35,7 @@
 | `vadimcn.vscode-lldb` | CodeLLDB — отладка Rust (lldb) |
 | `tamasfe.even-better-toml` | TOML: Cargo.toml с подсветкой и валидацией |
 | `serayuzgur.crates` | Подсказки версий крейтов в Cargo.toml |
-| `polyMeilex.wgsl` | Подсветка WGSL-шейдеров |
+| `wgsl-analyzer.wgsl-analyzer` | WGSL LSP (completion/hover/go-to-def/inlay hints, диагностика naga, форматтер wgslfmt — 4 пробела, [wgsl]-блок в settings); подсветка и в строках Rust |
 
 ## Качество жизни
 

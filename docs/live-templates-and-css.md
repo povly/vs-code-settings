@@ -97,10 +97,17 @@
 (mod tests), `res`, `errte` (thiserror), Bevy: `bcomp`, `bres`, `bevent`, `bsys`,
 `bsysq`, `bplugin`, `bapp`.
 
-#### WGSL — `wgsl.code-snippets` (6)
+#### WGSL — `wgsl.code-snippets` (23)
 
-`vs` (vertex-шейдер), `fs` (fragment), `st` (struct), `cbuf` (uniform-биндинг),
-`texb` (texture+sampler), `fn`.
+`vs` (vertex-шейдер), `fs` (fragment), `cs` (compute + workgroup_size), `st`
+(struct), `cbuf` (uniform-биндинг), `sbuf` (storage read/read_write), `texb`
+(texture+sampler), `tsample` (textureSample), `fn`, `var`, `let`, `const`,
+`for`, `loop` (continuing/break if), `vec` (vecN&lt;T&gt;), `arr` (array&lt;T, N&gt;).
+Атрибуты (серверный completion после `@` не реализован — issue wgsl-analyzer
+#312, закрыто клиентскими сниппетами): набирайте `@` + префикс:
+`ver` (@vertex), `frag` (@fragment), `comp` (@compute+@workgroup_size),
+`loc` (@location), `bui` (@builtin — выбор из частых), `gb`
+(@group+@binding), `intp` (@interpolate).
 
 ### Как добавить свой шаблон
 
@@ -165,7 +172,7 @@ tools/machine/install.sh
 | `rust` | `rust` | строго свой язык |
 | `wgsl` | `wgsl` | строго свой язык |
 
-Языки blade/wgsl/vue регистрируются расширениями (phpantom, polyMeilex.wgsl,
+Языки blade/wgsl/vue регистрируются расширениями (phpantom, wgsl-analyzer,
 Volar) — без расширения файл остаётся plaintext и сниппеты не подставятся.
 Регрессия — кейс 16b автотеста: в rust `asfn` ровно один, в js `cl` ровно
 один (кросс-язычная утечка ловится).
@@ -181,7 +188,7 @@ Volar) — без расширения файл остаётся plaintext и с
 | Проект (отдельный корень) | `.vue` | `vsfc` | ☐ | ☐ |
 | Проект (отдельный корень) | `.html` | `scriptm`, `alpshow` | ☐ | ☐ |
 | Проект (отдельный корень) | `.rs` | `pfn` | ☐ | ☐ |
-| Проект (отдельный корень) | `.wgsl` | `fn`, `vs` | ☐ | ☐ |
+| Проект (отдельный корень) | `.wgsl` | `fn`, `vs`, `cs` | ☐ | ☐ |
 | Воркспейс `_vscode` | те же файлы | те же префиксы | ☐ (дубли ожидаемы — см. ниже) | ☐ |
 
 Автоматическая верификация (2026-09-27, test-electron: профиль с
