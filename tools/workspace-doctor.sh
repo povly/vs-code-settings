@@ -87,7 +87,19 @@ for ext in junstyle.php-cs-fixer xdebug.php-debug vue.volar laravel.vscode-larav
 	fi
 done
 
-# 8. Снимок user settings не старше живого файла (анти-дрейф; WARN, не FAIL)
+# 8. WGSL (Rust/wgpu-трек): LSP wgsl-analyzer + [wgsl]-блок форматтера
+if has_ext "wgsl-analyzer.wgsl-analyzer"; then
+	ok "wgsl-analyzer: $(ls "$EXT_DIR" | grep -i '^wgsl-analyzer.wgsl-analyzer-' | head -n1)"
+else
+	bad "wgsl-analyzer не установлен — нет WGSL-подсказок/диагностики (code-oss --install-extension wgsl-analyzer.wgsl-analyzer)"
+fi
+if grep -q '"\[wgsl\]"' "$LIVE_SETTINGS" 2>/dev/null; then
+	ok "user settings: [wgsl]-блок — форматтер выровнен (4 пробела, стиль wgslfmt фиксирован)"
+else
+	note "WARN: в user settings нет [wgsl]-блока — редактор вне воркспейса будет вставлять табы, formatOnSave переписывать в пробелы (снимок machine/Code-OSS-User-settings.jsonc)"
+fi
+
+# 9. Снимок user settings не старше живого файла (анти-дрейф; WARN, не FAIL)
 if [ -f "$SNAPSHOT" ] && [ -f "$LIVE_SETTINGS" ]; then
 	if [ "$SNAPSHOT" -nt "$LIVE_SETTINGS" ] || [ "$SNAPSHOT" -ef "$LIVE_SETTINGS" ]; then
 		ok "снимок user settings актуальнее живого файла"
@@ -98,7 +110,7 @@ else
 	note "WARN: снимок ($SNAPSHOT) или живой settings не найдены — сравнение пропущено"
 fi
 
-# 9. Машинные live-templates: сниппеты развёрнуты на user-уровень (install.sh)
+# 10. Машинные live-templates: сниппеты развёрнуты на user-уровень (install.sh)
 REPO_SNIPPETS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.vscode"
 USER_SNIPPETS="${VSCODE_USER_SNIPPETS_DIR:-$HOME/.config/Code - OSS/User/snippets}"
 snip_missing=""

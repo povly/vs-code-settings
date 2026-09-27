@@ -20,6 +20,7 @@
 //   15)  vue-css-jump ≥ 0.3.0: JSDoc в карточке — описание компонента + доки пропсов (строгий)
 //   16)  live-templates: snippet-completion по всем 8 языкам (.code-snippets воркспейса)
 //   16b) scope-привязка: кросс-языковые сниппеты не протекают (asfn — rust без js; cl — js без php)
+//   17)  WGSL-трек: languageId .wgsl + snippet-completion расширенного набора (cs/sbuf/loop)
 const assert = require('assert');
 const path = require('path');
 
@@ -539,5 +540,44 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 			console.log(`DEBUG [test] кейс 16b ${lang} «${prefix}»: точных вхождений ${count} (snippet-items всего ${labels.length})`);
 			assert.strictEqual(count, 1, `${lang}: «${prefix}» ожидается ровно 1, получено ${count} — scope-привязка не работает?`);
 		}
+	});
+
+	// Кейс 17: WGSL-трек (регрессия «нет подсказок wgsl», 27.09.2026). Язык
+	// .wgsl обязан регистрироваться (plaintext → сниппеты/подсказки не матчатся),
+	// расширенный набор live-templates (6→16) — в подсказках.
+	it('кейс 17: WGSL — languageId + snippet-completion расширенного набора', async function () {
+		const vscode = require('vscode');
+		const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(path.join(FIXTURES, 'snippet.wgsl')));
+		await vscode.window.showTextDocument(doc);
+		assert.strictEqual(
+			doc.languageId,
+			'wgsl',
+			`.wgsl должен открываться языком «wgsl», получен «${doc.languageId}» — язык не зарегистрирован`,
+		);
+		const missing = [];
+		for (const prefix of ['cs', 'sbuf', 'loop']) {
+			const idx = doc.getText().indexOf(prefix);
+			assert.ok(idx >= 0, `якорь «${prefix}» не найден в snippet.wgsl`);
+			const pos = doc.positionAt(idx + prefix.length);
+			const found = await waitFor(`кейс 17 ${prefix}`, async () => {
+				const list = await vscode.commands.executeCommand(
+					'vscode.executeCompletionItemProvider',
+					doc.uri,
+					pos
+				);
+				const labels = (list.items || [])
+					.filter(i => i.kind === vscode.CompletionItemKind.Snippet)
+					.map(i => (typeof i.label === 'string' ? i.label : i.label && i.label.label))
+					.filter(Boolean);
+				return labels.includes(prefix) ? labels : null;
+			}, { timeoutMs: 10000, intervalMs: 500 });
+			if (found) {
+				console.log(`INFO [baseline] кейс 17: «${prefix}» ✓ (${found.length} snippet-items)`);
+			} else {
+				console.log(`WARN [baseline] кейс 17: «${prefix}» отсутствует`);
+				missing.push(prefix);
+			}
+		}
+		assert.ok(missing.length === 0, `новые WGSL-сниппеты не в подсказках: ${missing.join(', ')}`);
 	});
 });

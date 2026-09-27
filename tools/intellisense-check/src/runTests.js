@@ -84,7 +84,7 @@ async function main() {
 	try {
 		console.log('INFO [runTests] запуск VS Code test instance…');
 		// test-languages-ext — dev-расширение: регистрирует blade/wgsl/vue в тест-инстансе
-	// (реальные phpantom/polyMeilex.wgsl/Volar сюда не ставятся; без регистрации
+	// (реальные phpantom/wgsl-analyzer/Volar сюда не ставятся; без регистрации
 	// язык = plaintext и scoped-сниппеты кейса 16 не матчатся)
 	await runTests({
 		extensionTestsPath,
