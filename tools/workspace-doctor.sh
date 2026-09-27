@@ -98,6 +98,25 @@ else
 	note "WARN: снимок ($SNAPSHOT) или живой settings не найдены — сравнение пропущено"
 fi
 
+# 9. Машинные live-templates: сниппеты развёрнуты на user-уровень (install.sh)
+REPO_SNIPPETS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.vscode"
+USER_SNIPPETS="${VSCODE_USER_SNIPPETS_DIR:-$HOME/.config/Code - OSS/User/snippets}"
+snip_missing=""
+for f in "$REPO_SNIPPETS"/*.code-snippets; do
+	[ -e "$f" ] || break
+	[ -f "$USER_SNIPPETS/$(basename "$f")" ] || snip_missing="$snip_missing $(basename "$f")"
+done
+if [ -z "$snip_missing" ]; then
+	ok "live-templates: user-сниппеты развёрнуты ($(ls "$USER_SNIPPETS" 2>/dev/null | grep -c '\.code-snippets$') файлов)"
+else
+	note "WARN: live-templates не развёрнуты (tools/machine/install.sh):$snip_missing"
+fi
+if grep -q '"editor.tabCompletion"' "$LIVE_SETTINGS" 2>/dev/null; then
+	ok "user settings: editor.tabCompletion — Tab разворачивает сниппеты в любом окне"
+else
+	note "WARN: в user settings нет editor.tabCompletion — Tab вне воркспейса не развернёт сниппет (снимок machine/Code-OSS-User-settings.jsonc, секция подсказок)"
+fi
+
 echo "────────────────────────────────────────────────────────────────"
 echo " Итог: PASS=$PASS FAIL=$FAIL"
 [ "$FAIL" -eq 0 ]
