@@ -11,7 +11,7 @@
     "onecentlin.laravel-blade",          // Подсветка и сниппеты Blade
     "shufo.vscode-blade-formatter",      // Форматтер Blade (табы заданы в settings.json: bladeFormatter.format.useTabs)
     "xdebug.php-debug",                  // Отладка PHP через Xdebug (порт 9003)
-    "junstyle.php-cs-fixer",             // Форматирование PHP — единый [php]-форматтер; табы глобально через .vscode/.php-cs-fixer.php (setIndent "\t"); в Laravel-проектах CI — Pint (pint.json)
+    "junstyle.php-cs-fixer",             // Форматирование PHP — единый [php]-форматтер; табы глобально через .vscode/.php-cs-fixer.php (setIndent "\t"); CI Laravel-проектов — vendor/bin/php-cs-fixer fix --dry-run (Pint не умеет табы)
     "Recca0120.vscode-phpunit",          // Запуск тестов PHPUnit/Pest из редактора
     "johnbillion.vscode-wordpress-hooks",// WordPress: автодополнение хуков/экшенов/фильтров
     "mikestead.dotenv",                  // Подсветка .env (Laravel): ключи/значения не сливаются (MIT, стабильная)
@@ -52,6 +52,10 @@
   ],
 
   // ── Опциональные (косметика/комфорт — НЕ база; поставить при желании вручную) ──
+  // Темы на изучение (полный проверенный список — docs/themes.md; дефолт — Rosé Pine из базового списка):
+  // "Catppuccin.catppuccin-vsc",              // пастель, ближайший дух Rosé Pine (Latte/Frappé/Macchiato/Mocha)
+  // "enkia.tokyo-night",                      // тёмная + Day (светлая), чистый контраст
+  // "metaphore.kanagawa-vscode-color-theme",  // Wave/Dragon (тёмные) + Lotus (светлая)
   // "naumovs.color-highlight",         // подсветка web-цветов; интерактивный пикер — встроенный VS Code
   // "pkief.material-icon-theme",       // иконки файлов/папок
   // "oderwat.indent-rainbow",          // цветная подсветка отступов
