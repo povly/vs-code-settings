@@ -37,11 +37,12 @@ test → build) + job `linux-distros` — тот же конвейер В КОН
 
 ## Рецепт 2 — воркспейс _vscode (инструменты)
 
-`.github/workflows/ci.yml` воркспейса, три job:
+`.github/workflows/ci.yml` воркспейса, четыре job:
 
 | Job | Что | Нюансы |
 |---|---|---|
 | intellisense-check | `tools/intellisense-check` `npm test` (@vscode/test-electron) | Linux — `xvfb-run -a`; win/macos — GUI-харнесс, до стабилизации `continue-on-error` (ubuntu обязателен); кэш npm по `tools/intellisense-check/package-lock.json` |
+| vue-css-jump | `tools/vscode-vue-css-jump` `npm ci` + `npm run typecheck` + `npm test` (vitest, headless) | checkout с `submodules: recursive` — иначе каталог submodule-расширения в CI пуст; xvfb не нужен |
 | shellcheck | `shellcheck --severity=error tools/*.sh tools/machine/*.sh` | только реальные баги, не стилистика — первый прогон не краснит CI |
 | validate-jsonc | `php tools/validate-jsonc.php` + те же 14 файлов, что в задаче «JSONC» (`.vscode/tasks.json`) | setup-php 8.3 |
 
@@ -74,7 +75,7 @@ test → build) + job `linux-distros` — тот же конвейер В КОН
 ## Чек-лист зелёного прогона
 
 - [ ] js-webgpu: 3 ОС + alpine/arch/fedora — все шесть чеков зелёные
-- [ ] Воркспейс: intellisense-check (ubuntu обязателен), shellcheck, JSONC
+- [ ] Воркспейс: intellisense-check (ubuntu обязателен), vue-css-jump (submodule + vitest), shellcheck, JSONC
 - [ ] Новый проект из генератора: CI работает с первого пуша
 - [ ] Шаблон Laravel/WP скопирован, плейсхолдеры заменены, прогоны зелёные
 

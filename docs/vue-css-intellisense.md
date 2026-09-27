@@ -26,7 +26,7 @@
 | 7 | Hover/Ctrl+Click по пути в `src="…"` (`<style>`, вк. самозакрытый `<style … />`) молчат | Volar не предоставляет links/definitions/hover на src-атрибутах SFC-блоков; path-intellisense — completions-only | расширение `povly.vscode-vue-css-jump` ≥ 0.1.2 (Definition + Hover; самозакрытые блоки поддержаны); см. раздел vue-css-jump |
 | 8 | TS: `File '…​.css' is not a module` на внешние стили | `resolveStyleImports: true` генерирует `typeof import('./x.css')`; css-modules-kit типизирует строго `*.module.css` — plain `.css` остаётся без типа модуля | именовать ВСЕ внешние CSS-модули `*.module.css` (конвенция, см. «Дисциплина именования»); fallback — ambient-стаб `declare module '*.css'` (PR #5136) |
 | 9 | Blade: `Undefined variable '$page'` (Inertia) | `$page` приходит в runtime из Inertia-middleware — статически не резолвит ни один LSP | `@var`-докблок в app.blade.php (тип в hover) + `@see`-тропинка для навигации к источникам (пример ниже); заглушка — `[[diagnostics.ignore]]` identifier+message-regex в `~/.config/phpantom_lsp/.phpantom.toml` |
-| 10 | Hover по тегу компонента — стена генериков + import, пропсов не видно | Нативный Volar не строит читаемую сводку public API компонента | расширение `povly.vscode-vue-css-jump` ≥ 0.4.0 (карточка props/emits/v-model/expose с ts-подсветкой, ссылками на типы и их превью); нативно — Ctrl+Space внутри тега; см. раздел «Компоненты» |
+| 10 | Hover по тегу компонента — стена генериков + import, пропсов не видно | Нативный Volar не строит читаемую сводку public API компонента | расширение `povly.vscode-vue-css-jump` ≥ 0.4.0 (карточка props/emits/v-model/expose с ts-подсветкой, ссылками на типы и их превью; ≥ 0.5.0 — ещё hover по class-токену, сводка `$style`, карточка библиотечных компонентов); нативно — Ctrl+Space внутри тега; см. раздел «Компоненты» |
 
 ## Быстрая диагностика на машине (2 минуты)
 
@@ -394,10 +394,16 @@ v-model (`defineModel`), EXPOSE (`defineExpose`) + путь к файлу. Се�
 секция «Типы» с превью деклараций (до 5 типов, полностью). Ctrl+Click
 по тегу открывает сам компонент, а не import-строку. Резолвятся относительные
 импорты и алиасы tsconfig (`@/…`), спецификатор без `.vue` тоже. Библиотечные
-компоненты (bare-импорты, напр. `@inertiajs/vue3`) остаются на нативном Volar.
+компоненты (bare-импорты, напр. `@inertiajs/vue3`) получают минимальную
+карточку-источник (0.5.0), полный API — нативный Volar.
 Парсинг текстовый (не TS AST): `defineProps<NamedInterface>` (не литерал)
 даёт «нет объявленного API»; re-export'ы (`export type { A } from …`) для
 ссылок на типы не разворачиваются.
+
+С 0.5.0 hover работает и по стилям: статический `class="token"` в шаблоне —
+превью селектора с первыми декларациями и file:line (Ctrl+Click — переход,
+как и раньше); базовый токен `$style` — сводка CSS-модулей компонента
+(классы / внешние файлы / inline-блоки).
 
 **Как описывать компоненты** — обычный JSDoc, работает без настройки везде:
 
@@ -446,9 +452,14 @@ npm test            # есть дисплей; на headless-сервере: npm
 `<style … />` (строгий), HoverProvider по src-пути (строгий), completions
 `$style.` (exploratory)**, **кейсы 10/10a (0.2.0): карточка props/emits по
 hover тега компонента (строгий) и нативные completions атрибутов внутри
-тега (exploratory)**. VSIX vue-css-jump ставится в тестовый инстанс из
-`vendor/` (обновляется при релизе расширения). Особенности харнесса
-(не баги воркспейса):
+тега (exploratory)**, **кейсы 11–15 (0.5.0): diagnostics `<style src>` (нет
+файла → Error, module без `.module.css` → Warning, строгий), bracket-
+completion `$style['` (dashed-имена, строгий), «Типы:» + превью типов в
+карточке (строгий), definition+hover по статическому class-токену (строгий),
+JSDoc в карточке (строгий)**. VSIX vue-css-jump ставится в тестовый инстанс
+из `vendor/` — раннер сам берёт старший semver из `vendor/*.vsix` (забытый
+старый VSIX виден как WARN). Ожидания харнесса — retry-polling (`waitFor`),
+а не фиксированные sleep. Особенности харнесса (не баги воркспейса):
 
 - встроенный css-клиент тестового хоста не отвечает на запрос по префиксу
   посреди слова — кейс 1 проверяется на пустой позиции (фильтрация по префиксу

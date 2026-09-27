@@ -173,7 +173,7 @@ workspace-члены. Гайд: [docs/rust-navigation-fix.md](docs/rust-navigati
 | Laravel | официальное расширение laravel.vscode-laravel — Laravel LSP: completions/links для @include, view(), route(), config(), env, переводов, middleware, валидации |
 | WordPress | johnbillion.vscode-wordpress-hooks (хуки до WP 7.1) |
 | Bitrix | отдельного расширения нет — покрывается PHP-стеком; сниппеты добавляйте в `php.code-snippets` |
-| Vue / Vite | vuejs.volar (подсказки `$style`: inline `<style module>` — jsconfig/tsconfig + `vueCompilerOptions`; внешние CSS-модули — `*.module.css` + `mizdra.css-modules-kit-vscode` + `resolveStyleImports`/`cmkOptions.enabled` — см. [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)), **povly.vscode-vue-css-jump ≥ 0.4.0** (своё расширение: hover/Ctrl+Click по `<style src>`, прыжки и подсказки `$style.` без tsserver-цепочки, карточки props/emits/expose по hover любого компонента — ts-подсветка темы, кликабельные типы, превью деклараций; исходники `tools/vscode-vue-css-jump/`, установка из VSIX), ESLint, Prettier |
+| Vue / Vite | vuejs.volar (подсказки `$style`: inline `<style module>` — jsconfig/tsconfig + `vueCompilerOptions`; внешние CSS-модули — `*.module.css` + `mizdra.css-modules-kit-vscode` + `resolveStyleImports`/`cmkOptions.enabled` — см. [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md)), **povly.vscode-vue-css-jump ≥ 0.5.0** (своё расширение: hover/Ctrl+Click по `<style src>`, прыжки и подсказки `$style.` без tsserver-цепочки, карточки props/emits/expose по hover любого компонента — ts-подсветка темы, кликабельные типы, превью деклараций; hover по статическому class-токену с превью правила, сводка CSS-модулей по `$style`, карточка библиотечных компонентов; исходники `tools/vscode-vue-css-jump/`, установка из VSIX), ESLint, Prettier |
 | Alpine.js | connorontheweb.alpinejs-tools + сниппеты `alp*` в html.code-snippets |
 | CSS / PostCSS | csstools.postcss (только подсветка; `.pcss`→`scss` для IntelliSense), vunguyentuan.vscode-css-variables (var(--) по проекту), встроенный color picker (naumovs.color-highlight — опционально, в комментариях extensions.json). Ловушка: при `postcss.config.js` в корне инсталла plain `*.css` перехватывается языком `postcss` (подсказки отключаются) — в `.vscode` проекта добавить `"*.css": "scss"`; WP-инсталл, открытый от корня WP, `.vscode` темы не применяет — зеркалить настройки в `.vscode` корня инсталла; известное ограничение: в файлах из одних `@define-mixin`-блоков списка свойств нет (`var(--)` работает) |
 | Rust / Bevy | rust-analyzer, CodeLLDB, crates, Even Better TOML |
@@ -251,7 +251,8 @@ tools/intellisense-check/ — автотест IntelliSense (@vscode/test-electr
 tools/vscode-vue-css-jump/ — исходники расширения povly.vscode-vue-css-jump
                            (git submodule; адрес репозитория — .gitmodules;
                            hover/Ctrl+Click по <style src>, $style-подсказки,
-                           props/emits-карточки (0.4.0 — ts-подсветка, переходы к типам);
+                           props/emits-карточки, превью типов, hover по class-токену
+                           и базовому $style (0.5.0);
                            npm run package → VSIX → code-oss --install-extension)
 tools/machine/            — глобальный машинный сетап: install.sh (развёртывание
                            одной командой), снимок user settings (анти-дрейф —
@@ -261,7 +262,7 @@ tools/rust-doctor.sh     — PASS/FAIL диагностика Rust-тулчей�
 tools/workspace-doctor.sh — PASS/FAIL диагностика веб-стека (phpantom, xdebug,
                            машинный php-cs-fixer, расширения)
 tools/install-extensions.sh — CLI-установка всех рекомендаций extensions.json
-docs/                  — гайды: 8 рецептов настройки — см. раздел «Документация»
+docs/                  — гайды: 10 рецептов настройки — см. раздел «Документация»
 .ai-factory/           — контекст AI Factory (описание, правила, архитектура)
 ```
 # vs-code-settings
