@@ -1,5 +1,8 @@
 {
-	// Live templates для WGSL-шейдеров (wgpu)
+	// Live templates для WGSL-шейдеров (wgpu). Отступ в body — табы (\t).
+	// Каталог префиксов — docs/live-templates-and-css.md.
+	// Язык регистрирует wgsl-analyzer (LSP); сниппеты — клиентские,
+	// деплой на user-уровень — tools/machine/install.sh.
 	"vertex_shader": {
 		"prefix": "vs",
 		"scope": "wgsl",
@@ -26,6 +29,19 @@
 		],
 		"description": "fragment-шейдер"
 	},
+	"compute_shader": {
+		"prefix": "cs",
+		"scope": "wgsl",
+		"body": [
+			"@compute @workgroup_size(${1:x}, ${2:y}, ${3:z})",
+			"fn cs_${4:main}(",
+			"\t@builtin(global_invocation_id) ${5:id}: vec3<u32>,",
+			") {",
+			"\t${0}",
+			"}"
+		],
+		"description": "compute-шейдер с workgroup_size"
+	},
 	"struct": {
 		"prefix": "st",
 		"scope": "wgsl",
@@ -44,6 +60,14 @@
 		],
 		"description": "uniform-биндинг"
 	},
+	"storage_binding": {
+		"prefix": "sbuf",
+		"scope": "wgsl",
+		"body": [
+			"@group(0) @binding(0) var<storage, ${1|read,read_write|}> ${2:name}: array<${3:f32}>;"
+		],
+		"description": "storage-биндинг (read/read_write)"
+	},
 	"texture_binding": {
 		"prefix": "texb",
 		"scope": "wgsl",
@@ -52,6 +76,14 @@
 			"@group(0) @binding(1) var ${2:samp}: sampler;"
 		],
 		"description": "texture + sampler биндинги"
+	},
+	"texture_sample": {
+		"prefix": "tsample",
+		"scope": "wgsl",
+		"body": [
+			"let ${1:color} = textureSample(${2:tex}, ${3:samp}, ${4:uv});"
+		],
+		"description": "textureSample(текстура, сэмплер, uv)"
 	},
 	"entry_point": {
 		"prefix": "fn",
@@ -62,5 +94,124 @@
 			"}"
 		],
 		"description": "fn name() -> T"
+	},
+	"var_decl": {
+		"prefix": "var",
+		"scope": "wgsl",
+		"body": [
+			"var ${1:name}: ${2:f32} = ${3:0.0};"
+		],
+		"description": "var name: T = value"
+	},
+	"let_decl": {
+		"prefix": "let",
+		"scope": "wgsl",
+		"body": [
+			"let ${1:name} = ${2:value};"
+		],
+		"description": "let name = value"
+	},
+	"const_decl": {
+		"prefix": "const",
+		"scope": "wgsl",
+		"body": [
+			"const ${1:name}: ${2:f32} = ${3:0.0};"
+		],
+		"description": "const name: T = value (module-scope)"
+	},
+	"for_loop": {
+		"prefix": "for",
+		"scope": "wgsl",
+		"body": [
+			"for (var ${1:i} = 0u; ${1:i} < ${2:n}; ${1:i}++) {",
+			"\t${0}",
+			"}"
+		],
+		"description": "for-цикл (u32-счётчик)"
+	},
+	"loop_block": {
+		"prefix": "loop",
+		"scope": "wgsl",
+		"body": [
+			"loop {",
+			"\t${1:// тело}",
+			"\tcontinuing {",
+			"\t\tbreak if ${2:condition};",
+			"\t}",
+			"}"
+		],
+		"description": "loop + continuing / break if"
+	},
+	"vec_ctor": {
+		"prefix": "vec",
+		"scope": "wgsl",
+		"body": [
+			"vec${1|2,3,4|}<${2|f32,i32,u32|}>(${3:0.0})"
+		],
+		"description": "vecN<T>(…)"
+	},
+	"array_type": {
+		"prefix": "arr",
+		"scope": "wgsl",
+		"body": [
+			"array<${1:f32}, ${2:8}>"
+		],
+		"description": "array<T, N>"
+	},
+	"attr_vertex": {
+		"prefix": "ver",
+		"scope": "wgsl",
+		"body": [
+			"@vertex"
+		],
+		"description": "@vertex (атрибут stage)"
+	},
+	"attr_fragment": {
+		"prefix": "frag",
+		"scope": "wgsl",
+		"body": [
+			"@fragment"
+		],
+		"description": "@fragment (атрибут stage)"
+	},
+	"attr_compute": {
+		"prefix": "comp",
+		"scope": "wgsl",
+		"body": [
+			"@compute @workgroup_size(${1:x}, ${2:y}, ${3:z})"
+		],
+		"description": "@compute + @workgroup_size"
+	},
+	"attr_location": {
+		"prefix": "loc",
+		"scope": "wgsl",
+		"body": [
+			"@location(${1:0})"
+		],
+		"description": "@location(n)"
+	},
+	"attr_builtin": {
+		"prefix": "bui",
+		"scope": "wgsl",
+		"body": [
+			"@builtin(${1|position,vertex_index,fragment_index,global_invocation_id,local_invocation_id,workgroup_id,front_facing,sample_index,frag_depth,primitive_index|})"
+		],
+		"description": "@builtin(…) — выбор из частых"
+	},
+	"attr_group_binding": {
+		"prefix": "gb",
+		"scope": "wgsl",
+		"body": [
+			"@group(${1:0}) @binding(${2:0})"
+		],
+		"description": "@group(n) @binding(n)"
+	},
+	"attr_interpolate": {
+		"prefix": "intp",
+		"scope": "wgsl",
+		"body": [
+			"@interpolate(${1|perspective,linear,flat|})"
+		],
+		"description": "@interpolate(тип)"
 	}
 }
