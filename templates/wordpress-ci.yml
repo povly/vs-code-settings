@@ -1,0 +1,113 @@
+# WordPress CI — шаблон воркспейса _vscode.
+# Модель репо: ВЕСЬ WP-инсталл в git (как <wp-инсталл>-проекты воркспейса),
+# тема — wp-content/themes/<тема> (Sage/Acorn-стиль: composer.json, app/,
+# modules/, ACF). Копировать в <wp-инсталл>/.github/workflows/ci.yml.
+#
+# Две зоны:
+#   theme — статические проверки темы (кросс-ОС матрица, без БД);
+#   e2e   — Playwright smoke против поднято-в-CI WordPress (только ubuntu +
+#           Chromium; локальные webkit-прогоны против дев-домена остаются
+#           дев-сценарием — в CI браузер и BASE_URL переопределяются).
+
+name: CI (WordPress)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: wp-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  THEME_DIR: wp-content/themes/<тема>
+
+jobs:
+  theme:
+    name: theme · php ${{ matrix.php }} · ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        php: ["8.3", "8.4"]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: wp-content/themes/<тема>
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, dom
+          coverage: none
+      - name: Composer install (если composer.json есть)
+        shell: bash
+        run: |
+          if [ -f composer.json ]; then
+            composer install --prefer-dist --no-interaction --no-progress
+          fi
+      - name: php-cs-fixer (dry-run)
+        shell: bash
+        run: |
+          if [ -f vendor/bin/php-cs-fixer ]; then
+            php vendor/bin/php-cs-fixer fix --dry-run --diff
+          fi
+      - name: Tests (pest/phpunit при наличии)
+        shell: bash
+        run: |
+          if [ -f vendor/bin/pest ]; then php vendor/bin/pest --ci
+          elif [ -f vendor/bin/phpunit ]; then php vendor/bin/phpunit
+          fi
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: wordpress
+          MYSQL_USER: wp
+          MYSQL_PASSWORD: wp
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      WP_URL: http://127.0.0.1:8080
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, intl, pdo_mysql, dom
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: wp-cli
+        run: |
+          curl -sSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o wp-cli.phar
+          chmod +x wp-cli.phar
+      - name: WP config + install
+        run: |
+          php wp-cli.phar config create --dbname=wordpress --dbuser=wp --dbpass=wp --dbhost=127.0.0.1 --skip-check
+          php wp-cli.phar core install --url="$WP_URL" --title=CI --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email
+      - name: PHP built-in server
+        run: nohup php -S 127.0.0.1:8080 -t . > server.log 2>&1 &
+      - name: Playwright (Chromium)
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          # Локальный playwright.config.ts бьёт по дев-домену/webkit:
+          # в CI переопределяем базовый URL и проект браузера через env
+          # (поддержать в конфиге: baseURL: process.env.WP_URL ?? 'http://<домен>')
+          npx playwright test --project=chromium
+        env:
+          WP_URL: ${{ env.WP_URL }}

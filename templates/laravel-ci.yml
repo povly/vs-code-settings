@@ -1,0 +1,46 @@
+# Laravel CI — шаблон воркспейса _vscode.
+# Копировать в <проект>/.github/workflows/ci.yml нового Laravel-проекта.
+# Требования к проекту: dev-зависимость friendsofphp/php-cs-fixer с проектным
+# .php-cs-fixer.php (табы ×2 — шаблон в docs/clean-problems-formatting.md);
+# юнит-тесты на sqlite :memory: (прод-БД MySQL — CI-юниты на sqlite,
+# стандартная практика).
+
+name: CI (Laravel)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: laravel-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: php ${{ matrix.php }} · ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        php: ["8.3", "8.4"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, pdo_sqlite
+          coverage: none
+      - name: Composer install
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: php-cs-fixer (dry-run)
+        run: php vendor/bin/php-cs-fixer fix --dry-run --diff
+      - name: Tests (pest или phpunit, sqlite :memory:)
+        shell: bash
+        run: |
+          if [ -f vendor/bin/pest ]; then
+            php vendor/bin/pest --ci
+          else
+            php vendor/bin/phpunit
+          fi

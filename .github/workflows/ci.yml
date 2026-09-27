@@ -1,0 +1,70 @@
+name: CI (workspace tools)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: workspace-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Автотест IntelliSense (@vscode/test-electron): чистый инстанс VS Code,
+  # кейсы vue-css-jump и CSS-подсказок. Linux — через xvfb; Windows/macOS
+  # запускаются в сессии раннера (GUI-харнесс — если зафлейкает, фикс по факту).
+  intellisense-check:
+    name: intellisense-check · ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/intellisense-check/package-lock.json
+      - name: xvfb (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+      - name: npm ci
+        working-directory: tools/intellisense-check
+        run: npm ci
+      - name: test (Linux, xvfb)
+        if: runner.os == 'Linux'
+        working-directory: tools/intellisense-check
+        run: xvfb-run -a npm test
+      - name: test (Windows/macOS)
+        if: runner.os != 'Linux'
+        working-directory: tools/intellisense-check
+        run: npm test
+        # GUI-харнесс на win/macos — не блокирует общий статус до стабилизации
+        # (ubuntu — обязательный). Снять флаг после стабильных прогонов.
+        continue-on-error: true
+
+  # Синтаксис shell-скриптов воркспейса. --severity=error: стилистику не ловим,
+  # только реальные баги (первый прогон не должен краснить CI).
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: shellcheck tools
+        run: shellcheck --severity=error tools/*.sh tools/machine/*.sh
+
+  # JSONC-валидация .vscode-конфигов и сниппетов (те же 14 файлов,
+  # что и в задаче «Валидация JSONC-конфигов» .vscode/tasks.json)
+  validate-jsonc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+      - name: validate JSONC
+        run: php tools/validate-jsonc.php .vscode/settings.json .vscode/extensions.json .vscode/tasks.json .vscode/keybindings.json .vscode/launch.json opencode.json .vscode/php.code-snippets .vscode/blade.code-snippets .vscode/vue.code-snippets .vscode/javascript.code-snippets .vscode/html.code-snippets .vscode/css.code-snippets .vscode/rust.code-snippets .vscode/wgsl.code-snippets
