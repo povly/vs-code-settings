@@ -7,7 +7,7 @@
 
 - Отступы: **табы шириной 2** во всех языках (PHP, JS, Vue, CSS, PostCSS, Rust, WGSL); JSON/YAML — 2 пробела (синтаксис JSON не допускает сырых табов в строках)
 - Источник правды — `.editorconfig`; в VS Code `editor.detectIndentation: false` (отступы не «угадываются»)
-- Форматирование при сохранении: Prettier (JS/Vue/CSS/HTML/JSON), php-cs-fixer/Pint (PHP), blade-formatter (Blade), rustfmt (Rust)
+- Форматирование при сохранении: Prettier (JS/Vue/CSS/HTML/JSON), php-cs-fixer (PHP; Laravel Pint НЕ использовать — не умеет табы: `indentation_type` берёт отступ из `Config->getIndent()`, который Pint не экспонирует), blade-formatter (Blade), rustfmt (Rust)
 
 ## Машинный уровень конфигурации (global-first)
 

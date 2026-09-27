@@ -48,7 +48,8 @@
   // символ отступа живёт в Config->setIndent (дефолт 4 пробела), правилами
   // не переключается (проверено CLI: «Fixed 0» на файле с пробелами).
   // Отдельные корни (WP/Bitrix вне воркспейса): копировать .php-cs-fixer.php
-  // в корень инсталла. Laravel CI: Pint + pint.json (то же правило).
+  // в корень инсталла. Laravel CI: `vendor/bin/php-cs-fixer fix --dry-run`
+  // (Pint не умеет табы — не использовать).
   // Схема phpantom [formatting] отпала: встроенный форматтер PER-CS 2.0 —
   // 4 пробела без опций отступа. Подробности: docs/clean-problems-formatting.md
   "php-cs-fixer.config": ".vscode/.php-cs-fixer.php",

@@ -69,7 +69,7 @@ path = "upload/**"
 identifier = "unknown_member"
 message = "^Property '[^']+' not found on class 'WP_Post'$"
 
-# PHPCS-прокси выключен (стиль — Pint/php-cs-fixer, не PHPCS)
+# PHPCS-прокси выключен (стиль — php-cs-fixer, не PHPCS/Pint)
 [phpcs]
 command = ""
 ```
@@ -116,7 +116,6 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
   HTML-атрибуты в php-файлах не переносит. Выносить разметку в blade или
   переносить вручную; менять `[php]`-форматтер на HTML-форматтер нельзя —
   сломается «один форматтер на язык» и табы ×2 в PHP.
-
 
 ## PHP: табы (php-cs-fixer), Rector
 

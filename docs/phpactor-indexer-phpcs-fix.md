@@ -9,13 +9,16 @@
 > **Актуализация 25.09.2026:** `stoildobreff.php-resolver` убран из рекомендаций
 > воркспейса (дубль возможностей phpantom + сам ложный тост); ключ
 > `"phpResolver.phpSnifferCommand": ""` в проектах больше не нужен.
+> **Актуализация 27.09.2026:** упомянутый ниже стиль «Laravel Pint» — состояние
+> кейса на тот момент; канон воркспейса — php-cs-fixer (Pint не умеет табы —
+> docs/clean-problems-formatting.md).
 > Гайд ниже сохранён как история инцидента.
 
 ## Симптомы
 
 1. Падение сервиса индексации phpactor:
 
-   ```
+   ```text
    Error in service "indexer"
    "Phpactor\Extension\LanguageServerIndexer\Handler\IndexerHandler:{closure:...ServiceManager::start():78}":
    SplFileInfo::getSize(): stat failed for
@@ -24,7 +27,7 @@
 
 2. Периодический тост:
 
-   ```
+   ```text
    phpcs - Mismatch configuration provided
    ```
 
@@ -38,8 +41,8 @@
   Сервер запускается с cwd = корень проекта и читает проектный `.phpactor.json`.
 - Дефолтные `indexer.exclude_patterns` (phpactor 2026.07.22):
 
-  ```
-  /vendor/**/Tests/**/*
+   ```text
+   /vendor/**/Tests/**/*
   /vendor/**/tests/**/*
   /vendor/composer/**/*
   /vendor/rector/rector/stubs-rector
@@ -78,8 +81,8 @@
   ошибка конфигурации) и показывает ложное «Mismatch configuration provided».
   Сама конфигурация корректна; это баг маппинга в php-resolver (`src/PHPCs.js`,
   `case 3`).
-- Стиль кода в <laravel-проект> задаёт **Laravel Pint** (`vendor/bin/pint`),
-  phpcs там избыточен; диагностики расширение всё равно не показывает
+- Стиль кода в <laravel-проект> на момент кейса задавал **Laravel Pint**
+  (`vendor/bin/pint`), phpcs там был избыточен; диагностики расширение всё равно не показывает
   (соответствующий код в PHPCs.js закомментирован) — только тост.
 
 ## Что изменено
