@@ -45,6 +45,30 @@ jobs:
         # (ubuntu — обязательный). Снять флаг после стабильных прогонов.
         continue-on-error: true
 
+  # Unit-тесты и typecheck собственного расширения vue-css-jump (submodule):
+  # vitest headless — xvfb не нужен. checkout обязан инициализировать submodules,
+  # иначе каталог расширения в CI пуст.
+  vue-css-jump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/vscode-vue-css-jump/package-lock.json
+      - name: npm ci
+        working-directory: tools/vscode-vue-css-jump
+        run: npm ci
+      - name: typecheck
+        working-directory: tools/vscode-vue-css-jump
+        run: npm run typecheck
+      - name: unit tests (vitest)
+        working-directory: tools/vscode-vue-css-jump
+        run: npm test
+
   # Синтаксис shell-скриптов воркспейса. --severity=error: стилистику не ловим,
   # только реальные баги (первый прогон не должен краснить CI).
   shellcheck:
