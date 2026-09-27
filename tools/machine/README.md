@@ -9,7 +9,7 @@
 
 | Файл | Назначение |
 |---|---|
-| `install.sh` | Развёртывание машинного уровня **одной командой**: mkdir `~/.config/vscode-php-cs-fixer/` + копия конфигов + wrapper (755). Идемпотентен, логирует каждый шаг |
+| `install.sh` | Развёртывание машинного уровня **одной командой**: mkdir `~/.config/vscode-php-cs-fixer/` + копия конфигов + wrapper (755); live-templates: 8 файлов `.vscode/*.code-snippets` → `~/.config/Code - OSS/User/snippets/` (сниппеты в любом окне). Идемпотентен, логирует каждый шаг |
 | `export-user-settings.sh` | Анти-дрейф снимка: перезаписывает `Code-OSS-User-settings.jsonc` из живого user settings (запускать после изменения глобальных ключей) |
 | `vscode-php-cs-fixer.php` | Машинный конфиг php-cs-fixer: табы ×2 + PSR12 + `array_indentation`. Копируется в `~/.config/vscode-php-cs-fixer/.php-cs-fixer.php` |
 | `php-cs-fixer-wrapper.sh` | Silent-wrapper (обязателен): cwd = `~/.config/vscode-php-cs-fixer` — гасит WARN «Unable to determine minimum PHP version…» и фильтрует баннер fixer'а из stderr (баг junstyle 0.3.21: `files==0` + непустой stderr → «provider FAILED» — падало каждое сохранение уже-чистого файла). Настоящие ошибки проходят насквозь. Механика — docs/clean-problems-formatting.md |
@@ -26,7 +26,10 @@
    ```
 
    Скрипт создаёт `~/.config/vscode-php-cs-fixer/`, копирует конфиг и служебный
-   composer.json, ставит wrapper с правами 755. Wrapper обязателен: устраняет WARN
+   composer.json, ставит wrapper с правами 755 и раскладывает live-templates:
+   8 файлов `.vscode/*.code-snippets` → `~/.config/Code - OSS/User/snippets/` —
+   сниппеты действуют в ЛЮБОМ окне, не только в воркспейсе (гайд:
+   docs/live-templates-and-css.md). Wrapper обязателен: устраняет WARN
    «Unable to determine minimum PHP version…» на каждом сохранении и баг
    junstyle 0.3.21 «provider FAILED» на уже-чистых файлах (механика и
    регресс-чек —
@@ -60,7 +63,8 @@
    `[html]`/`[markdown]`-форматтеры, `editor.formatOnSave` в `[js-блоках]`,
    `editor.codeActionsOnSave: {"source.fixAll.eslint": "explicit"}` (no-op без
    eslint-конфига), `editor.formatOnPaste`, suggest-ключи (`suggest.preview`,
-   `parameterHints`, `snippetSuggestions`), файловая гигиена
+   `parameterHints`, `snippetSuggestions`, `editor.tabCompletion` — Tab-разворот
+   сниппетов), файловая гигиена
    (`files.eol`/finalNewline/trim). JS-корни вне воркспейса НЕ кладут
    `.prettierrc`/`.vscode` — редактор форматирует значениями user settings
    (гайд: docs/js-standalone-root.md); `.prettierrc` — только под CLI/CI

@@ -16,6 +16,8 @@ WordPress, Bitrix) и Rust-графики (winit + wgpu + Bevy). Никаких 
    наберите префикс (например `pubf`, `fore`, `bfore`, `vsfc`, `vref`, `cl`,
    `bcomp`, `pfn`) и нажмите **Tab**. Каталог префиксов и CSS-приёмы —
    в [docs/live-templates-and-css.md](docs/live-templates-and-css.md).
+   В окнах других проектов — после `tools/machine/install.sh` (user-уровень;
+   без него workspace-сниппеты в чужих окнах не действуют — детали в гайде).
 4. Отступы: везде **табы шириной 2** (settings.json + .editorconfig),
    VS Code не «угадывает» отступы (`detectIndentation: false`); JSON/YAML/TOML —
    2 пробела (в JSON-строках сырые табы запрещены). Символы пробелов не
