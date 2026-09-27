@@ -9,6 +9,22 @@
 - Источник правды — `.editorconfig`; в VS Code `editor.detectIndentation: false` (отступы не «угадываются»)
 - Форматирование при сохранении: Prettier (JS/Vue/CSS/HTML/JSON), php-cs-fixer/Pint (PHP), blade-formatter (Blade), rustfmt (Rust)
 
+## Машинный уровень конфигурации (global-first)
+
+- Редакторское поведение — в **машинных user settings** Code OSS
+  (`~/.config/Code - OSS/User/settings.json`), НЕ в `.vscode/` проектов:
+  отступы, формат-on-save, форматтеры per-lang, `prettier.*`,
+  `source.fixAll.eslint`, подсказки, файловая гигиена, excludes,
+  `files.associations`
+- Анти-дрейф: после изменения глобальных ключей — `tools/machine/export-user-settings.sh`
+  (снимок `tools/machine/Code-OSS-User-settings.jsonc` — источник для переноса)
+- В проект — только незаменимые языковые файлы: JS — `jsconfig.json` +
+  `src/vite-env.d.ts` (+ `@webgpu/types` для WebGPU), `eslint.config.js`
+  (flat config глобальным не бывает), `.editorconfig` (editorconfig не имеет
+  fallback вне `$HOME`); `.prettierrc`/`.php-cs-fixer.php` — только для CLI/CI
+- Новые JS-корни — генератором `tools/new-js-project.sh <каталог> [--webgpu]`
+  (CI-готовы: vitest-каркас + workflow), не копированием конфигов руками
+
 ## Конвенции именования
 
 - **PHP / Laravel:** PSR-12 — классы `PascalCase`, методы/переменные `camelCase`,

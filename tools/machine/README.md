@@ -51,8 +51,22 @@
    "bladeFormatter.format.indentSize": 2,
    "bladeFormatter.format.wrapAttributes": "auto",
    "prettier.useTabs": true,
-   "prettier.tabWidth": 2
+   "prettier.tabWidth": 2,
+   "prettier.singleAttributePerLine": true
    ```
+
+   **JS — тоже глобально** (2026-09-26): в снимке дополнительно —
+   `formatOnSave` для js/ts/css/scss/html/md/json(`c`)/yaml +
+   `[html]`/`[markdown]`-форматтеры, `editor.formatOnSave` в `[js-блоках]`,
+   `editor.codeActionsOnSave: {"source.fixAll.eslint": "explicit"}` (no-op без
+   eslint-конфига), `editor.formatOnPaste`, suggest-ключи (`suggest.preview`,
+   `parameterHints`, `snippetSuggestions`), файловая гигиена
+   (`files.eol`/finalNewline/trim). JS-корни вне воркспейса НЕ кладут
+   `.prettierrc`/`.vscode` — редактор форматирует значениями user settings
+   (гайд: docs/js-standalone-root.md); `.prettierrc` — только под CLI/CI
+   (таблица ниже). Новые JS-проекты — генератором
+   `tools/new-js-project.sh <каталог> [--webgpu]` (jsconfig + ESLint +
+   vitest-каркас + CI-workflow). Паттерны CI — docs/github-ci.md.
 
 ## Ключевой факт (почему НЕ pint)
 

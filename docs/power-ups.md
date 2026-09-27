@@ -1,4 +1,4 @@
-[← Предыдущий гайд](clean-problems-formatting.md) · [К README](../README.md)
+[← Предыдущий гайд](clean-problems-formatting.md) · [К README](../README.md) · [Следующий гайд →](js-standalone-root.md)
 
 # Productivity Power-Ups: расширения-2026, фичи редактора, горячие клавиши
 

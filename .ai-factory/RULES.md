@@ -10,3 +10,4 @@
 - В коммит-сообщениях никаких клиентских/проектных идентификаторов и путей реальных инсталлов — conventional commits, обезличенно
 - Пути реальных инсталлов не хардкодить в скриптах/артефактах — только через env/параметры (пример: `THEME_DIR` в диагностических харнессах tools/intellisense-check)
 - Все AI-артефакты (планы, патчи, RESEARCH, кейсы тестов, фикстуры) обезличивать ДО сохранения: перед записью проверять на имена клиентов/тем/домены
+- Global-first: редакторское поведение (отступы, формат-on-save, форматтеры, `prettier.*`, `fixAll.eslint`, подсказки, гигиена, ассоциации) — только в машинных user settings Code OSS (снимок `tools/machine/Code-OSS-User-settings.jsonc`), НЕ в `.vscode/` проектов; в проект — только `jsconfig.json` + `src/vite-env.d.ts` + `eslint.config.js` + `.editorconfig` (`.prettierrc`/`.php-cs-fixer.php` — только CLI/CI); новые JS-корни — `tools/new-js-project.sh <каталог> [--webgpu]`

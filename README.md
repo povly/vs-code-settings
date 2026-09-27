@@ -205,6 +205,8 @@ Intelephense…»).
 | [docs/rust-navigation-fix.md](docs/rust-navigation-fix.md) | Навигация во вложенных крейтах: `[workspace] members` в корневом Cargo.toml (без glob `"*"`), механика discovery rust-analyzer, linkedProjects-фолбэк, чек-лист проверки |
 | [docs/rust-senior-setup.md](docs/rust-senior-setup.md) | Сеньор-сетап «всё глобально»: clippy + rustfmt (табы ×2) на сохранении, Run/Debug-лензы, bacon, just, алиасы `cargo c/t/cl/f/fc`, health-check `tools/rust-doctor.sh`, рецепт «новый проект за 30 секунд» |
 | [docs/power-ups.md](docs/power-ups.md) | Расширения-2026 с вердиктами Open VSX (REST Client, Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint + Mermaid, DotENV), задачи tasks.json, keybindings Alt+R/A/M/L, live templates invk/mig12/useTplRef/useid |
+| [docs/js-standalone-root.md](docs/js-standalone-root.md) | Паттерн «отдельный JS-корень» (Vite vanilla JS): jsconfig (checkJs + strict:false) + @webgpu/types (WebGPU во встроенном lib.dom нет), vite-env.d.ts, JSDoc-касты, Prettier табы ×2, ESLint 9 flat, зеркалирование .vscode — подсказки/переходы/форматирование вне воркспейса |
+| [docs/github-ci.md](docs/github-ci.md) | GitHub CI «всё везде»: JS-проект (матрица 3 ОС + alpine/arch/fedora-контейнеры, vitest-каркас), воркспейс (intellisense-check/shellcheck/JSONC), шаблоны templates/ для Laravel и WordPress (тема + e2e с wp-cli/Playwright) |
 
 Внутренние документации и AI-контекст:
 
