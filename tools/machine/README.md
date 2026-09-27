@@ -72,6 +72,20 @@
    `tools/new-js-project.sh <каталог> [--webgpu]` (jsconfig + ESLint +
    vitest-каркас + CI-workflow). Паттерны CI — docs/github-ci.md.
 
+## Анти-дрейф снимка user settings
+
+Снимок `Code-OSS-User-settings.jsonc` — справочник переноса; источник правды —
+живой `~/.config/Code - OSS/User/settings.json`. Регламент синхронизации:
+
+1. Изменили глобальные ключи (user settings) → запустить
+   `tools/machine/export-user-settings.sh` — снимок перезапишется.
+2. Сверить diff снимка с `.vscode/settings.json` воркспейса: общие ключи
+   (отступы, форматтеры, `prettier.*`, гигиена) не должны разъезжаться.
+   Расхождение = WARN: чинить сразу — либо в живом файле, либо в воркспейсе.
+3. Зафиксировать снимок коммитом (вместе с сопутствующей правкой воркспейса).
+4. Обратное направление (правка воркспейса → машина): перенести ключи в живой
+   user settings вручную, затем снова шаг 1.
+
 ## Ключевой факт (почему НЕ pint)
 
 **Laravel Pint не умеет табы**: правило `indentation_type` в php-cs-fixer 3.9x

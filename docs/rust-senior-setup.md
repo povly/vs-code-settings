@@ -28,7 +28,7 @@
 
 ### Алиасы cargo (в любом проекте)
 
-```
+```text
 cargo c   → cargo check --workspace
 cargo t   → cargo test --workspace
 cargo cl  → cargo clippy --workspace
@@ -38,7 +38,7 @@ cargo fc  → cargo fmt --all --check (табы ×2)
 
 ### just -g (в любом cargo-проекте)
 
-```
+```text
 just -g test | build | clippy | fmt | check | watch | watch-test | run
 ```
 
@@ -57,6 +57,7 @@ cargo new my-project && cd my-project
 #   members = ["sub-crate"]
 code-oss .
 ```
+
 Всё остальное (форматирование, clippy, ленз, алиасы, bacon, just) уже глобально.
 Проверка окружения: `tools/rust-doctor.sh` (из корня репо).
 

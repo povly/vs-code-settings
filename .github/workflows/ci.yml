@@ -91,4 +91,17 @@ jobs:
           php-version: "8.3"
           coverage: none
       - name: validate JSONC
-        run: php tools/validate-jsonc.php .vscode/settings.json .vscode/extensions.json .vscode/tasks.json .vscode/keybindings.json .vscode/launch.json opencode.json .vscode/php.code-snippets .vscode/blade.code-snippets .vscode/vue.code-snippets .vscode/javascript.code-snippets .vscode/html.code-snippets .vscode/css.code-snippets .vscode/rust.code-snippets .vscode/wgsl.code-snippets
+        run: php tools/validate-jsonc.php .vscode/settings.json .vscode/extensions.json .vscode/tasks.json .vscode/keybindings.json .vscode/launch.json opencode.json .vscode/php.code-snippets .vscode/blade.code-snippets .vscode/vue.code-snippets .vscode/javascript.code-snippets .vscode/html.code-snippets .vscode/css.code-snippets .vscode/rust.code-snippets .vscode/wgsl.code-snippets .markdownlint-cli2.jsonc
+
+  # Качество markdown-доков (markdownlint-cli2); исключения — .markdownlint-cli2.jsonc
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: install markdownlint-cli2
+        run: npm install -g markdownlint-cli2@0.23
+      - name: lint markdown
+        run: markdownlint-cli2 "README.md" "AGENTS.md" "docs/*.md"

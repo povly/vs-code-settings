@@ -92,7 +92,7 @@ phpantom_lsp analyze <wp-инсталл>/wp-content/themes/<тема>/app \
 
 - Расширение PHPantom владеет бинарником: кеш
   `~/.config/Code - OSS/User/globalStorage/phpantom.phpantom/bin/<tag>/<platform>/phpantom_lsp`
-  + маркер `bin/latest.json` (`{"tagName": "..."}`), autoUpdate обновляет кеш.
+  плюс маркер `bin/latest.json` (`{"tagName": "..."}`), autoUpdate обновляет кеш.
 - НЕ задавать `phpantom.serverPath` — закрепление пути отключает autoUpdate.
 - CLI-мост (для `analyze` в регресс-чеках): `~/.local/bin/phpantom_lsp` —
   sh-обёртка, читающая `latest.json` и exec'ающая бинарник из кеша расширения.

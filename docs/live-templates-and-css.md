@@ -13,6 +13,7 @@
 курсор прыгает по «аргументам», Tab/Shift+Tab — вперёд/назад.
 
 Что включено в settings.json:
+
 - `editor.tabCompletion: "onlySnippets"` — Tab разворачивает сниппет;
 - `editor.snippetSuggestions: "top"` — шаблоны первыми в списке подсказок.
 
@@ -327,7 +328,7 @@ clamp(14px, calc(14px + (18 - 14) * (100vw - 320px) / (1200 - 320)), 18px)
 
 Префикс `fluid` → Tab → идентичная формула, параметры — табами:
 
-```
+```text
 fluid → clamp(14px, calc(14px + (4) * (100vw - 320px) / (880)), 18px)
 ```
 
@@ -374,7 +375,6 @@ export default defineConfig({
   ],
 })
 ```
-
 
 | Действие | Клавиши |
 |---|---|

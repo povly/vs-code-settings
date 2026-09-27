@@ -1,0 +1,18 @@
+{
+  // markdownlint-cli2 — конфиг воркспейса (CI-job «markdownlint» + локально `npx markdownlint-cli2`)
+  // MD013 (line-length) off: длинные русские строки и таблицы гайдов — перенос не нужен
+  // MD041 (first-line-heading) off: гайды начинаются с нав-строки ссылок [← …], не с заголовка
+  // MD010 (no-hard-tabs) off: табы в примерах кода — конвенция воркспейса (табы ×2 везде)
+  // MD060 (table-column-style) off: часть таблиц гайдов в compact-стиле; унификация не планируется
+  // MD038 (spaces-in-code) off: `` `<Button ` `` и т.п. — осознанный контент (синтаксис шаблонов)
+  // MD029 (ol-prefix) off: гайды ведут сквозную нумерацию 1→2→3 через код-блоки
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD041": false,
+    "MD010": false,
+    "MD060": false,
+    "MD038": false,
+    "MD029": false
+  }
+}
