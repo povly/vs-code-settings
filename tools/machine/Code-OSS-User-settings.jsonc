@@ -148,6 +148,17 @@
     // Логи LSP: Output → Rust Analyzer (при проблемах переключать в "verbose")
     "rust-analyzer.trace.server": "messages",
 
+    // WGSL — форматтер wgsl-analyzer (встроенный wgslfmt): стиль фиксирован
+    // (4 пробела; клиентские опции сервер игнорирует — конфиг-ключей отступа
+    // в схеме нет). Редактор выровнен под выход форматтера, иначе табы ↔
+    // пробелы зациклятся с formatOnSave. Зеркала: .vscode воркспейса + .editorconfig
+    "[wgsl]": {
+        "editor.defaultFormatter": "wgsl-analyzer.wgsl-analyzer",
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true
+    },
+
     // ═══ IntelliSense CSS/Vue/Laravel — глобально (источник: воркспейс _vscode,
     //      гайд: docs/vue-css-intellisense.md в _vscode) ═══
 

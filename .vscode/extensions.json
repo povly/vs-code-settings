@@ -32,7 +32,7 @@
     "vadimcn.vscode-lldb",               // CodeLLDB: отладка Rust
     "tamasfe.even-better-toml",          // TOML (Cargo.toml, phpantom.toml) + форматтер
     "serayuzgur.crates",                 // Версии крейтов в Cargo.toml
-    "polyMeilex.wgsl",                   // WGSL-шейдеры (wgpu)
+    "wgsl-analyzer.wgsl-analyzer",       // WGSL LSP (in-tree, как rust-analyzer): completion/hover/go-to-def/inlay hints/диагностика; бинарь сервера качает сам; подсветка WGSL и в строках Rust (wgpu/Bevy). Заменил PolyMeilex.wgsl 27.09.2026 — та была грамматика+globals-подсказки без LSP, последнее обновление 02.2024, валидация требовала внешний cargo-wgsl
 
     // ── Инструменты и данные (11) ──
     "usernamehw.errorlens",              // Ошибки прямо в строке (шум от vendor погашен path-ignore)

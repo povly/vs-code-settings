@@ -81,6 +81,17 @@
     "editor.insertSpaces": true,
     "editor.tabSize": 2
   },
+  // WGSL — форматтер wgsl-analyzer (встроенный wgslfmt): стиль фиксирован
+  // (4 пробела; клиентские опции tabSize/insertSpaces сервер игнорирует —
+  // проверено LSP-тестом 27.09.2026, конфиг-ключей отступа в схеме нет —
+  // только wgslfmt_override_command/extra_args для внешнего форматтера).
+  // Редактор выровнен под выход форматтера (как [php] под php-cs-fixer),
+  // иначе табы ↔ пробелы зациклятся с formatOnSave. Зеркало — .editorconfig
+  "[wgsl]": {
+    "editor.defaultFormatter": "wgsl-analyzer.wgsl-analyzer",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
+  },
   // Явные prettier-блоки: ровно один форматтер на язык → нет диалога
   // «Multiple Formatters», Ctrl+Shift+I (Format Document) ≡ Ctrl+S
   "[javascript]": {

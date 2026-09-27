@@ -18,5 +18,11 @@ trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2
 
+# WGSL — пробелы ×4: стиль фиксирован форматтером wgsl-analyzer (встроенный
+# wgslfmt, опции клиента не поддерживает); ping-pong с formatOnSave исключаем
+[*.wgsl]
+indent_style = space
+indent_size = 4
+
 [Makefile]
 indent_style = tab
