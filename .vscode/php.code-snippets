@@ -3,6 +3,7 @@
 	// Расширение по Tab: включите "editor.tabCompletion": "onlySnippets" в settings.json
 	"pubf": {
 		"prefix": "pubf",
+		"scope": "php,blade",
 		"body": [
 			"public function ${1:name}(${2})",
 			"{",
@@ -13,6 +14,7 @@
 	},
 	"pubfr": {
 		"prefix": "pubfr",
+		"scope": "php,blade",
 		"body": [
 			"public function ${1:name}(${2}): ${3:ReturnType}",
 			"{",
@@ -23,6 +25,7 @@
 	},
 	"pubfs": {
 		"prefix": "pubfs",
+		"scope": "php,blade",
 		"body": [
 			"public static function ${1:name}(${2}): ${3:ReturnType}",
 			"{",
@@ -33,6 +36,7 @@
 	},
 	"prif": {
 		"prefix": "prif",
+		"scope": "php,blade",
 		"body": [
 			"private function ${1:name}(${2})",
 			"{",
@@ -43,6 +47,7 @@
 	},
 	"prof": {
 		"prefix": "prof",
+		"scope": "php,blade",
 		"body": [
 			"protected function ${1:name}(${2})",
 			"{",
@@ -53,6 +58,7 @@
 	},
 	"constructor_promotion": {
 		"prefix": "cstr",
+		"scope": "php,blade",
 		"body": [
 			"public function __construct(",
 			"\t${1|public,protected,private|} readonly ${2:Type} \\$${3:prop},",
@@ -64,6 +70,7 @@
 	},
 	"class": {
 		"prefix": "cl",
+		"scope": "php,blade",
 		"body": [
 			"class ${1:$TM_FILENAME_BASE}",
 			"{",
@@ -74,6 +81,7 @@
 	},
 	"interface": {
 		"prefix": "intf",
+		"scope": "php,blade",
 		"body": [
 			"interface ${1:$TM_FILENAME_BASE}",
 			"{",
@@ -84,6 +92,7 @@
 	},
 	"trait": {
 		"prefix": "trt",
+		"scope": "php,blade",
 		"body": [
 			"trait ${1:$TM_FILENAME_BASE}",
 			"{",
@@ -94,6 +103,7 @@
 	},
 	"enum": {
 		"prefix": "enum",
+		"scope": "php,blade",
 		"body": [
 			"enum ${1:$TM_FILENAME_BASE}",
 			"{",
@@ -104,6 +114,7 @@
 	},
 	"enum_backed": {
 		"prefix": "enumb",
+		"scope": "php,blade",
 		"body": [
 			"enum ${1:$TM_FILENAME_BASE}: ${2|string,ind}",
 			"{",
@@ -114,6 +125,7 @@
 	},
 	"fore": {
 		"prefix": "fore",
+		"scope": "php,blade",
 		"body": [
 			"foreach (\\$${1:array} as \\$${2:item}) {",
 			"\t${0://}",
@@ -123,6 +135,7 @@
 	},
 	"forek": {
 		"prefix": "forek",
+		"scope": "php,blade",
 		"body": [
 			"foreach (\\$${1:array} as \\$${2:key} => \\$${3:value}) {",
 			"\t${0://}",
@@ -132,6 +145,7 @@
 	},
 	"tryc": {
 		"prefix": "tryc",
+		"scope": "php,blade",
 		"body": [
 			"try {",
 			"\t${0://}",
@@ -143,6 +157,7 @@
 	},
 	"thr": {
 		"prefix": "thr",
+		"scope": "php,blade",
 		"body": [
 			"throw new ${1|RuntimeException,InvalidArgumentException,LogicException,DomainException|}(\\$${2:message});"
 		],
@@ -150,6 +165,7 @@
 	},
 	"strict_types": {
 		"prefix": "strict",
+		"scope": "php,blade",
 		"body": [
 			"declare(strict_types=1);"
 		],
@@ -157,6 +173,7 @@
 	},
 	"arrow_fn": {
 		"prefix": "afn",
+		"scope": "php,blade",
 		"body": [
 			"fn (${1:Type \\$${2:param}}) => ${0:expression}"
 		],
@@ -164,6 +181,7 @@
 	},
 	"match": {
 		"prefix": "match",
+		"scope": "php,blade",
 		"body": [
 			"\\$${1:result} = match (${2:true}) {",
 			"\t${3:cond} => ${4:value},",
@@ -174,6 +192,7 @@
 	},
 	"phpunit_test": {
 		"prefix": "test",
+		"scope": "php,blade",
 		"body": [
 			"public function test_${1:something_works}(): void",
 			"{",
@@ -184,6 +203,7 @@
 	},
 	"laravel_dd": {
 		"prefix": "dd",
+		"scope": "php,blade",
 		"body": [
 			"dd(${0:\\$${1:var}});"
 		],
@@ -191,6 +211,7 @@
 	},
 	"laravel_dump": {
 		"prefix": "dumpv",
+		"scope": "php,blade",
 		"body": [
 			"dump(${0:\\$${1:var}});"
 		],
@@ -198,6 +219,7 @@
 	},
 	"laravel_log_info": {
 		"prefix": "logi",
+		"scope": "php,blade",
 		"body": [
 			"Log::info('${1:message}', [${2:}]);"
 		],
@@ -205,6 +227,7 @@
 	},
 	"laravel_log_error": {
 		"prefix": "loge",
+		"scope": "php,blade",
 		"body": [
 			"Log::error('${1:message}', [${2:}]);"
 		],
@@ -212,6 +235,7 @@
 	},
 	"laravel_route": {
 		"prefix": "route:",
+		"scope": "php,blade",
 		"body": [
 			"Route::${1|get,post,put,patch,delete|}('${2:/uri}', [${3:HomeController}::class, '${4:index}'])->name('${5:name}');"
 		],
@@ -219,6 +243,7 @@
 	},
 	"laravel_validate": {
 		"prefix": "val:",
+		"scope": "php,blade",
 		"body": [
 			"\\$validated = \\$request->validate([",
 			"\t'${1:field}' => ['${2|required}', '${3:string}'],",
@@ -228,6 +253,7 @@
 	},
 	"laravel_rel_hasmany": {
 		"prefix": "relhm",
+		"scope": "php,blade",
 		"body": [
 			"public function ${1:posts}(): HasMany",
 			"{",
@@ -238,6 +264,7 @@
 	},
 	"laravel_rel_belongsto": {
 		"prefix": "relbo",
+		"scope": "php,blade",
 		"body": [
 			"public function ${1:user}(): BelongsTo",
 			"{",
@@ -248,6 +275,7 @@
 	},
 	"laravel_scope": {
 		"prefix": "scope:",
+		"scope": "php,blade",
 		"body": [
 			"public function scope${1:Active}(Builder \\$query): Builder",
 			"{",
@@ -258,6 +286,7 @@
 	},
 	"laravel_migration_column": {
 		"prefix": "col:",
+		"scope": "php,blade",
 		"body": [
 			"\\$table->${1|string,integer,boolean,date,text,foreignId|}('${2:name}')${0:};}"
 		],
@@ -265,6 +294,7 @@
 	},
 	"laravel_invokable": {
 		"prefix": "invk",
+		"scope": "php,blade",
 		"body": [
 			"public function __invoke(): ${1:Response}",
 			"{",
@@ -275,6 +305,7 @@
 	},
 	"laravel_migration_anon": {
 		"prefix": "mig12",
+		"scope": "php,blade",
 		"body": [
 			"return new class extends Migration",
 			"{",
@@ -297,6 +328,7 @@
 	},
 	"laravel_form_request": {
 		"prefix": "freq",
+		"scope": "php,blade",
 		"body": [
 			"class ${1:StoreThing}Request extends FormRequest",
 			"{",

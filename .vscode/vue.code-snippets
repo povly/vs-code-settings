@@ -2,6 +2,7 @@
 	// Live templates в стиле PhpStorm для Vue 3 (Composition API, <script setup>)
 	"vue_sfc": {
 		"prefix": "vsfc",
+		"scope": "vue",
 		"body": [
 			"<script setup>",
 			"${1}",
@@ -21,6 +22,7 @@
 	},
 	"vue_script_setup": {
 		"prefix": "vscript",
+		"scope": "vue",
 		"body": [
 			"<script setup>",
 			"${0}",
@@ -30,6 +32,7 @@
 	},
 	"vue_ref": {
 		"prefix": "vref",
+		"scope": "vue",
 		"body": [
 			"const ${1:name} = ref(${2:null})"
 		],
@@ -37,6 +40,7 @@
 	},
 	"vue_reactive": {
 		"prefix": "vreactive",
+		"scope": "vue",
 		"body": [
 			"const ${1:state} = reactive({",
 			"\t${2:count: 0},",
@@ -46,6 +50,7 @@
 	},
 	"vue_computed": {
 		"prefix": "vcompd",
+		"scope": "vue",
 		"body": [
 			"const ${1:name} = computed(() => {",
 			"\treturn ${2:value}",
@@ -55,6 +60,7 @@
 	},
 	"vue_watch": {
 		"prefix": "vwatch",
+		"scope": "vue",
 		"body": [
 			"watch(${1:source}, (${2:newValue}) => {",
 			"\t${0}",
@@ -64,6 +70,7 @@
 	},
 	"vue_watch_effect": {
 		"prefix": "vwatche",
+		"scope": "vue",
 		"body": [
 			"watchEffect(() => {",
 			"\t${0}",
@@ -73,6 +80,7 @@
 	},
 	"vue_props": {
 		"prefix": "vprops",
+		"scope": "vue",
 		"body": [
 			"const props = defineProps({",
 			"\t${1:prop}: {",
@@ -85,6 +93,7 @@
 	},
 	"vue_emits": {
 		"prefix": "vemit",
+		"scope": "vue",
 		"body": [
 			"const emit = defineEmits(['${1:event}'])"
 		],
@@ -92,6 +101,7 @@
 	},
 	"vue_expose": {
 		"prefix": "vexpose",
+		"scope": "vue",
 		"body": [
 			"defineExpose({ ${1} })"
 		],
@@ -99,6 +109,7 @@
 	},
 	"vue_on_mounted": {
 		"prefix": "vmounted",
+		"scope": "vue",
 		"body": [
 			"onMounted(() => {",
 			"\t${0}",
@@ -108,6 +119,7 @@
 	},
 	"vue_on_unmounted": {
 		"prefix": "vunmounted",
+		"scope": "vue",
 		"body": [
 			"onUnmounted(() => {",
 			"\t${0}",
@@ -117,6 +129,7 @@
 	},
 	"vue_vfor": {
 		"prefix": "vfor",
+		"scope": "vue",
 		"body": [
 			"v-for=\"${1:item} in ${2:items}\" :key=\"${1:item}.${3:id}\""
 		],
@@ -124,6 +137,7 @@
 	},
 	"vue_vmodel": {
 		"prefix": "vmodel",
+		"scope": "vue",
 		"body": [
 			"v-model=\"${1:modelValue}\""
 		],
@@ -131,6 +145,7 @@
 	},
 	"vue_slot": {
 		"prefix": "vslot",
+		"scope": "vue",
 		"body": [
 			"<slot name=\"${1:default}\">${0}</slot>"
 		],
@@ -138,6 +153,7 @@
 	},
 	"vue_pinia_store": {
 		"prefix": "vstore",
+		"scope": "vue",
 		"body": [
 			"import { defineStore } from 'pinia'",
 			"",
@@ -159,6 +175,7 @@
 	},
 	"vue_use_template_ref": {
 		"prefix": "useTplRef",
+		"scope": "vue",
 		"body": [
 			"const ${1:root} = useTemplateRef('${2:name}')"
 		],
@@ -166,6 +183,7 @@
 	},
 	"vue_use_id": {
 		"prefix": "useid",
+		"scope": "vue",
 		"body": [
 			"const ${1:id} = useId()"
 		],
@@ -173,6 +191,7 @@
 	},
 	"vue_define_model": {
 		"prefix": "dmod",
+		"scope": "vue",
 		"body": [
 			"const ${1:model} = defineModel<${2:T}>()"
 		],
@@ -180,6 +199,7 @@
 	},
 	"vue_provide": {
 		"prefix": "vprov",
+		"scope": "vue",
 		"body": [
 			"provide('${1:key}', ${2:value})"
 		],
@@ -187,6 +207,7 @@
 	},
 	"vue_inject": {
 		"prefix": "vinj",
+		"scope": "vue",
 		"body": [
 			"const ${1:value} = inject<${2:T}>('${3:key}', ${4:undefined})"
 		],
@@ -194,6 +215,7 @@
 	},
 	"vue_sfc_module": {
 		"prefix": "vsfcm",
+		"scope": "vue",
 		"body": [
 			"<script setup lang=\"ts\">",
 			"${1}",

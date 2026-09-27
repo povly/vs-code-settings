@@ -2,6 +2,7 @@
 	// Live templates в стиле PhpStorm для JavaScript
 	"console_log": {
 		"prefix": "cl",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"console.log(${1})"
 		],
@@ -9,6 +10,7 @@
 	},
 	"console_error": {
 		"prefix": "ce",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"console.error(${1})"
 		],
@@ -16,6 +18,7 @@
 	},
 	"console_warn": {
 		"prefix": "cw",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"console.warn(${1})"
 		],
@@ -23,6 +26,7 @@
 	},
 	"arrow_function": {
 		"prefix": "afn",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"const ${1:fn} = (${2:params}) => {",
 			"\t${0}",
@@ -32,6 +36,7 @@
 	},
 	"arrow_function_expression": {
 		"prefix": "afnr",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"const ${1:fn} = (${2:params}) => ${0:expression}"
 		],
@@ -39,6 +44,7 @@
 	},
 	"function": {
 		"prefix": "nfn",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"function ${1:name}(${2:params}) {",
 			"\t${0}",
@@ -48,6 +54,7 @@
 	},
 	"async_function": {
 		"prefix": "asfn",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"async function ${1:name}(${2:params}) {",
 			"\t${0}",
@@ -57,6 +64,7 @@
 	},
 	"export_function": {
 		"prefix": "expf",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"export function ${1:name}(${2:params}) {",
 			"\t${0}",
@@ -66,6 +74,7 @@
 	},
 	"try_catch": {
 		"prefix": "tryc",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"try {",
 			"\t${1}",
@@ -77,6 +86,7 @@
 	},
 	"import_named": {
 		"prefix": "imp",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"import { ${2:name} } from '${1:module}'"
 		],
@@ -84,6 +94,7 @@
 	},
 	"import_default": {
 		"prefix": "impd",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"import ${2:name} from '${1:module}'"
 		],
@@ -91,6 +102,7 @@
 	},
 	"export_default": {
 		"prefix": "expd",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"export default ${1}"
 		],
@@ -98,6 +110,7 @@
 	},
 	"promise": {
 		"prefix": "prom",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"return new Promise((resolve, reject) => {",
 			"\t${0}",
@@ -107,6 +120,7 @@
 	},
 	"for_each": {
 		"prefix": "fe",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"${1:arr}.forEach((${2:item}) => {",
 			"\t${0}",
@@ -116,6 +130,7 @@
 	},
 	"map": {
 		"prefix": "mapr",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"${1:arr}.map((${2:item}) => ${0:item})"
 		],
@@ -123,6 +138,7 @@
 	},
 	"filter": {
 		"prefix": "filtr",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"${1:arr}.filter((${2:item}) => ${0:true})"
 		],
@@ -130,6 +146,7 @@
 	},
 	"for_of": {
 		"prefix": "forof",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"for (const ${1:item} of ${2:iterable}) {",
 			"\t${0}",
@@ -139,6 +156,7 @@
 	},
 	"set_timeout": {
 		"prefix": "st",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"setTimeout(() => {",
 			"\t${1}",
@@ -148,6 +166,7 @@
 	},
 	"switch": {
 		"prefix": "sw",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"switch (${1:value}) {",
 			"\tcase ${2:variant}:",
@@ -161,6 +180,7 @@
 	},
 	"vue_composable": {
 		"prefix": "composable",
+		"scope": "javascript,javascriptreact,typescript,typescriptreact,vue,html,blade,php",
 		"body": [
 			"import { ref } from 'vue'",
 			"",

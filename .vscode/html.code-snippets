@@ -2,6 +2,7 @@
 	// Live templates в стиле PhpStorm для HTML (Emmet покрывает теги — тут каркасы)
 	"html5_boilerplate": {
 		"prefix": "html5",
+		"scope": "html,blade,php",
 		"body": [
 			"<!DOCTYPE html>",
 			"<html lang=\"${1|ru,en|}\">",
@@ -19,6 +20,7 @@
 	},
 	"link_stylesheet": {
 		"prefix": "linkcss",
+		"scope": "html,blade,php",
 		"body": [
 			"<link rel=\"stylesheet\" href=\"${1:style.css}\">"
 		],
@@ -26,6 +28,7 @@
 	},
 	"script_module": {
 		"prefix": "scriptm",
+		"scope": "html,blade,php",
 		"body": [
 			"<script type=\"module\" src=\"${1:main.js}\"></script>"
 		],
@@ -33,6 +36,7 @@
 	},
 	"meta_viewport": {
 		"prefix": "mvp",
+		"scope": "html,blade,php",
 		"body": [
 			"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
 		],
@@ -40,6 +44,7 @@
 	},
 	"picture_source": {
 		"prefix": "picture",
+		"scope": "html,blade,php",
 		"body": [
 			"<picture>",
 			"\t<source srcset=\"${1:image.webp}\" type=\"image/webp\">",
@@ -50,6 +55,7 @@
 	},
 	"alpine_data": {
 		"prefix": "alpdata",
+		"scope": "html,blade,php",
 		"body": [
 			"<div x-data=\"{ ${1:open: false} }\">",
 			"\t${0}",
@@ -59,6 +65,7 @@
 	},
 	"alpine_click": {
 		"prefix": "alpclick",
+		"scope": "html,blade,php",
 		"body": [
 			"x-on:click=\"${1:open = !open}\""
 		],
@@ -66,6 +73,7 @@
 	},
 	"alpine_show": {
 		"prefix": "alpshow",
+		"scope": "html,blade,php",
 		"body": [
 			"x-show=\"${1:open}\""
 		],
@@ -73,6 +81,7 @@
 	},
 	"alpine_for": {
 		"prefix": "alpfor",
+		"scope": "html,blade,php",
 		"body": [
 			"<template x-for=\"${1:item} in ${2:items}\" :key=\"${1:item}.id\">",
 			"\t<div x-text=\"${1:item}.${3:name}\"></div>",

@@ -2,6 +2,7 @@
 	// Live templates в стиле PhpStorm для CSS / PostCSS
 	"position_relative": {
 		"prefix": "psrel",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"position: relative;"
 		],
@@ -9,6 +10,7 @@
 	},
 	"position_absolute": {
 		"prefix": "psab",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"position: absolute;",
 			"top: ${1:0};",
@@ -18,6 +20,7 @@
 	},
 	"flex_center": {
 		"prefix": "flexcc",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"display: flex;",
 			"align-items: center;",
@@ -27,6 +30,7 @@
 	},
 	"flex_between": {
 		"prefix": "flexbb",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"display: flex;",
 			"align-items: center;",
@@ -36,6 +40,7 @@
 	},
 	"grid_auto_fit": {
 		"prefix": "dgrid",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"display: grid;",
 			"grid-template-columns: repeat(auto-fit, minmax(${1:220px}, 1fr));",
@@ -45,6 +50,7 @@
 	},
 	"media_query": {
 		"prefix": "mq",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"@media (${1|min-width,max-width}: ${2:768px}) {",
 			"\t${3:selector} {",
@@ -56,6 +62,7 @@
 	},
 	"custom_property": {
 		"prefix": "varc",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"var(--${1:name})"
 		],
@@ -63,6 +70,7 @@
 	},
 	"absolute_center": {
 		"prefix": "centerabs",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"position: absolute;",
 			"top: 50%;",
@@ -73,6 +81,7 @@
 	},
 	"transition": {
 		"prefix": "trans",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"transition: ${1:all} ${2:0.2s} ${3|ease,ease-in,ease-out,ease-in-out,linear|};"
 		],
@@ -80,6 +89,7 @@
 	},
 	"truncate": {
 		"prefix": "trunc",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"overflow: hidden;",
 			"text-overflow: ellipsis;",
@@ -89,6 +99,7 @@
 	},
 	"visually_hidden": {
 		"prefix": "vishid",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"position: absolute;",
 			"width: 1px;",
@@ -104,6 +115,7 @@
 	},
 	"postcss_import": {
 		"prefix": "pcssimp",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"@import \"${1:partial}\";"
 		],
@@ -111,6 +123,7 @@
 	},
 	"fluid_type": {
 		"prefix": "fluid",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"clamp(${1:14px}, calc(${1:14px} + (${5:4}) * (100vw - ${3:320px}) / (${6:880})), ${2:18px})"
 		],
@@ -118,6 +131,7 @@
 	},
 	"fluid_var": {
 		"prefix": "fvar",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"--${1:fs-fluid}: clamp(${2:14px}, calc(${2:14px} + (${3:4}) * (100vw - ${4:320px}) / (${5:880})), ${6:18px});"
 		],
@@ -125,6 +139,7 @@
 	},
 	"fluid_type_precomputed": {
 		"prefix": "fluidc",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"clamp(${1:0.875rem}, ${2:0.85rem} + ${3:0.71}vw, ${4:1.125rem})"
 		],
@@ -132,6 +147,7 @@
 	},
 	"postcss_nesting": {
 		"prefix": "pcssnest",
+		"scope": "css,scss,less,vue,html,blade,php",
 		"body": [
 			"${1:.selector} {",
 			"\t${2}",

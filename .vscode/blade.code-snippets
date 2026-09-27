@@ -2,6 +2,7 @@
 	// Live templates в стиле PhpStorm для Blade-шаблонов Laravel
 	"blade_extends": {
 		"prefix": "bext",
+		"scope": "blade",
 		"body": [
 			"@extends('${1:layouts.app}')",
 			"",
@@ -13,6 +14,7 @@
 	},
 	"blade_section": {
 		"prefix": "bsec",
+		"scope": "blade",
 		"body": [
 			"@section('${1:name}')",
 			"\t${0}",
@@ -22,6 +24,7 @@
 	},
 	"blade_yield": {
 		"prefix": "byield",
+		"scope": "blade",
 		"body": [
 			"@yield('${1:content}')"
 		],
@@ -29,6 +32,7 @@
 	},
 	"blade_if": {
 		"prefix": "bif",
+		"scope": "blade",
 		"body": [
 			"@if (\\$${1:condition})",
 			"\t${0}",
@@ -38,6 +42,7 @@
 	},
 	"blade_if_else": {
 		"prefix": "bifel",
+		"scope": "blade",
 		"body": [
 			"@if (\\$${1:condition})",
 			"\t${2}",
@@ -49,6 +54,7 @@
 	},
 	"blade_foreach": {
 		"prefix": "bfore",
+		"scope": "blade",
 		"body": [
 			"@foreach (\\$${1:items} as \\$${2:item})",
 			"\t${0}",
@@ -58,6 +64,7 @@
 	},
 	"blade_forelse": {
 		"prefix": "bforelse",
+		"scope": "blade",
 		"body": [
 			"@forelse (\\$${1:items} as \\$${2:item})",
 			"\t${3}",
@@ -69,6 +76,7 @@
 	},
 	"blade_component_tag": {
 		"prefix": "bxcomp",
+		"scope": "blade",
 		"body": [
 			"<x-${1:component.name} ${2::prop=\"\\$${3:value}}\" />"
 		],
@@ -76,6 +84,7 @@
 	},
 	"blade_slot": {
 		"prefix": "bxslot",
+		"scope": "blade",
 		"body": [
 			"<x-slot name=\"${1:name}\">",
 			"\t${0}",
@@ -85,6 +94,7 @@
 	},
 	"blade_props": {
 		"prefix": "bprops",
+		"scope": "blade",
 		"body": [
 			"@props(['${1:prop}' => ${2:null}])"
 		],
@@ -92,6 +102,7 @@
 	},
 	"blade_csrf": {
 		"prefix": "bcsrf",
+		"scope": "blade",
 		"body": [
 			"@csrf"
 		],
@@ -99,6 +110,7 @@
 	},
 	"blade_method": {
 		"prefix": "bmethod",
+		"scope": "blade",
 		"body": [
 			"@method('${1|PUT,PATCH,DELETE|}')"
 		],
@@ -106,6 +118,7 @@
 	},
 	"blade_echo": {
 		"prefix": "bech",
+		"scope": "blade",
 		"body": [
 			"{{ \\$${1:variable} }}"
 		],
@@ -113,6 +126,7 @@
 	},
 	"blade_raw_echo": {
 		"prefix": "braw",
+		"scope": "blade",
 		"body": [
 			"{!! \\$${1:variable} !!}"
 		],
@@ -120,6 +134,7 @@
 	},
 	"blade_json": {
 		"prefix": "bjson",
+		"scope": "blade",
 		"body": [
 			"@json(\\$${1:data})"
 		],
@@ -127,6 +142,7 @@
 	},
 	"blade_error": {
 		"prefix": "berror",
+		"scope": "blade",
 		"body": [
 			"@error('${1:field}')",
 			"\t<span class=\"${2:text-red-600}\">{{ \\$message }}</span>",
@@ -136,6 +152,7 @@
 	},
 	"blade_auth": {
 		"prefix": "bauth",
+		"scope": "blade",
 		"body": [
 			"@auth",
 			"\t${0}",
@@ -145,6 +162,7 @@
 	},
 	"blade_guest": {
 		"prefix": "bguest",
+		"scope": "blade",
 		"body": [
 			"@guest",
 			"\t${0}",
@@ -154,6 +172,7 @@
 	},
 	"blade_include": {
 		"prefix": "binc",
+		"scope": "blade",
 		"body": [
 			"@include('${1:partials.${2:name}}')"
 		],
@@ -161,6 +180,7 @@
 	},
 	"blade_push": {
 		"prefix": "bpush",
+		"scope": "blade",
 		"body": [
 			"@push('${1:scripts}')",
 			"\t${0}",
@@ -170,6 +190,7 @@
 	},
 	"blade_vite": {
 		"prefix": "bvite",
+		"scope": "blade",
 		"body": [
 			"@vite(${1:['resources/js/app.js', 'resources/css/app.css']})"
 		],
@@ -177,6 +198,7 @@
 	},
 	"blade_lang": {
 		"prefix": "blang",
+		"scope": "blade",
 		"body": [
 			"{{ __('${1:translation.key}') }}"
 		],

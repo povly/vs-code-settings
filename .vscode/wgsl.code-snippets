@@ -2,6 +2,7 @@
 	// Live templates для WGSL-шейдеров (wgpu)
 	"vertex_shader": {
 		"prefix": "vs",
+		"scope": "wgsl",
 		"body": [
 			"@vertex",
 			"fn vs_${1:main}(",
@@ -14,6 +15,7 @@
 	},
 	"fragment_shader": {
 		"prefix": "fs",
+		"scope": "wgsl",
 		"body": [
 			"@fragment",
 			"fn fs_${1:main}(",
@@ -26,6 +28,7 @@
 	},
 	"struct": {
 		"prefix": "st",
+		"scope": "wgsl",
 		"body": [
 			"struct ${1:Name} {",
 			"\t${2:field}: ${3:vec3<f32>},",
@@ -35,6 +38,7 @@
 	},
 	"uniform_binding": {
 		"prefix": "cbuf",
+		"scope": "wgsl",
 		"body": [
 			"@group(0) @binding(0) var<uniform> ${1:name}: ${2:Globals};"
 		],
@@ -42,6 +46,7 @@
 	},
 	"texture_binding": {
 		"prefix": "texb",
+		"scope": "wgsl",
 		"body": [
 			"@group(0) @binding(0) var ${1:tex}: texture_2d<f32>;",
 			"@group(0) @binding(1) var ${2:samp}: sampler;"
@@ -50,6 +55,7 @@
 	},
 	"entry_point": {
 		"prefix": "fn",
+		"scope": "wgsl",
 		"body": [
 			"fn ${1:name}(${2}) -> ${3:f32} {",
 			"\t${0}",
