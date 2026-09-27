@@ -13,12 +13,32 @@
 //   9a) var(--…) из соседнего файла в postcss-диалекте (css-variables поверх scss-ассоциации)
 //   10)  vue-css-jump ≥ 0.2.0: hover по тегу компонента — карточка props/emits/v-model/expose (строгий)
 //   10a) exploratory: нативный Volar — completions атрибутов внутри тега компонента
+//   11)  vue-css-jump ≥ 0.1.3: diagnostics <style src> — нет файла (Error) и module без .module.css (Warning)
+//   12)  vue-css-jump: bracket-completion $style[' — dashed-имена (после $style. — exploratory)
+//   13)  vue-css-jump ≥ 0.4.0: карточка — «Типы:» command-links + секция превью типов (строгий)
+//   14)  vue-css-jump ≥ 0.5.0: definition + hover по статическому class-токену (селектор + декларации)
+//   15)  vue-css-jump ≥ 0.3.0: JSDoc в карточке — описание компонента + доки пропсов (строгий)
 const assert = require('assert');
 const path = require('path');
 
 const FIXTURES = path.resolve(__dirname, '..', '..', 'fixtures');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Retry-polling вместо фиксированных sleep: тест идёт дальше, как только сервер
+// ответил (fn → truthy); таймаут — верхняя граница ожидания, а не норма.
+async function waitFor(label, fn, { timeoutMs = 10000, intervalMs = 300 } = {}) {
+	const deadline = Date.now() + timeoutMs;
+	for (let attempt = 1; ; attempt++) {
+		const res = await fn();
+		if (res) return res;
+		if (Date.now() >= deadline) {
+			console.log(`INFO [waitFor] ${label}: таймаут ${timeoutMs}ms (${attempt} попыток) — берём как есть`);
+			return res;
+		}
+		await sleep(intervalMs);
+	}
+}
 
 async function activateExtension(id) {
 	const vscode = require('vscode');
@@ -44,25 +64,28 @@ async function completionsAfter(rel, anchor, settleMs = 2500, retries = 5) {
 	assert.ok(idx >= 0, `якорь «${anchor}» не найден в ${rel}`);
 	const pos = doc.positionAt(idx + anchor.length);
 
-	await sleep(settleMs);
-
-	// Языковые серверы прогреваются асинхронно → retry-цикл запросов
-	let labels = [];
-	let count = 0;
-	for (let attempt = 1; attempt <= retries; attempt++) {
+	// Языковые серверы прогреваются асинхронно → опрос вместо sleep-цикла:
+	// большие списки (>5) принимаются сразу, малые — не раньше settleMs
+	// (прежняя семантика settle+retry), бюджет — settleMs×retries
+	const settleAt = Date.now() + settleMs;
+	const ready = await waitFor(`${rel} completions`, async () => {
 		const list = await vscode.commands.executeCommand(
 			'vscode.executeCompletionItemProvider',
 			uri,
 			pos
 		);
-		count = list.items.length;
-		labels = list.items
-			.map(i => (typeof i.label === 'string' ? i.label : i.label && i.label.label))
-			.filter(Boolean);
-		if (count > 5 || attempt === retries) break; // сервер прогрет (или попытки кончились)
-		console.log(`DEBUG [test] ${rel}: попытка ${attempt} — ${count} items, ждём прогрева…`);
-		await sleep(3000);
-	}
+		const items = list.items || [];
+		if (items.length === 0) return null;
+		if (items.length <= 5 && Date.now() < settleAt) return null;
+		return {
+			labels: items
+				.map(i => (typeof i.label === 'string' ? i.label : i.label && i.label.label))
+				.filter(Boolean),
+			count: items.length,
+		};
+	}, { timeoutMs: settleMs * retries, intervalMs: 500 });
+	const labels = (ready && ready.labels) || [];
+	const count = (ready && ready.count) || 0;
 	console.log(`DEBUG [test] ${rel} @«${anchor}»: ${count} items; sample: ${labels.slice(0, 10).join(', ')}`);
 	return { labels, count };
 }
@@ -118,13 +141,22 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 		// Прогрев: заранее открываем по одному .css и .vue (+ внешний css-модуль),
 		// чтобы встроенный CSS-сервер, TS-сторона Volar и ts-плагин css-modules-kit
 		// успели инициализироваться ДО первых кейсов
-		for (const f of ['consumer.css', 'Example.vue', 'Example2.vue', 'Example2.module.css', 'Example3.vue', 'Example3.module.css', 'Example4.vue', 'Widget.vue']) {
+		for (const f of ['consumer.css', 'Example.vue', 'Example2.vue', 'Example2.module.css', 'Example3.vue', 'Example3.module.css', 'Example4.vue', 'Widget.vue', 'Example5.vue', 'Example6.vue', 'Example6.module.css']) {
 			const doc = await vscode.workspace.openTextDocument(
 				vscode.Uri.file(path.join(FIXTURES, f))
 			);
 			await vscode.window.showTextDocument(doc);
 		}
-		await sleep(8000);
+		// Готовность CSS-сервера ждём опросом (completions в consumer.css),
+		// а не фиксированным sleep(8000): тёплый сервер — секунды, холодный — таймаут
+		const warmDoc = await vscode.workspace.openTextDocument(
+			vscode.Uri.file(path.join(FIXTURES, 'consumer.css'))
+		);
+		const warmPos = warmDoc.positionAt(warmDoc.getText().indexOf('{\n\t') + '{\n\t'.length);
+		await waitFor('прогрев css-сервера', async () => {
+			const list = await vscode.commands.executeCommand('vscode.executeCompletionItemProvider', warmDoc.uri, warmPos);
+			return (list.items || []).length > 5;
+		}, { timeoutMs: 15000, intervalMs: 500 });
 	});
 
 	it('кейс 1: .css — property-completion (встроенный CSS-сервис)', async function () {
@@ -218,12 +250,14 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 		await vscode.window.showTextDocument(doc);
 		const at = doc.getText().indexOf('./Example3.module.css');
 		assert.ok(at >= 0, 'src-якорь не найден в Example3.vue');
-		await sleep(1500);
-		const defs = await vscode.commands.executeCommand(
-			'vscode.executeDefinitionProvider',
-			uri,
-			doc.positionAt(at + 3)
-		);
+		const defs = await waitFor('кейс 8 definitions', async () => {
+			const d = await vscode.commands.executeCommand(
+				'vscode.executeDefinitionProvider',
+				uri,
+				doc.positionAt(at + 3)
+			);
+			return (d || []).length ? d : null;
+		});
 		const targets = (defs || []).map(d => (d.uri && d.uri.fsPath) || String(d));
 		console.log(`DEBUG [test] кейс 8: definitions: ${JSON.stringify(targets)}`);
 		assert.ok(
@@ -238,12 +272,14 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 		const doc = await vscode.workspace.openTextDocument(uri);
 		await vscode.window.showTextDocument(doc);
 		const at = doc.getText().indexOf('./Example3.module.css');
-		await sleep(1000);
-		const hovers = await vscode.commands.executeCommand(
-			'vscode.executeHoverProvider',
-			uri,
-			doc.positionAt(at + 2)
-		);
+		const hovers = await waitFor('кейс 8b hover', async () => {
+			const h = await vscode.commands.executeCommand(
+				'vscode.executeHoverProvider',
+				uri,
+				doc.positionAt(at + 2)
+			);
+			return (h || []).length ? h : null;
+		});
 		const text = (hovers || []).map(h => h.contents.map(c => c.value || '').join(' ')).join(' | ');
 		console.log(`DEBUG [test] кейс 8b hover: ${text.slice(0, 300)}`);
 		assert.ok(
@@ -278,12 +314,14 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 		await vscode.window.showTextDocument(doc);
 		const at = doc.getText().indexOf('<Widget');
 		assert.ok(at >= 0, 'тег <Widget не найден в Example4.vue');
-		await sleep(1500);
-		const hovers = await vscode.commands.executeCommand(
-			'vscode.executeHoverProvider',
-			uri,
-			doc.positionAt(at + 3)
-		);
+		const hovers = await waitFor('кейс 10 hover', async () => {
+			const h = await vscode.commands.executeCommand(
+				'vscode.executeHoverProvider',
+				uri,
+				doc.positionAt(at + 3)
+			);
+			return (h || []).length ? h : null;
+		});
 		const text = (hovers || []).map(h => h.contents.map(c => c.value || '').join(' ')).join(' | ');
 		console.log(`DEBUG [test] кейс 10 hover: ${text.slice(0, 400)}`);
 		assert.ok(
@@ -310,5 +348,113 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 		} else {
 			console.log(`WARN [baseline] кейс 10a: программно props-completions не получены (${labels.slice(0, 15).join(', ') || 'пусто'}) — известное ограничение test-host (template → inferred project, раунд 3); в реальном редакторе проверяется чек-листом (docs/vue-css-intellisense.md, п. 11)`);
 		}
+	});
+
+	it('кейс 11: vue-css-jump — diagnostics по <style src> (нет файла → Error, module без .module.css → Warning)', async function () {
+		const vscode = require('vscode');
+		const uri = vscode.Uri.file(path.join(FIXTURES, 'Example5.vue'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+		// диагностика дебаунсится (300ms) → опрос до двух vue-css-jump-записей
+		const diags = await waitFor('кейс 11 diagnostics', async () => {
+			const own = vscode.languages.getDiagnostics(uri)
+				.filter(d => String(d.message).includes('vue-css-jump'));
+			return own.length >= 2 ? own : null;
+		}, { timeoutMs: 10000, intervalMs: 400 });
+		const list = diags || [];
+		console.log(`DEBUG [test] кейс 11: ${list.length} vue-css-jump-диагностик: ${list.map(d => `${d.severity}:${d.message.slice(0, 60)}`).join(' | ')}`);
+		assert.ok(
+			list.some(d => d.severity === vscode.DiagnosticSeverity.Error && d.message.includes('существует')),
+			`нет Error «файл не существует»; получено: ${JSON.stringify(list.map(d => d.message))}`
+		);
+		assert.ok(
+			list.some(d => d.severity === vscode.DiagnosticSeverity.Warning && d.message.includes('.module.css')),
+			`нет Warning про суффикс .module.css; получено: ${JSON.stringify(list.map(d => d.message))}`
+		);
+	});
+
+	it('кейс 12: vue-css-jump — bracket-completion $style[\' (dashed-имена); после $style. — нет (exploratory)', async function () {
+		const bracket = await completionsAfter('Example6.vue', "$style['", 3000, 4);
+		assert.ok(
+			bracket.labels.includes('ext-card'),
+			`нет «ext-card» после $style['; получено: ${bracket.labels.slice(0, 15).join(', ') || 'пусто'}`
+		);
+		const dot = await completionsAfter('Example6.vue', '$style.e', 3000, 4);
+		if (dot.labels.includes('ext-card')) {
+			console.log('WARN [baseline] кейс 12: dashed-имя после точки предлагает не vue-css-jump (tsserver-цепочка) — ожидаемо только в bracket-форме');
+		} else {
+			console.log('INFO [baseline] кейс 12: после точки dashed-имена не предлагаются ✓');
+		}
+	});
+
+	it('кейс 13: vue-css-jump ≥ 0.4.0 — карточка: «Типы:» command-links + превью типов (строгий)', async function () {
+		const vscode = require('vscode');
+		const uri = vscode.Uri.file(path.join(FIXTURES, 'Example4.vue'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+		const at = doc.getText().indexOf('<Widget');
+		assert.ok(at >= 0, 'тег <Widget не найден в Example4.vue');
+		const hovers = await waitFor('кейс 13 hover', async () => {
+			const h = await vscode.commands.executeCommand('vscode.executeHoverProvider', uri, doc.positionAt(at + 3));
+			return (h || []).length ? h : null;
+		});
+		const text = (hovers || []).map(h => h.contents.map(c => c.value || '').join(' ')).join(' | ');
+		console.log(`DEBUG [test] кейс 13 hover: ${text.slice(0, 400)}`);
+		assert.ok(
+			text.includes('Типы:') && text.includes('command:vue-css-jump.openType'),
+			`в карточке нет строки «Типы:» с command-ссылками; получено: ${text.slice(0, 300) || 'пусто'}`
+		);
+		assert.ok(
+			text.includes('**Типы**') && text.includes('interface Options'),
+			`нет секции превью типов с «interface Options»; получено: ${text.slice(0, 300) || 'пусто'}`
+		);
+	});
+
+	it('кейс 14: vue-css-jump ≥ 0.5.0 — definition + hover по статическому class-токену', async function () {
+		const vscode = require('vscode');
+		const uri = vscode.Uri.file(path.join(FIXTURES, 'Example.vue'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+		const at = doc.getText().indexOf('class="demo-title"');
+		assert.ok(at >= 0, 'статический class-токен не найден в Example.vue');
+		const pos = doc.positionAt(at + 'class="'.length + 2);
+		const defs = await waitFor('кейс 14 definitions', async () => {
+			const d = await vscode.commands.executeCommand('vscode.executeDefinitionProvider', uri, pos);
+			return (d || []).length ? d : null;
+		});
+		const targets = (defs || []).map(d => (d.uri && d.uri.fsPath) || String(d));
+		console.log(`DEBUG [test] кейс 14 definitions: ${JSON.stringify(targets)}`);
+		assert.ok(
+			targets.some(p => p.endsWith('Example.vue')),
+			`DefinitionProvider по class-токену не ведёт в Example.vue; получено: ${JSON.stringify(targets)}`
+		);
+		const hovers = await waitFor('кейс 14 hover', async () => {
+			const h = await vscode.commands.executeCommand('vscode.executeHoverProvider', uri, pos);
+			return (h || []).length ? h : null;
+		});
+		const text = (hovers || []).map(h => h.contents.map(c => c.value || '').join(' ')).join(' | ');
+		console.log(`DEBUG [test] кейс 14 hover: ${text.slice(0, 300)}`);
+		assert.ok(
+			text.includes('.demo-title') && text.includes('font-weight'),
+			`hover по class-токену без превью селектора/деклараций; получено: ${text.slice(0, 200) || 'пусто'}`
+		);
+	});
+
+	it('кейс 15: vue-css-jump ≥ 0.3.0 — JSDoc в карточке: описание компонента + доки пропсов (строгий)', async function () {
+		const vscode = require('vscode');
+		const uri = vscode.Uri.file(path.join(FIXTURES, 'Example4.vue'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+		const at = doc.getText().indexOf('<Widget');
+		const hovers = await waitFor('кейс 15 hover', async () => {
+			const h = await vscode.commands.executeCommand('vscode.executeHoverProvider', uri, doc.positionAt(at + 3));
+			return (h || []).length ? h : null;
+		});
+		const text = (hovers || []).map(h => h.contents.map(c => c.value || '').join(' ')).join(' | ');
+		console.log(`DEBUG [test] кейс 15 hover: ${text.slice(0, 400)}`);
+		assert.ok(
+			text.includes('Демонстрационный компонент фикстуры') && text.includes('Метка кнопки'),
+			`JSDoc (описание компонента / доки пропса label) не попали в карточку; получено: ${text.slice(0, 300) || 'пусто'}`
+		);
 	});
 });

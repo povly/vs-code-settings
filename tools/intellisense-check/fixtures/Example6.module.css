@@ -1,0 +1,7 @@
+.ext-card {
+	border: 1px solid #ccc;
+}
+
+.ext-item--active {
+	font-weight: 700;
+}
