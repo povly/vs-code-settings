@@ -6,7 +6,10 @@
 		// Кейс 9/9a: postcss-диалект (@define-mixin/$vars/nesting) в plain .css —
 		// сценарий WP-темы с postcss-конфигом; scope по имени файла, чтобы не трогать
 		// кейсы 1/2/7 на чистом .css
-		"dialect.css": "scss"
+		"dialect.css": "scss",
+		// Кейс 16: языковые id сниппет-фикстур (зеркало настроек воркспейса)
+		"*.blade.php": "blade",
+		"*.wgsl": "wgsl"
 	},
 	// @define-mixin (postcss-mixins) — неизвестная SCSS at-rule, не ругаться
 	"scss.lint.unknownAtRules": "ignore",

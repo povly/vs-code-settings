@@ -37,6 +37,33 @@ function pickVueCssJumpVsix() {
 	return found[0].file;
 }
 
+// Кейс 16: сниппеты гоняются против реальных .code-snippets воркспейса —
+// runtime-копия в fixtures/.vscode (в git не коммитится, после прогона удаляется)
+const REPO_SNIPPETS_DIR = path.resolve(__dirname, '..', '..', '..', '.vscode');
+const FIXTURE_VSCODE_DIR = path.resolve(__dirname, '..', 'fixtures', '.vscode');
+
+function deployWorkspaceSnippets() {
+	const files = fs.readdirSync(REPO_SNIPPETS_DIR).filter(f => f.endsWith('.code-snippets'));
+	if (files.length === 0) {
+		throw new Error(`нет *.code-snippets в ${REPO_SNIPPETS_DIR}`);
+	}
+	for (const f of files) {
+		fs.copyFileSync(path.join(REPO_SNIPPETS_DIR, f), path.join(FIXTURE_VSCODE_DIR, f));
+	}
+	console.log(`INFO [runTests] live-templates (кейс 16): скопировано файлов: ${files.length}`);
+	return files;
+}
+
+function cleanupWorkspaceSnippets(files) {
+	for (const f of files) {
+		try {
+			fs.unlinkSync(path.join(FIXTURE_VSCODE_DIR, f));
+		} catch (e) {
+			console.warn(`WARN [runTests] не удалена runtime-копия: ${f}`);
+		}
+	}
+}
+
 async function main() {
 	const extensionTestsPath = path.resolve(__dirname, 'suite', 'index.js');
 	const launchArgs = [path.resolve(__dirname, '..', 'fixtures')];
@@ -53,9 +80,21 @@ async function main() {
 		await runVSCodeCommand(['--install-extension', ext]);
 	}
 
-	console.log('INFO [runTests] запуск VS Code test instance…');
-	await runTests({ extensionTestsPath, launchArgs });
-	console.log('INFO [runTests] готово');
+	const snippetFiles = deployWorkspaceSnippets();
+	try {
+		console.log('INFO [runTests] запуск VS Code test instance…');
+		// test-languages-ext — dev-расширение: регистрирует blade/wgsl/vue в тест-инстансе
+	// (реальные phpantom/polyMeilex.wgsl/Volar сюда не ставятся; без регистрации
+	// язык = plaintext и scoped-сниппеты кейса 16 не матчатся)
+	await runTests({
+		extensionTestsPath,
+		launchArgs,
+		extensionDevelopmentPath: path.resolve(__dirname, '..', 'test-languages-ext'),
+	});
+		console.log('INFO [runTests] готово');
+	} finally {
+		cleanupWorkspaceSnippets(snippetFiles);
+	}
 }
 
 main().catch(err => {

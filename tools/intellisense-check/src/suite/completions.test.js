@@ -18,6 +18,8 @@
 //   13)  vue-css-jump ≥ 0.4.0: карточка — «Типы:» command-links + секция превью типов (строгий)
 //   14)  vue-css-jump ≥ 0.5.0: definition + hover по статическому class-токену (селектор + декларации)
 //   15)  vue-css-jump ≥ 0.3.0: JSDoc в карточке — описание компонента + доки пропсов (строгий)
+//   16)  live-templates: snippet-completion по всем 8 языкам (.code-snippets воркспейса)
+//   16b) scope-привязка: кросс-языковые сниппеты не протекают (asfn — rust без js; cl — js без php)
 const assert = require('assert');
 const path = require('path');
 
@@ -456,5 +458,86 @@ describe('IntelliSense воркспейса (CSS / $style / переменные
 			text.includes('Демонстрационный компонент фикстуры') && text.includes('Метка кнопки'),
 			`JSDoc (описание компонента / доки пропса label) не попали в карточку; получено: ${text.slice(0, 300) || 'пусто'}`
 		);
+	});
+
+	// Кейс 16: сниппеты без scope → все языки; файлы кладёт runTests.js в
+	// fixtures/.vscode (runtime-копия .vscode/ воркспейса). Фиксирует пайплайн
+	// SnippetsService — тот же механизм, что и user-уровень (tools/machine/install.sh).
+	it('кейс 16: live-templates — snippet-completion по всем 8 языкам', async function () {
+		const vscode = require('vscode');
+		const cases = [
+			['snippet.css', 'flexcc'],
+			['snippet.js', 'cl'],
+			['snippet.php', 'pubf'],
+			['snippet.blade.php', 'bfore'],
+			['snippet.vue', 'vsfc'],
+			['snippet.html', 'scriptm'],
+			['snippet.rs', 'pfn'],
+			['snippet.wgsl', 'fn'],
+		];
+		const missing = [];
+		// blade/wgsl/vue регистрирует dev-расширение test-languages-ext (раннер
+		// грузит его через extensionDevelopmentPath) — иначе язык = plaintext
+		// и scoped-сниппеты не матчатся
+		for (const [rel, prefix] of cases) {
+			const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(path.join(FIXTURES, rel)));
+			await vscode.window.showTextDocument(doc);
+			const idx = doc.getText().indexOf(prefix);
+			assert.ok(idx >= 0, `якорь «${prefix}» не найден в ${rel}`);
+			const pos = doc.positionAt(idx + prefix.length);
+			const found = await waitFor(`кейс 16 ${rel}`, async () => {
+				const list = await vscode.commands.executeCommand(
+					'vscode.executeCompletionItemProvider',
+					doc.uri,
+					pos
+				);
+				const labels = (list.items || [])
+					.filter(i => i.kind === vscode.CompletionItemKind.Snippet)
+					.map(i => (typeof i.label === 'string' ? i.label : i.label && i.label.label))
+					.filter(Boolean);
+				return labels.includes(prefix) ? labels : null;
+			}, { timeoutMs: 10000, intervalMs: 500 });
+			if (found) {
+				console.log(`INFO [baseline] кейс 16: ${rel} — «${prefix}» ✓ (${found.length} snippet-items)`);
+			} else {
+				console.log(`WARN [baseline] кейс 16: ${rel} — «${prefix}» отсутствует`);
+				missing.push(`${rel}: «${prefix}»`);
+			}
+		}
+		assert.ok(
+			missing.length === 0,
+			`сниппеты не в подсказках: ${missing.join('; ')} — проверить копирование .code-snippets в fixtures/.vscode (runTests.js)`
+		);
+	});
+
+	// Кейс 16b: scope-привязка — кросс-языковые сниппеты не протекают:
+	// «asfn» есть и в rust, и в javascript; «cl» — в javascript и php.
+	// В языке должен остаться ровно один одноимённый префикс.
+	it('кейс 16b: scope — кросс-языковые сниппеты не протекают', async function () {
+		const vscode = require('vscode');
+		const probes = [
+			['rust', 'asfn'],
+			['javascript', 'cl'],
+		];
+		for (const [lang, prefix] of probes) {
+			const doc = await vscode.workspace.openTextDocument({ language: lang, content: prefix });
+			await vscode.window.showTextDocument(doc);
+			const pos = doc.positionAt(doc.getText().length);
+			const labels = (await waitFor(`кейс 16b ${lang}`, async () => {
+				const list = await vscode.commands.executeCommand(
+					'vscode.executeCompletionItemProvider',
+					doc.uri,
+					pos
+				);
+				const ls = (list.items || [])
+					.filter(i => i.kind === vscode.CompletionItemKind.Snippet)
+					.map(i => (typeof i.label === 'string' ? i.label : i.label && i.label.label))
+					.filter(Boolean);
+				return ls.length ? ls : null;
+			}, { timeoutMs: 10000, intervalMs: 500 })) || [];
+			const count = labels.filter(l => l === prefix).length;
+			console.log(`DEBUG [test] кейс 16b ${lang} «${prefix}»: точных вхождений ${count} (snippet-items всего ${labels.length})`);
+			assert.strictEqual(count, 1, `${lang}: «${prefix}» ожидается ровно 1, получено ${count} — scope-привязка не работает?`);
+		}
 	});
 });

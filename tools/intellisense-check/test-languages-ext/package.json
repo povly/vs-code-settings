@@ -1,0 +1,16 @@
+{
+	"name": "test-languages-ext",
+	"displayName": "Test languages (blade/wgsl/vue ids)",
+	"publisher": "povly",
+	"version": "0.0.1",
+	"description": "Dev-расширение для tools/intellisense-check: регистрирует языковые id, которые в чистом тест-инстансе дают реальные расширения (phpantom → blade, polyMeilex.wgsl → wgsl, Volar → vue). Нужен только contributes.languages — активации нет. Загружается через extensionDevelopmentPath раннера.",
+	"engines": { "vscode": "^1.80.0" },
+	"categories": ["Other"],
+	"contributes": {
+		"languages": [
+			{ "id": "blade", "extensions": [".blade.php"] },
+			{ "id": "wgsl", "extensions": [".wgsl"] },
+			{ "id": "vue", "extensions": [".vue"] }
+		]
+	}
+}
