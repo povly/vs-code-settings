@@ -464,7 +464,8 @@ if [ "$CI" -eq 1 ]; then
 	DEPS="$DEPS typescript vitest happy-dom"
 fi
 log "npm i -D $DEPS"
-# shellcheck disable=SC2086 — список пакетов собирается по флагам
+# Список пакетов собирается по флагам — word-splitting намеренный
+# shellcheck disable=SC2086
 npm i -D --no-fund --no-audit $DEPS >/dev/null
 
 npm run lint --silent
