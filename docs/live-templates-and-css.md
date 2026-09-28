@@ -103,8 +103,8 @@
 (struct), `cbuf` (uniform-биндинг), `sbuf` (storage read/read_write), `texb`
 (texture+sampler), `tsample` (textureSample), `fn`, `var`, `let`, `const`,
 `for`, `loop` (continuing/break if), `vec` (vecN&lt;T&gt;), `arr` (array&lt;T, N&gt;).
-Атрибуты (серверный completion после `@` не реализован — issue wgsl-analyzer
-#312, закрыто клиентскими сниппетами): набирайте `@` + префикс:
+Атрибуты (серверный completion после `@` не реализован — issue
+wgsl-analyzer #312, закрыто клиентскими сниппетами): набирайте `@` + префикс:
 `ver` (@vertex), `frag` (@fragment), `comp` (@compute+@workgroup_size),
 `loc` (@location), `bui` (@builtin — выбор из частых), `gb`
 (@group+@binding), `intp` (@interpolate).
