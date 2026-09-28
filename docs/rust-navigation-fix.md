@@ -76,6 +76,39 @@ members = ["adder"]   # новые крейты дописывать сюда
 | Корень-пакет + подкаталоги-крейты | `[workspace] members = [...]` — явный список |
 | Репо с каталогом крейтов | `[workspace] members = ["crates/*"]` (в каталоге только крейты) |
 | Глубоко вложенные (Ch01/proj/…) | Открыть сам проект папкой, ИЛИ `linkedProjects`: `["${workspaceFolder}/Ch01/proj/Cargo.toml", ...]` — списком, без wildcards |
+| Подкаталог-модуль одного крейта | `mod <имя>;` в корне крейта + `mod.rs`/`<имя>.rs` — НЕ `lib.rs` (см. следующий раздел) |
+
+## Смежный случай: модуль подключён как «вложенный крейт» (lib.rs в подкаталоге)
+
+> Симптом: в `src/<модуль>/**` нет completion/hover/F12, файлы серые
+> «This file is not included in any crate» — при этом `cargo build` зелёный.
+> История фикса: `<rust-проект>` (`src/pages/lib.rs`, а `mod pages;` в корне
+> крейта не был объявлен вовсе).
+
+Модуль внутри ОДНОГО крейта — не крейт. `lib.rs` легитимен только как корень
+отдельного библиотечного крейта (со своим `Cargo.toml`); для `mod pages;` в
+`src/main.rs` Rust ищет строго `src/pages.rs` или `src/pages/mod.rs`. Если
+корневого файла модуля нет — или `mod`-декларации в корне нет вовсе — файлы
+каталога выпадают из дерева: rustc их не компилирует (сборка зелёная!), а
+rust-analyzer помечает «not included in any crate» — без подсказок, ховера
+и переходов.
+
+Фикс (минимальный, один крейт):
+
+```text
+src/
+├── main.rs        # + `mod pages;` и вызов pages::home::view(…)
+└── pages/
+    ├── mod.rs     # `pub mod home;`   (НЕ lib.rs)
+    └── home.rs    # реальный код модуля
+```
+
+Проверка headless: `rust-analyzer analysis-stats .` — в прогрессе должны
+фигурировать `<crate>::<модуль>::…`; `rust-analyzer diagnostics .` — без
+ошибок. Автопроверка: `cd tools/intellisense-check && npm run test:rust` —
+кейсы R1–R3 против герметичной фикстуры `fixtures-rust` (completion внутри
+модуля, hover и definition из корня в модуль); в CI — джоба
+`rust-intellisense-check`.
 
 ## Чек-лист проверки (после фикса)
 
@@ -99,6 +132,7 @@ Rust Analyzer; `cargo clean`; Restart Server. Если Code OSS запущен �
 - rust-lang/rust-analyzer#17664 — регрессия linkedProjects 0.4.2040–2042
 - rust-lang/rust-analyzer#19567 — глубина автодискавери = 1 уровень
 - Cargo Book → Workspaces (members/exclude, globs)
+- Rust Reference → Module system (поиск файла модуля: `<имя>.rs` / `<имя>/mod.rs`)
 
 ---
 

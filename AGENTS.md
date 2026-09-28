@@ -39,13 +39,16 @@ _var-www-_vscode/
 ├── .editorconfig               # табы шириной 2 для любых редакторов
 ├── .gitignore                  # исключения git: зависимости, AI-планы, chrome-профиль дебага
 ├── .github/workflows/ci.yml    # CI: intellisense-check (3 ОС) + vue-css-jump (submodule)
-│                               #   + shellcheck + JSONC-валидация
+│                               #   + rust-intellisense-check (Linux) + shellcheck
+│                               #   + JSONC-валидация
 ├── templates/                  # CI-шаблоны для Laravel-/WordPress-проектов
 │                               #   (laravel-ci.yml, wordpress-ci.yml; гайд docs/github-ci.md)
 ├── opencode.json               # Playwright MCP (браузерная проверка сайтов агентом)
 ├── tools/
 │   ├── intellisense-check/     # автотест IntelliSense (@vscode/test-electron, npm test)
-│   │                           #   кейсы 8-15: vue-css-jump из vendor/*.vsix (старший semver)
+│   │                           #   кейсы 8-15: vue-css-jump из vendor/*.vsix (старший semver);
+│   │                           #   test:rust (R0–R3): rust-analyzer в модульном cargo-проекте
+│   │                           #   (фикстура fixtures-rust)
 │   ├── machine/                # глобальный машинный сетап: install.sh (развёртывание
 │   │                           #   одной командой), снимок user settings (анти-дрейф —
 │   │                           #   export-user-settings.sh), php-cs-fixer — по README внутри
@@ -89,7 +92,7 @@ _var-www-_vscode/
 | Фикс phpactor/phpcs | docs/phpactor-indexer-phpcs-fix.md | Диагностика и фикс: indexer + storage/, exit-коды PHPCS 4.x, шаблон `.phpactor.json` для Laravel-проектов |
 | IntelliSense CSS/Vue/Laravel | docs/vue-css-intellisense.md | Матрица «симптом → фикс»: подсказки CSS, `$style` (inline + внешние `*.module.css` через css-modules-kit; member-list также от vue-css-jump ≥ 0.1.2), hover/Ctrl+Click по `<style src>`, карточки props/emits компонентов (vue-css-jump ≥ 0.5.0 — с ts-подсветкой и переходами к типам), «is not a module», `var(--…)`, пикер, отступы, Blade `@include`/Inertia `$page`; автотест tools/intellisense-check |
 | PHPantom + WordPress | docs/phpantom-wordpress.md | Паттерн полного IntelliSense для WP-инсталлов: открытие от корня WP, `.ignore` для vendor темы, editor-стабы (Acorn/WP-CLI), конфиги phpantom, регресс-чеки analyze; политика LSP-бинарников (расширение Code OSS → системный пакет) |
-| Rust-навигация (rust-analyzer) | docs/rust-navigation-fix.md | Фикс навигации для вложенных крейтов: `[workspace] members` в корневом Cargo.toml (glob `"*"` неприменим — cargo требует манифест от каждого совпавшего каталога), механика discovery rust-analyzer (корневой манифест / 1 уровень подкаталогов), linkedProjects-фолбэк, глобальный уровень (машинные расширения, `[rust]`-форматтер), чек-лист проверки |
+| Rust-навигация (rust-analyzer) | docs/rust-navigation-fix.md | Фикс навигации для вложенных крейтов: `[workspace] members` в корневом Cargo.toml (glob `"*"` неприменим — cargo требует манифест от каждого совпавшего каталога), механика discovery rust-analyzer (корневой манифест / 1 уровень подкаталогов), linkedProjects-фолбэк, глобальный уровень (машинные расширения, `[rust]`-форматтер), чек-лист проверки; смежный случай: модуль одного крейта через `mod.rs` (не `lib.rs` в подкаталоге), автотест `test:rust` (кейсы R0–R3) |
 | Rust-сеньор-сетап | docs/rust-senior-setup.md | Всё глобально: user-settings Code OSS (clippy на сохранении, ленз, табы ×2 через rustfmt.extraArgs), алиасы `~/.cargo/config.toml` (c/t/cl/f/fc), `~/.justfile` (`just -g`), bacon без конфига, `tools/rust-doctor.sh` (PASS/FAIL-диагностика), рецепт «новый проект за 30 секунд» |
 | Чистые Problems + форматирование | docs/clean-problems-formatting.md | Политика «анализ — только свой код»: исключения search/watcher/diagnostics/telemetry (vendor, node_modules, ядра Bitrix/WP), `php.validate.enable: false`, глобальные path-ignore phpantom; матрица форматтеров «один на язык» (Ctrl+Shift+I ≡ Ctrl+S), табы ×2: машинный `~/.config/vscode-php-cs-fixer/` + проектный `.php-cs-fixer.php` (Pint табы не умеет), Rector-конвейер; почему не Intelephense/PHP Tools |
 | Productivity Power-Ups | docs/power-ups.md | Расширения-2026 с вердиктами Open VSX API (REST Client, Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint, Mermaid, npm Intellisense, DotENV), задачи tasks.json (интелли-чек/rust-doctor/JSONC), keybindings Alt+R/A/M/L для phpantom-бонусов, live templates invk/mig12/useTplRef/useid |

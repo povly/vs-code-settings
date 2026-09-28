@@ -148,7 +148,10 @@ rustup component add rust-analyzer clippy rustfmt
 
 Навигация/подсказки во вложенных крейтах: корневой `Cargo.toml` обязан
 объявлять `[workspace] members = [...]` — rust-analyzer индексирует только
-workspace-члены. Гайд: [docs/rust-navigation-fix.md](docs/rust-navigation-fix.md).
+workspace-члены. Модули одного крейта: `mod <имя>;` в корне + `mod.rs`
+(не `lib.rs` — он корень отдельного крейта); автотест обоих случаев —
+`npm run test:rust` в tools/intellisense-check (кейсы R1–R3). Гайд:
+[docs/rust-navigation-fix.md](docs/rust-navigation-fix.md).
 
 Сеньор-автоматизация (всё глобально, любой проект): clippy + rustfmt (табы ×2)
 на сохранении, Run/Debug-лензы, bacon (фоновые проверки), just, алиасы
@@ -250,7 +253,8 @@ skills-lock.json       — фиксация версий внешних скил
 opencode.json          — Playwright MCP для AI-агента (проверка сайтов)
 tools/intellisense-check/ — автотест IntelliSense (@vscode/test-electron,
                            чистый инстанс VS Code; npm test; кейсы 9/9a —
-                           postcss-диалект; диагностика инсталлов:
+                           postcss-диалект; test:rust — rust-analyzer
+                           в модульном cargo-проекте; диагностика инсталлов:
                            npm run diag:wp -- --theme=… [--workspace/--files])
 tools/vscode-vue-css-jump/ — исходники расширения povly.vscode-vue-css-jump
                            (git submodule; адрес репозитория — .gitmodules;
