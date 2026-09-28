@@ -7,6 +7,7 @@
     "test": "node src/runTests.js",
     "test:headless": "xvfb-run -a npm test",
     "test:phpantom": "xvfb-run -a node src/runPhpantomTests.js",
+    "test:rust": "xvfb-run -a node src/runRustTests.js",
     "diag:wp": "xvfb-run -a node src/runDiagWpTheme.js"
   },
   "devDependencies": {
