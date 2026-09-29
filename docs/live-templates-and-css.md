@@ -14,7 +14,8 @@
 
 Что включено в settings.json:
 
-- `editor.tabCompletion: "onlySnippets"` — Tab разворачивает сниппет;
+- `editor.tabCompletion: "on"` — Tab принимает любой пункт списка подсказок
+  (и разворачивает сниппет, если выбран он);
 - `editor.snippetSuggestions: "top"` — шаблоны первыми в списке подсказок.
 
 ### Синтаксис шаблонов
@@ -151,8 +152,9 @@ tools/machine/install.sh
   **Reload Window** в открытых окнах.
 - Править `~/.config/Code - OSS/User/snippets/` вручную запрещено (дрейф от
   источника); чек развёртывания — `tools/workspace-doctor.sh`.
-- Tab-разворот вне воркспейса требует `editor.tabCompletion: "onlySnippets"` в
-  машинных user settings (входит в снимок
+- Tab-приём подсказок и разворот сниппетов вне воркспейса требуют
+  `editor.tabCompletion: "on"` + `editor.snippetSuggestions: "top"` в
+  машинных user settings (входят в снимок
   `tools/machine/Code-OSS-User-settings.jsonc`, секция подсказок).
 
 ### Языковая привязка (scope)

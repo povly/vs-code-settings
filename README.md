@@ -149,13 +149,20 @@ rustup component add rust-analyzer clippy rustfmt
 Навигация/подсказки во вложенных крейтах: корневой `Cargo.toml` обязан
 объявлять `[workspace] members = [...]` — rust-analyzer индексирует только
 workspace-члены. Модули одного крейта: `mod <имя>;` в корне + `mod.rs`
-(не `lib.rs` — он корень отдельного крейта); автотест обоих случаев —
-`npm run test:rust` в tools/intellisense-check (кейсы R1–R3). Гайд:
+(не `lib.rs` — он корень отдельного крейта); автотест —
+`npm run test:rust` в tools/intellisense-check (кейсы R0–R4: модули и граница
+workspace-крейта) и `npm run test:wgsl` (W0–W2: активация wgsl-analyzer,
+язык `.wgsl`, completion). Гайд:
 [docs/rust-navigation-fix.md](docs/rust-navigation-fix.md).
 
 Сеньор-автоматизация (всё глобально, любой проект): clippy + rustfmt (табы ×2)
 на сохранении, Run/Debug-лензы, bacon (фоновые проверки), just, алиасы
-`cargo c/t/cl/f/fc`, health-check `tools/rust-doctor.sh`. Гайд:
+`cargo c/t/cl/f/fc`, health-check `tools/rust-doctor.sh` (5 расширений,
+`[rust]`+`[wgsl]` user-settings, содержимое алиасов/justfile, `[workspace]`,
+капы памяти), развёртывание глобалей — `tools/machine/install.sh`.
+Новый Rust-проект — генератор
+`tools/new-rust-project.sh <каталог> [--bevy|--wgpu|--iced] [--nightly]`
+(самопроверка: cargo check + rust-doctor). Гайд:
 [docs/rust-senior-setup.md](docs/rust-senior-setup.md).
 
 ## Отладка фронтенда (Vue/Alpine/JS)
@@ -208,10 +215,12 @@ Intelephense…»).
 | [docs/phpantom-wordpress.md](docs/phpantom-wordpress.md) | Полный IntelliSense для WP-инсталлов (Sage/Acorn, ACF, WP-CLI): открытие от корня WP, `.ignore` для vendor, editor-стабы, регресс-чеки `phpantom_lsp analyze`, глобальные path-ignore |
 | [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md) | История миграции с phpactor: падение индексатора на `storage/`, ложный тост php-resolver/phpcs (PHPCS 4.x и битовая маска), шаблон конфига для Laravel-проектов |
 | [docs/rust-navigation-fix.md](docs/rust-navigation-fix.md) | Навигация во вложенных крейтах: `[workspace] members` в корневом Cargo.toml (без glob `"*"`), механика discovery rust-analyzer, linkedProjects-фолбэк, чек-лист проверки |
-| [docs/rust-senior-setup.md](docs/rust-senior-setup.md) | Сеньор-сетап «всё глобально»: clippy + rustfmt (табы ×2) на сохранении, Run/Debug-лензы, bacon, just, алиасы `cargo c/t/cl/f/fc`, health-check `tools/rust-doctor.sh`, рецепт «новый проект за 30 секунд» |
+| [docs/rust-senior-setup.md](docs/rust-senior-setup.md) | Сеньор-сетап «всё глобально»: clippy + rustfmt (табы ×2) на сохранении, Run/Debug-лензы, bacon, just, алиасы `cargo c/t/cl/f/fc`, health-check `tools/rust-doctor.sh` (5 расширений, `[rust]`+`[wgsl]`, содержимое алиасов/justfile, `[workspace]`, память), развёртывание глобалей `tools/machine/install.sh`, генератор `new-rust-project.sh`, автотесты test:rust (R0–R4) / test:wgsl (W0–W2) |
 | [docs/power-ups.md](docs/power-ups.md) | Расширения-2026 с вердиктами Open VSX (REST Client, Vitest explorer, Git Graph, Bookmarks, Rainbow CSV, ShellCheck, markdownlint + Mermaid, DotENV), задачи tasks.json, keybindings Alt+R/A/M/L, live templates invk/mig12/useTplRef/useid |
 | [docs/themes.md](docs/themes.md) | Темы для Code OSS (Open VSX): проверенный список из 11 тем (Catppuccin, Tokyo Night, Kanagawa Flavors, Ayu…), исключения (deprecated / MS-only), top-5 рядом с Rosé Pine, установка и закрепление `workbench.colorTheme` |
 | [docs/js-standalone-root.md](docs/js-standalone-root.md) | Паттерн «отдельный JS-корень» (Vite vanilla JS): jsconfig (checkJs + strict:false) + @webgpu/types (WebGPU во встроенном lib.dom нет), vite-env.d.ts, JSDoc-касты, Prettier табы ×2, ESLint 9 flat, зеркалирование .vscode — подсказки/переходы/форматирование вне воркспейса |
+| [docs/rust-standalone-root.md](docs/rust-standalone-root.md) | Паттерн «отдельный Rust-корень» (iced GUI-кейс): mod-декларации + mod.rs (не lib.rs) для подсказок/F12, global-first — почти всё машинное; в проекте только незаменимое: [workspace], rustfmt.toml (CLI-паритет табов ×2), rust-toolchain.toml, .editorconfig, launch.json (F5 CodeLLDB); нюанс rust-doctor check#8 |
+| [docs/rust-memory.md](docs/rust-memory.md) | Память Code OSS при Rust: замер `tools/rust-memory-report.sh` (RA 2.7 GB на iced-проекте без капов), капы `lru.capacity`/`cachePriming.numThreads` в user settings, opt-in профиль (bacon вместо checkOnSave, гигиена расширений), диагностика «F12 к макросам/крейтам молчит» (cargo check — истина; макросы iced в `widget::{row, column}`) |
 | [docs/github-ci.md](docs/github-ci.md) | GitHub CI «всё везде»: JS-проект (матрица 3 ОС + alpine/arch/fedora-контейнеры, vitest-каркас), воркспейс (intellisense-check/shellcheck/JSONC), шаблоны templates/ для Laravel и WordPress (тема + e2e с wp-cli/Playwright) |
 
 Внутренние документации и AI-контекст:
@@ -263,10 +272,15 @@ tools/vscode-vue-css-jump/ — исходники расширения povly.vsc
                            и базовому $style (0.5.0);
                            npm run package → VSIX → code-oss --install-extension)
 tools/machine/            — глобальный машинный сетап: install.sh (развёртывание
-                           одной командой), снимок user settings (анти-дрейф —
-                           export-user-settings.sh), php-cs-fixer (README внутри)
+                           одной командой; PHP-часть + Rust-глобаль: cargo-алиасы,
+                           ~/.justfile), снимок user settings (анти-дрейф —
+                           export-user-settings.sh), php-cs-fixer — README внутри
 tools/validate-jsonc.php — валидатор .vscode/*.json (задача «JSONC»)
-tools/rust-doctor.sh     — PASS/FAIL диагностика Rust-тулчейна
+tools/rust-doctor.sh     — PASS/FAIL диагностика Rust-окружения: 5 расширений,
+                           [rust]+[wgsl] user-settings, содержимое алиасов и
+                           ~/.justfile, [workspace] проекта, капы памяти
+tools/new-rust-project.sh — генератор Rust-проекта (--bevy/--wgpu/--iced,
+                           самопроверка cargo check + rust-doctor)
 tools/workspace-doctor.sh — PASS/FAIL диагностика веб-стека (phpantom, xdebug,
                            машинный php-cs-fixer, расширения)
 tools/install-extensions.sh — CLI-установка всех рекомендаций extensions.json

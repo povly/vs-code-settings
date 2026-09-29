@@ -1,4 +1,4 @@
-[← Предыдущий гайд](rust-senior-setup.md) · [К README](../README.md) · [Следующий гайд →](power-ups.md)
+[← Предыдущий гайд](rust-standalone-root.md) · [К README](../README.md) · [Следующий гайд →](power-ups.md)
 
 # Чистые Problems + единое форматирование (табы ×2)
 
