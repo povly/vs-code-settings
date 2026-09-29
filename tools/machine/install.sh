@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # install.sh — развёртывание машинного уровня (форматирование PHP +
-# live-templates) одной командой.
+# live-templates + Rust-глобаль: cargo-алиасы и ~/.justfile) одной командой.
 # Заменяет 3 ручных шага README (mkdir + cp + install). Идемпотентен: повторный
-# запуск безопасен (копирование поверх, wrapper переустанавливается с 755).
+# запуск безопасен (копирование поверх, wrapper переустанавливается с 755,
+# существующие [alias]/~/.justfile пользователя не перезаписываются — WARN).
 # Использование: tools/machine/install.sh   (из любого каталога)
 set -uo pipefail
 
@@ -54,6 +55,29 @@ else
 	printf 'WARN [machine-install] live-templates: *.code-snippets не найдены в %s\n' "$SNIPPETS_SRC"
 fi
 
+# Rust-глобаль: cargo-алиасы + ~/.justfile (гайд: docs/rust-senior-setup.md;
+# существующие [alias]/~/.justfile пользователя не перезаписываем — только WARN)
+RUST_SRC="$SRC/rust"
+CARGO_CONFIG="$HOME/.cargo/config.toml"
+JUSTFILE="$HOME/.justfile"
+mkdir -p "$HOME/.cargo" || die "не удалось создать ~/.cargo"
+
+if grep -q '^\[alias\]' "$CARGO_CONFIG" 2>/dev/null; then
+	printf 'WARN [machine-install] %s уже содержит [alias] — не трогаю (шаблон: tools/machine/rust/cargo-config.toml)\n' "$CARGO_CONFIG"
+elif cat "$RUST_SRC/cargo-config.toml" >> "$CARGO_CONFIG"; then
+	step "cargo-алиасы: [alias] дописан в ~/.cargo/config.toml (c/t/cl/f/fc)"
+else
+	die "не удалось дописать алиасы в $CARGO_CONFIG"
+fi
+
+if [ -f "$JUSTFILE" ]; then
+	printf 'WARN [machine-install] %s уже существует — не перезаписываю (шаблон: tools/machine/rust/justfile)\n' "$JUSTFILE"
+elif cp "$RUST_SRC/justfile" "$JUSTFILE"; then
+	step "just-рецепты: создан ~/.justfile (just -g test|build|clippy|fmt|check|watch)"
+else
+	die "копирование не удалось: $JUSTFILE"
+fi
+
 echo
 echo "PASS [machine-install] машинный уровень развёрнут в $DEST"
 if command -v php-cs-fixer >/dev/null 2>&1; then
@@ -66,5 +90,5 @@ echo "NOTE  ключи user settings (~/config Code - OSS/User/settings.json) �
 echo "      перенос из снимка Code-OSS-User-settings.jsonc, секция PHP обязательна"
 echo "      (полный чек после — tools/workspace-doctor.sh)"
 echo "NOTE  live-templates: $snippets_installed файл(ов) в $USER_SNIPPETS_DIR —"
-echo "      действуют в любом окне после Reload Window; Tab-разворот требует"
-echo "      editor.tabCompletion: \"onlySnippets\" в user settings (есть в снимке)"
+echo "      действуют в любом окне после Reload Window; Tab принимает пункты"
+echo "      списка и разворачивает сниппеты: editor.tabCompletion: \"on\" (есть в снимке)"

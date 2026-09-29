@@ -1,0 +1,30 @@
+# Универсальные рецепты для ЛЮБОГО cargo-проекта: just -g <рецепт> (например: just -g test)
+# Шаблон машинного ~/.justfile (развёртывание — tools/machine/install.sh; существующий
+# файл не перезаписывается). Гайд — docs/rust-senior-setup.md.
+default := "test"
+
+build:
+    cargo build --workspace
+
+test:
+    cargo test --workspace
+
+clippy:
+    cargo clippy --workspace --all-targets
+
+# Табы ×2 — конвенция воркспейса (тот же стиль, что и редактор через rust-analyzer)
+fmt:
+    cargo fmt --all -- --config hard_tabs=true --config tab_spaces=2
+
+fmt-check:
+    cargo fmt --all -- --check --config hard_tabs=true --config tab_spaces=2
+
+# Полный чек: стиль + линт
+check: fmt-check clippy
+
+# Фоновые проверки (терминал рядом с редактором; встроенные job'ы bacon, конфиг не нужен)
+watch:
+    bacon
+
+watch-test:
+    bacon test

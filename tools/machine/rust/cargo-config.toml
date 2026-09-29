@@ -1,0 +1,10 @@
+# Шаблон машинного ~/.cargo/config.toml (только [alias]; остальное содержимое
+# пользовательского конфига install.sh не трогает). Развёртывание — tools/machine/install.sh,
+# гайд — docs/rust-senior-setup.md. f/fc форматируют табами ×2 (конвенция воркспейса)
+# без проектного rustfmt.toml.
+[alias]
+c = "check --workspace"
+t = "test --workspace"
+cl = "clippy --workspace"
+f = ["fmt", "--all", "--", "--config", "hard_tabs=true", "--config", "tab_spaces=2"]
+fc = ["fmt", "--all", "--check", "--", "--config", "hard_tabs=true", "--config", "tab_spaces=2"]
