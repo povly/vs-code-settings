@@ -1,4 +1,4 @@
-[← Предыдущий гайд](js-standalone-root.md) · [К README](../README.md)
+[← Предыдущий гайд](js-standalone-root.md) · [К README](../README.md) · [Следующий гайд →](laravel-vue-alpine-root.md)
 
 # GitHub CI: все ОС, все типы проектов (JS · воркспейс · Laravel · WordPress)
 

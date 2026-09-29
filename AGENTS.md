@@ -71,6 +71,7 @@ _var-www-_vscode/
 │   ├── live-templates-and-css.md # гайд: live templates, Emmet, PostCSS-миксины
 │   ├── phpactor-indexer-phpcs-fix.md # фикс: падение индексатора phpactor на storage/, тост php-resolver/phpcs
 │   ├── vue-css-intellisense.md # гайд: подсказки CSS/$style/var(--)/пикер/Blade @include
+│   ├── laravel-vue-alpine-root.md # гайд: отдельный Laravel-корень — Laravel+Vue 3 (JS)+Alpine+Inertia+Vite
 │   ├── themes.md # гайд: темы Code OSS (Open VSX) — проверенный список, топ-5, закрепление colorTheme
 │   ├── rust-memory.md # гайд: память Code OSS при Rust — замер, капы RA, F12-диагностика
 │   └── … # остальные гайды — полная таблица в разделе «Документация» ниже
@@ -107,6 +108,7 @@ _var-www-_vscode/
 | Отдельный Rust-корень | docs/rust-standalone-root.md | Паттерн «Rust-проект вне воркспейса» (iced GUI-кейс): mod-декларации + mod.rs (НЕ lib.rs) — иначе файлы «not included in any crate» без подсказок/F12; global-first (rustfmt/clippy/лензы/сниппеты — машинные); проектное незаменимое: [workspace], rustfmt.toml (CLI-паритет табов ×2), rust-toolchain.toml, .editorconfig, launch.json (F5 CodeLLDB kind-only); генератор `tools/new-rust-project.sh` закрывает незаменимое одной командой (check#8 одиночного крейта — PASS с note, прежний ложный FAIL исправлен) |
 | Память Code OSS при Rust | docs/rust-memory.md | Замер `tools/rust-memory-report.sh` (RA 2.7 GB на iced-проекте без капов), фиксы машинного уровня: `lru.capacity` + `cachePriming.numThreads` в user settings (rust-doctor чек #9), снятие verbose-трейсинга tsserver/vue; opt-in профиль (bacon вместо checkOnSave, Disable (Workspace) веб-LSP); диагностика «F12 к макросам/крейтам молчит»: cargo check — истина, макросы iced 0.14 импортируются из `widget::{row, column}` |
 | GitHub CI | docs/github-ci.md | CI «всё везде»: JS-проекты (матрица ubuntu/windows/macos + контейнеры alpine/arch/fedora, vitest-каркас, генератор tools/new-js-project.sh — CI-ready по умолчанию), воркспейс (intellisense-check + shellcheck + JSONC), шаблоны templates/{laravel,wordpress}-ci.yml (тема + e2e: mysql + wp-cli + Playwright Chromium) |
+| Отдельный Laravel-корень | docs/laravel-vue-alpine-root.md | Паттерн «Laravel-проект вне воркспейса» (Laravel + Vue 3 чистый JS + Alpine.js + Inertia + Vite): веб-подмножество расширений и чёрный список (Vetur/Intelephense/phpactor/php-resolver), Alpine `@click`↔Blade-конфликт (x-on:/@@ + diagnostics.ignore), settings.json двух уровней (машина global-first + проектный минимум) и матрица форматтеров «один на язык» (Pint не умеет табы), jsconfig `@/` + алиас vite, границы Inertia (статического Ctrl+Click из контроллера нет — `@see`-тропинки), ide-helper vs генератор phpantom, Open VSX VSIX-флоу, чек-лист «подсказки пропали» |
 
 ## AI-контекст файлы
 
