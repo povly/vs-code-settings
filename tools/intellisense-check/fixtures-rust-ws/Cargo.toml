@@ -1,0 +1,12 @@
+[package]
+name = "ws-fixture"
+version = "0.1.0"
+edition = "2024"
+
+# Кейс docs/rust-navigation-fix.md: подкаталог-крейт индексируется rust-analyzer
+# только как workspace-член. members — явный список (glob "*" запрещён).
+[workspace]
+members = [".", "mathlib"]
+
+[dependencies]
+mathlib = { path = "mathlib" }

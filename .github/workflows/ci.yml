@@ -106,11 +106,15 @@ jobs:
       - name: lint markdown
         run: markdownlint-cli2 "README.md" "AGENTS.md" "docs/*.md"
 
-  # Регрессия rust-analyzer в модульном cargo-проекте (фикстура
-  # tools/intellisense-check/fixtures-rust, кейсы R0–R3): completion/hover/
-  # definition в файлах модулей — история <rust-проект>: файлы вне дерева
-  # крейта молча теряют весь IntelliSense. Linux-only: rust-тулчейн ставится
-  # только здесь (edition 2024 требует Rust ≥ 1.85); xvfb зашит в test:rust.
+  # Регрессия rust-analyzer (фикстуры tools/intellisense-check/fixtures-rust
+  # и fixtures-rust-ws): кейсы R0–R3 — completion/hover/definition в файлах
+  # модулей (история <rust-проект>: файлы вне дерева крейта молча теряют
+  # IntelliSense); R4 — те же проверки через границу workspace-крейта
+  # ([workspace] members, первичный кейс docs/rust-navigation-fix.md).
+  # Плюс WGSL: кейсы W0–W2 (fixtures-wgsl) — активация wgsl-analyzer,
+  # язык .wgsl, completion; W0-guard при недоступности расширения — WARN-skip.
+  # Linux-only: rust-тулчейн ставится только здесь (edition 2024 требует
+  # Rust ≥ 1.85); xvfb зашит в test:rust/test:wgsl.
   rust-intellisense-check:
     runs-on: ubuntu-latest
     steps:
@@ -129,3 +133,6 @@ jobs:
       - name: test:rust
         working-directory: tools/intellisense-check
         run: npm run test:rust
+      - name: test:wgsl
+        working-directory: tools/intellisense-check
+        run: npm run test:wgsl

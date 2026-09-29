@@ -12,6 +12,9 @@ const { execSync } = require('child_process');
 
 const FIXTURES = path.resolve(__dirname, '..', '..', 'fixtures-rust');
 const RA_EXT = 'rust-lang.rust-analyzer';
+// Раннер гоняет две фикстуры отдельными инстансами VS Code (runRustTests.js):
+// этот сьют активен в прогоне RUST_SUITE=modular (или без переменной).
+const ACTIVE = !process.env.RUST_SUITE || process.env.RUST_SUITE === 'modular';
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -64,7 +67,7 @@ function hoverHasContent(hovers) {
 	);
 }
 
-describe('rust-analyzer: модульная система (fixtures-rust)', function () {
+(ACTIVE ? describe : describe.skip)('rust-analyzer: модульная система (fixtures-rust)', function () {
 	this.timeout(180000);
 
 	before(async function () {
