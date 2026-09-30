@@ -1,4 +1,4 @@
-// Снимок user settings Code OSS — 2026-09-29
+// Снимок user settings Code OSS — 2026-09-30
 // Источник правды — живой файл: /home/povly/.config/Code - OSS/User/settings.json
 // Обновлено скриптом tools/machine/export-user-settings.sh (не править руками)
 
@@ -21,16 +21,14 @@
   // сохранении. Wrapper ставит cwd = ~/.config/vscode-php-cs-fixer (там служебный
   // composer.json с config.platform.php). Шаблоны: tools/machine/ в воркспейсе _vscode.
   "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
-  // Гасим ложный тост php-resolver «phpcs - Mismatch configuration provided»
-  // (PHPCS 4.x битовая маска) глобально — стиль держат pint/junstyle, не PHPCS
-  "phpResolver.phpSnifferCommand": "",
   "security.workspace.trust.untrustedFiles": "open",
   "chat.disableAIFeatures": true,
-  "kilo-code.allowedCommands": ["git log", "git diff", "git show"],
-  "kilo-code.deniedCommands": [],
   "editor.minimap.enabled": false,
   "terminal.integrated.stickyScroll.enabled": false,
-  "editor.stickyScroll.enabled": false,
+  // Sticky scroll редактора — on (паритет с воркспейсом): контекст-шапка
+  // при навигации по большим файлам (WP/Bitrix/vendor).
+  // Терминальный sticky scroll — off (осознанный выбор)
+  "editor.stickyScroll.enabled": true,
   "workbench.editor.revealIfOpen": true,
   "[blade]": {
     "editor.defaultFormatter": "shufo.vscode-blade-formatter",
@@ -68,12 +66,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
   },
-  "terminal.integrated.commandsToSkipShell": [
-    "kilo-code.new.agentManagerOpen",
-    "kilo-code.new.agentManager.showTerminal",
-    "kilo-code.new.agentManager.previousTerminal",
-    "kilo-code.new.agentManager.nextTerminal",
-  ],
 
   // PHP: единственный LSP — PHPantom
   "php.validate.enable": false,
@@ -90,6 +82,12 @@
     "**/build": true,
     "**/.git": true,
     "**/.vscode-test": true,
+    // Ядра CMS — чужой код (глобально для окон вне воркспейса _vscode;
+    // свой код Bitrix: local/**, WP: свои темы/плагины — остаются в поиске)
+    "**/bitrix": true,
+    "**/upload": true,
+    "**/wp-admin": true,
+    "**/wp-includes": true,
   },
   "files.watcherExclude": {
     "**/vendor/**": true,
@@ -97,7 +95,12 @@
     "**/target/**": true,
     "**/dist/**": true,
     "**/storage/framework/**": true,
+    "**/storage/logs/**": true,
     "**/.vscode-test/**": true,
+    "**/bitrix/**": true,
+    "**/upload/**": true,
+    "**/wp-admin/**": true,
+    "**/wp-includes/**": true,
   },
 
   // Emmet в Vue-шаблонах
@@ -107,8 +110,11 @@
     "blade": "html",
     "postcss": "css",
   },
+  // Vue — Prettier (паритет с воркспейсом _vscode): форматтер Volar не читает
+  // prettier.useTabs/tabWidth → в чужих окнах SFC форматировались пробелами
   "[vue]": {
-    "editor.defaultFormatter": "Vue.volar",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
   },
   "explorer.confirmDelete": false,
   "files.autoSave": "afterDelay",
@@ -116,8 +122,19 @@
   // Todo Tree: путь к системному ripgrep (в Arch-сборке code нет встроенного;
   // правильный ключ — с двойным "ripgrep", текст ошибки называет старый)
   "todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
-  "redhat.telemetry.enabled": true,
+  // Телеметрия — off на машинном уровне (паритет с воркспейсом _vscode);
+  // redhat.* гасит телеметрию расширений Red Hat (vscode-xml и др.)
+  "telemetry.telemetryLevel": "off",
+  "redhat.telemetry.enabled": false,
   "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+  },
+  "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
   },
@@ -179,14 +196,15 @@
     "strings": true,
   },
 
-  // Подсказки: превью в списке, параметры вызовов, сниппеты первыми,
-  // Tab принимает любой пункт списка (сниппеты — в топе через snippetSuggestions:
-  // top — разворачиваются тем же Tab), форматирование при вставке
-  // (глобально, любой корень)
+  // Подсказки: превью в списке, параметры вызовов, сниппеты первыми
+  // (в топе через snippetSuggestions: top), форматирование при вставке
+  // (глобально, любой корень). Tab разворачивает ТОЛЬКО сниппеты
+  // (onlySnippets — паритет с воркспейсом _vscode): Enter принимает
+  // подсказки, Tab в коде всегда даёт таб-отступ
   "editor.suggest.preview": true,
   "editor.parameterHints.enabled": true,
   "editor.snippetSuggestions": "top",
-  "editor.tabCompletion": "on",
+  "editor.tabCompletion": "onlySnippets",
   "editor.formatOnPaste": true,
 
   // postcss-ловушка: язык «postcss» глушит CSS IntelliSense → .pcss/.postcss = scss
@@ -195,6 +213,7 @@
     "*.pcss": "scss",
     "*.postcss": "scss",
     "*.wgsl": "wgsl",
+    "*.volt": "html",
   },
   "scss.lint.unknownAtRules": "ignore",
 
@@ -211,20 +230,39 @@
   "editor.colorDecorators": true,
   "editor.defaultColorDecorators": "auto",
 
+  // ═══ Global-first: editor-поведение воркспейса _vscode — на машинный уровень
+  //      (чужие окна без .vscode получают те же фишки; 2026-09-29) ═══
+  "emmet.triggerExpansionOnTab": true, // Emmet по Tab (в любом окне, не только в _vscode)
+  "editor.linkedEditing": true, // синхронное переименование парных HTML-тегов (замена auto-rename-tag)
+  "editor.mouseWheelZoom": true, // Ctrl+колесо — масштаб шрифта
+  "editor.rulers": [120],
+  "editor.guides.bracketPairs": "active", // направляющие пар скобок активного блока
+  "editor.hover.delay": 150,
+  "editor.wordBasedSuggestions": "currentDocument",
+  "editor.acceptSuggestionOnEnter": "on",
+  "explorer.compactFolders": false, // папки не схлопываются в одну строку пути
+  "explorer.confirmDragAndDrop": false,
+  "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
+  "extensions.autoUpdate": "onlyEnabledExtensions", // меньше фоновых обновлений и перезапусков окна
+  "files.autoGuessEncoding": true, // старые файлы WP/Bitrix в cp1251 открываются корректно
+
   // JSON/YAML — единственное исключение из табов: 2 пробела
   "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "prettier.useTabs": false,
     "editor.formatOnSave": true,
   },
   "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "prettier.useTabs": false,
     "editor.formatOnSave": true,
   },
   "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "prettier.useTabs": false,
@@ -261,6 +299,19 @@
   // Перенос/переименование файлов: import-пути обновляются сами
   "typescript.updateImportsOnFileMove.enabled": "always",
   "javascript.updateImportsOnFileMove.enabled": "always",
+
+  // ═══ Встроенные возможности Code OSS 2025–2026 (без расширений; 2026-09-29) ═══
+
+  // Git blame в строке редактора — встроено с 1.97 (free-замена GitLens-функции);
+  // статус-бар item — on по умолчанию. Авто-fetch — фоном, безопасно
+  "git.blame.editorDecoration.enabled": true,
+  "git.autofetch": true,
+
+  // Terminal IntelliSense — GA с 1.106: completions путей/флагов/истории в bash
+  "terminal.integrated.suggest.enabled": true,
+
+  // Дебаг: брейкпоинты деревом по файлам (1.108) — удобно при Xdebug/CodeLLDB
+  "debug.breakpointsView.presentation": "tree",
 
   // ═══ Файловая гигиена (глобально, любой корень) ═══
   "files.eol": "\n",

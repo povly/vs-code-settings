@@ -124,16 +124,19 @@
   // JSON/YAML — единственное исключение из «табов везде»: 2 пробела (конвенция
   // воркспейса). Без этих блоков Prettier с глобальным useTabs:true писал бы в JSON табы.
   "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "prettier.useTabs": false
   },
   "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "prettier.useTabs": false
   },
   "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "prettier.useTabs": false
