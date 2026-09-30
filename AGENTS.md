@@ -58,6 +58,8 @@ _var-www-_vscode/
 │   ├── rust-doctor.sh          # PASS/FAIL-диагностика Rust-окружения (5 расширений,
 │   │                           #   содержимое алиасов/justfile, [workspace], память)
 │   ├── rust-memory-report.sh   # RSS-разбивка: кто ест память (RA, code-oss, flycheck, LSP)
+│   ├── lang-switch-doctor.sh   # PASS/FAIL: кража фокуса при переключении раскладки
+│                               #   (KDE Wayland: OSD plasmashell + Alt-меню Code OSS)
 │   ├── new-js-project.sh       # генератор JS-проекта (CI-ready, --webgpu)
 │   ├── new-rust-project.sh     # генератор Rust-проекта (--bevy/--wgpu/--iced,
 │   │                           #   самопроверка cargo check + rust-doctor)
@@ -109,6 +111,7 @@ _var-www-_vscode/
 | Память Code OSS при Rust | docs/rust-memory.md | Замер `tools/rust-memory-report.sh` (RA 2.7 GB на iced-проекте без капов), фиксы машинного уровня: `lru.capacity` + `cachePriming.numThreads` в user settings (rust-doctor чек #9), снятие verbose-трейсинга tsserver/vue; opt-in профиль (bacon вместо checkOnSave, Disable (Workspace) веб-LSP); диагностика «F12 к макросам/крейтам молчит»: cargo check — истина, макросы iced 0.14 импортируются из `widget::{row, column}` |
 | GitHub CI | docs/github-ci.md | CI «всё везде»: JS-проекты (матрица ubuntu/windows/macos + контейнеры alpine/arch/fedora, vitest-каркас, генератор tools/new-js-project.sh — CI-ready по умолчанию), воркспейс (intellisense-check + shellcheck + JSONC), шаблоны templates/{laravel,wordpress}-ci.yml (тема + e2e: mysql + wp-cli + Playwright Chromium) |
 | Отдельный Laravel-корень | docs/laravel-vue-alpine-root.md | Паттерн «Laravel-проект вне воркспейса» (Laravel + Vue 3 чистый JS + Alpine.js + Inertia + Vite): веб-подмножество расширений и чёрный список (Vetur/Intelephense/phpactor/php-resolver), Alpine `@click`↔Blade-конфликт (x-on:/@@ + diagnostics.ignore), settings.json двух уровней (машина global-first + проектный минимум) и матрица форматтеров «один на язык» (Pint не умеет табы), jsconfig `@/` + алиас vite, границы Inertia (статического Ctrl+Click из контроллера нет — `@see`-тропинки), ide-helper vs генератор phpantom, Open VSX VSIX-флоу, чек-лист «подсказки пропали» |
+| Фокус при переключении языка (KDE) | docs/kde-lang-switch-focus-fix.md | Фикс кражи фокуса ввода при Alt+Shift (XKB `grp:alt_shift_toggle`, Plasma 6.7 Wayland): механизм №1 — OSD раскладки plasmashell (kwin безусловно дёргает `org.kde.osdService`; фикс `plasmarc [OSD] kbdLayoutChangedEnabled=false`, на лету); механизм №2 — Alt-меню-бар Code OSS (Electron; фикс машинный `window.menuBarVisibility: "compact"` + переэкспорт снимка); диагностика `queryWindowInfo`/DBus-пробы, fallback-лестница (апплет трея → плагин kwin → grp:shifts_toggle), чек `tools/lang-switch-doctor.sh` (PASS 5/5) |
 
 ## AI-контекст файлы
 

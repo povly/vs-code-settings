@@ -6,6 +6,11 @@
   "workbench.startupEditor": "none",
   "workbench.colorTheme": "Rosé Pine",
   "workbench.iconTheme": "material-icon-theme",
+  // Меню-бар — компакт-кнопка в титлбаре: при переключении раскладки Alt+Shift
+  // (XKB grp:alt_shift_toggle) одиночный Alt-up активирует классический
+  // меню-бар (панель File) и крадёт фокус ввода (нужен ESC). Без меню-бара
+  // Alt нечего активировать. Гайд: docs/kde-lang-switch-focus-fix.md (_vscode)
+  "window.menuBarVisibility": "compact",
   "[php]": {
     "editor.defaultFormatter": "junstyle.php-cs-fixer",
   },
@@ -243,7 +248,7 @@
   "explorer.compactFolders": false, // папки не схлопываются в одну строку пути
   "explorer.confirmDragAndDrop": false,
   "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
-  "extensions.autoUpdate": "onlyEnabledExtensions", // меньше фоновых обновлений и перезапусков окна
+  "extensions.autoUpdate": "on", // меньше фоновых обновлений и перезапусков окна
   "files.autoGuessEncoding": true, // старые файлы WP/Bitrix в cp1251 открываются корректно
 
   // JSON/YAML — единственное исключение из табов: 2 пробела
@@ -317,5 +322,5 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
-  "files.trimFinalNewlines": true,
+  "files.trimFinalNewlines": true
 }
