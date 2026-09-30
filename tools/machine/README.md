@@ -77,6 +77,21 @@
    `tools/new-js-project.sh <каталог> [--webgpu]` (jsconfig + ESLint +
    vitest-каркас + CI-workflow). Паттерны CI — docs/github-ci.md.
 
+   **Global-first editor-фишки + встроенный git-стек** (2026-09-29, аудит
+   возможностей Code OSS 1.97–1.108): машинные user settings дополнительно
+   несут — editor-поведение воркспейса в любом окне (Emmet по Tab,
+   `linkedEditing`, `mouseWheelZoom`, `rulers`, `guides.bracketPairs`,
+   `files.autoGuessEncoding` для cp1251, `extensions.autoUpdate`), исключения
+   CMS-ядер из поиска/watcher (`bitrix/upload/wp-admin/wp-includes/
+   storage/logs`), приватность (`telemetry.telemetryLevel: off`,
+   `redhat.telemetry.enabled: false`), явные форматтеры `[json]/[jsonc]/
+   [yaml]` + `[vue]` = Prettier (Volar игнорирует `prettier.useTabs`),
+   встроенные возможности (`git.blame.editorDecoration.enabled`,
+   `git.autofetch`, Terminal IntelliSense, дерево брейкпоинтов). Мёртвые
+   ключи (phpResolver, kilo-code) удалены; `editor.tabCompletion:
+   "onlySnippets"` и `editor.stickyScroll.enabled: true` выровнены
+   с воркспейсом.
+
 ## Анти-дрейф снимка user settings
 
 Снимок `Code-OSS-User-settings.jsonc` — справочник переноса; источник правды —

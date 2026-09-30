@@ -104,6 +104,28 @@ npm-скрипты вложенных проектов подхватывают�
   (идемпотентен); `machine/export-user-settings.sh` — обновить снимок user
   settings из живого файла (анти-дрейф, прогоняет workspace-doctor как чек).
 
+## Встроенные возможности Code OSS 2025–2026 (2026-09-29)
+
+Без расширений — требует редактор 1.10x+ (проверка: `code-oss --version`).
+Ключи прописаны в машинных user settings → действуют в любом открытом окне:
+
+| Возможность | Ключ | Версия | Что даёт |
+|---|---|---|---|
+| Git blame в строке | `git.blame.editorDecoration.enabled: true` | 1.97 | Автор+коммит в конце строки (hover — детали). Free-замена функции GitLens; статус-бар item — on по умолчанию (`git.blame.statusBarItem.enabled`) |
+| Авто-fetch | `git.autofetch: true` | — | `git fetch` фоном — статус веток всегда свежий |
+| Git worktrees | — (UI из коробки) | 1.103 | Несколько веток одновременно: Command Palette → «Git: Create New Worktree…» — без CLI и расширений |
+| Terminal IntelliSense | `terminal.integrated.suggest.enabled: true` | 1.106 (GA) | Completions путей/флагов/истории команд в bash |
+| Брейкпоинты деревом | `debug.breakpointsView.presentation: "tree"` | 1.108 | Группировка брейкпоинтов по файлам — порядок при Xdebug/CodeLLDB-сессиях с десятками точек |
+| Staged-изменения в гуттере | — (default) | 1.100 | Индикаторы staged-правок в редакторе, без Source Control-панели |
+| EditContext-ввод | — (default) | 1.101 | Стабильный ввод/IME — ничего настраивать не нужно |
+
+Из той же волны — глобально выровнены с воркспейсом (аудит 29.09.2026):
+`[json]/[jsonc]/[yaml]` получили явный форматтер Prettier (нет диалога
+«Multiple Formatters»), `[vue]` — Prettier вместо Volar (Volar не читает
+`prettier.useTabs` → чужие окна форматировали SFC пробелами), телеметрия
+off на машинном уровне, мёртвые ключи (phpResolver, kilo-code) удалены,
+`editor.tabCompletion: "onlySnippets"` и sticky scroll — едины везде.
+
 ## Горячие клавиши phpantom (.vscode/keybindings.json)
 
 | Клавиши | Команда | Что делает |
