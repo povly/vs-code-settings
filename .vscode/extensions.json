@@ -47,8 +47,9 @@
     "DavidAnson.vscode-markdownlint",    // markdownlint: качество docs (MIT; релизы 2026)
     "bierner.markdown-mermaid",          // Mermaid-диаграммы/флоучарты в markdown-preview (MIT)
 
-    // ── Тема (по умолчанию — закреплена в workbench.colorTheme) ──
-    "mvllow.rose-pine"                   // Rosé Pine — основная тема воркспейса
+    // ── Темы/иконки (дефолты закреплены в workbench.colorTheme / workbench.iconTheme) ──
+    "mvllow.rose-pine",                  // Rosé Pine — основная тема воркспейса
+    "pkief.material-icon-theme"          // Иконки файлов/папок — закреплены в глобальном workbench.iconTheme (user settings)
   ],
 
   // ── Опциональные (косметика/комфорт — НЕ база; поставить при желании вручную) ──
@@ -57,7 +58,6 @@
   // "enkia.tokyo-night",                      // тёмная + Day (светлая), чистый контраст
   // "metaphore.kanagawa-vscode-color-theme",  // Wave/Dragon (тёмные) + Lotus (светлая)
   // "naumovs.color-highlight",         // подсветка web-цветов; интерактивный пикер — встроенный VS Code
-  // "pkief.material-icon-theme",       // иконки файлов/папок
   // "oderwat.indent-rainbow",          // цветная подсветка отступов
   // "pranaygp.vscode-css-peek",        // прыжок от класса в HTML к CSS-правилу
   // "aaron-bond.better-comments",      // цветные комментарии
@@ -65,6 +65,11 @@
   // "ms-vscode.live-server",           // Live Preview (официальный MS): превью HTML в встроенном браузере — замена заброшенного ritwickdey.liveserver
   // "donjayamanne.githistory",         // Git History: история файла/сравнение веток (основной сценарий уже покрыт git-graph)
   // "yzhang.markdown-all-in-one",      // Markdown All in One: TOC и шорткаты (markdownlint уже в базе)
+
+  // Вне базового списка (установлены на машине вручную — при переносе ставить по необходимости):
+  // natizyskunk.sftp (деплой по SFTP), lkrms.inifmt (.ini), lch.nginx-beautifier (nginx.conf),
+  // redhat.vscode-xml (XML/LSP), cherrymarkdownpublisher.cherry-markdown (Markdown-редактор),
+  // decahedra.pinit (пиннинг вкладок)
 
   // НЕ рекомендуем (freemium / платные функции / конфликты):
   // bmewburn.vscode-intelephense-client — rename/organize imports платные
