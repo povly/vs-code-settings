@@ -131,10 +131,12 @@ kwriteconfig6 --file plasmarc --group OSD --key kbdLayoutChangedEnabled --type b
    Убрать: правый клик по панели → «Добавить виджеты» → убрать keyboard layout
    (или вычеркнуть из `extraItems` в конфиге системного трея).
 2. **Плагин kwin keyboardlayout** (гасит OSD-DBus, апплет и org.kde.keyboard разом):
+
    ```bash
    kwriteconfig6 --file kwinrc --group Plugins --key keyboardlayoutEnabled false
    qdbus6 org.kde.KWin /KWin reconfigure
    ```
+
    Обязательно проверить, что Alt+Shift продолжает переключать раскладку
    (XKB-тоггл должен выжить — он в ядре ввода). Откат: `--key keyboardlayoutEnabled --delete` + reconfigure.
 3. **Смена тоггла на не-Alt** (`grp:shifts_toggle` — два Shift, `localectl set-x11-keymap us,ru "" grp:shifts_toggle`):
