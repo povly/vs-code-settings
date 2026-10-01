@@ -1,0 +1,52 @@
+# Глобальный конфиг phpantom (~/.config/phpantom_lsp/.phpantom.toml)
+# ─────────────────────────────────────────────────────────────────
+# Назначение: «Problems — только свой код» в ЛЮБОМ открытом корне:
+#   - path-ignore чужой диагностики (vendor, ядра CMS, плагины) — гасит
+#     сообщения, не трогая индексацию/F12;
+#   - PHPCS-прокси выключен: phpantom по умолчанию сам находит системный
+#     phpcs в $PATH и гоняет его при каждом сохранении (стандарт PSR12) —
+#     шум; стиль PHP в воркспейсе задаёт php-cs-fixer (Pint не умеет табы),
+#     PHPCS не используется (docs/clean-problems-formatting.md).
+# Развёртывание: tools/machine/install.sh (идемпотентен: существующий
+#   конфиг не перезаписывает — diff сверять вручную с этим шаблоном).
+# Источник правды — этот файл; проверка: tools/workspace-doctor.sh (чеки 2-3).
+# Схема опций: config-schema.json в репо PHPantom-dev/phpantom_lsp
+#   (секции: php / diagnostics / indexing / semantic_tokens / laravel /
+#    formatting / phpstan / phpcs / mago); полный обзор — docs/phpantom-lsp.md.
+
+# composer-зависимости любого проекта (Laravel, Sage/Acorn и др.)
+[[diagnostics.ignore]]
+path = "vendor/**"
+
+# ядро WordPress
+[[diagnostics.ignore]]
+path = "wp-includes/**"
+
+[[diagnostics.ignore]]
+path = "wp-admin/**"
+
+# сторонние плагины WP (свой плагин — сузить правило)
+[[diagnostics.ignore]]
+path = "wp-content/plugins/**"
+
+[[diagnostics.ignore]]
+path = "wp-content/mu-plugins/**"
+
+# ядро 1С-Битрикс (свой код — local/**)
+[[diagnostics.ignore]]
+path = "bitrix/**"
+
+# медиа/аплоады Битрикс
+[[diagnostics.ignore]]
+path = "upload/**"
+
+# WP-шум: динамические свойства меню на WP_Post
+[[diagnostics.ignore]]
+identifier = "unknown_member"
+message = "^Property '[^']+' not found on class 'WP_Post'$"
+
+# PHPCS-прокси выключен: пустая строка = disable (config-schema.json:
+# «Empty string: disable PHPCS integration»). Аналогично отключаются
+# прокси phpstan и mago — оставлены unset (phpstan полезен в Laravel).
+[phpcs]
+command = ""

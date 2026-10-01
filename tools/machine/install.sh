@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # install.sh — развёртывание машинного уровня (форматирование PHP +
+# конфиг phpantom: path-ignore чужой диагностики + PHPCS-прокси off,
 # live-templates + Rust-глобаль: cargo-алиасы и ~/.justfile) одной командой.
 # Заменяет 3 ручных шага README (mkdir + cp + install). Идемпотентен: повторный
 # запуск безопасен (копирование поверх, wrapper переустанавливается с 755,
-# существующие [alias]/~/.justfile пользователя не перезаписываются — WARN).
+# существующие [alias]/~/.justfile/~/.phpantom.toml пользователя
+# не перезаписываются — WARN).
 # Использование: tools/machine/install.sh   (из любого каталога)
 set -uo pipefail
 
@@ -27,6 +29,24 @@ if install -m 755 "$SRC/php-cs-fixer-wrapper.sh" "$DEST/php-cs-fixer-wrapper.sh"
 	step "установлен wrapper (755): $DEST/php-cs-fixer-wrapper.sh"
 else
 	die "установка wrapper не удалась"
+fi
+
+# phpantom: глобальный конфиг (~/.config/phpantom_lsp/.phpantom.toml) —
+# path-ignore чужой диагностики (vendor/**, ядра WP/Bitrix, плагины) +
+# выключенный PHPCS-прокси (иначе phpantom сам находит системный phpcs
+# в $PATH и гоняет его при каждом сохранении — PSR12-шум; стиль —
+# php-cs-fixer). Шаблон: tools/machine/phpantom.toml; проверка —
+# tools/workspace-doctor.sh (чеки 2–3); обзор опций — docs/phpantom-lsp.md.
+PHPANTOM_DIR="$HOME/.config/phpantom_lsp"
+PHPANTOM_TOML="$PHPANTOM_DIR/.phpantom.toml"
+mkdir -p "$PHPANTOM_DIR" || die "не удалось создать $PHPANTOM_DIR"
+
+if [ -f "$PHPANTOM_TOML" ]; then
+	printf 'WARN [machine-install] %s уже существует — не трогаю (шаблон: tools/machine/phpantom.toml; diff — вручную)\n' "$PHPANTOM_TOML"
+elif cp "$SRC/phpantom.toml" "$PHPANTOM_TOML"; then
+	step "phpantom-конфиг: создан $PHPANTOM_TOML (path-ignore + [phpcs] off)"
+else
+	die "копирование phpantom.toml не удалось"
 fi
 
 # Live-templates: .code-snippets воркспейса → user-уровень, чтобы сниппеты
@@ -86,6 +106,8 @@ else
 	echo "WARN  CLI php-cs-fixer не в PATH — один раз на машину:"
 	echo "      composer global require friendsofphp/php-cs-fixer"
 fi
+echo "NOTE  phpantom: после ПЕРВОГО создания ~/.config/phpantom_lsp/.phpantom.toml —"
+echo "      PHPantom: Restart Language Server (или Reload Window) в открытых окнах"
 echo "NOTE  ключи user settings (~/config Code - OSS/User/settings.json) —"
 echo "      перенос из снимка Code-OSS-User-settings.jsonc, секция PHP обязательна"
 echo "      (полный чек после — tools/workspace-doctor.sh)"
