@@ -1,10 +1,10 @@
-// Снимок user settings Code OSS — 2026-09-30
+// Снимок user settings Code OSS — 2026-10-01
 // Источник правды — живой файл: /home/povly/.config/Code - OSS/User/settings.json
 // Обновлено скриптом tools/machine/export-user-settings.sh (не править руками)
 
 {
   "workbench.startupEditor": "none",
-  "workbench.colorTheme": "Rosé Pine",
+  "workbench.colorTheme": "Kanagawa Wave",
   "workbench.iconTheme": "material-icon-theme",
   // Меню-бар — компакт-кнопка в титлбаре: при переключении раскладки Alt+Shift
   // (XKB grp:alt_shift_toggle) одиночный Alt-up активирует классический
@@ -333,7 +333,7 @@
   "workbench.breadcrumbs.enabled": false,
   "workbench.editor.actionBar.location": "hidden",
   "workbench.tips.enabled": false,
-  "editor.showFoldingControls": "never",
+  "editor.showFoldingControls": "always",
   // Компактность: плотные списки/дерева, вкладки ниже, тонкие скроллбары.
   // Масштаб UI — стандартный (zoom 0: хром на 100%); код мельче дефолта
   // (fontSize 13), терминал чуть крупнее кода (14). Откат — одна строка.
@@ -348,5 +348,5 @@
   "terminal.integrated.fontSize": 14,
   // Плавность (Zed-feel)
   "editor.cursorSmoothCaretAnimation": "on",
-  "editor.smoothScrolling": true
+  "editor.smoothScrolling": true,
 }
