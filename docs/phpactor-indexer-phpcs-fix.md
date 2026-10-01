@@ -12,6 +12,11 @@
 > **Актуализация 27.09.2026:** упомянутый ниже стиль «Laravel Pint» — состояние
 > кейса на тот момент; канон воркспейса — php-cs-fixer (Pint не умеет табы —
 > docs/clean-problems-formatting.md).
+> **Актуализация 01.10.2026:** системный `phpcs` 4.0.4 в `$PATH` находит и
+> сам phpantom: его PHPCS-прокси (source `phpcs`, коды PSR12.*) гоняет сниффер
+> при каждом сохранении файла без `phpcs.xml`. Выключение `[phpcs] command = ""`
+> провижинится глобально: шаблон `tools/machine/phpantom.toml`, деплой —
+> `tools/machine/install.sh` (обзор — docs/phpantom-lsp.md).
 > Гайд ниже сохранён как история инцидента.
 
 ## Симптомы

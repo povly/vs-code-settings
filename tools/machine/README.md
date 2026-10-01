@@ -14,6 +14,7 @@
 | `vscode-php-cs-fixer.php` | Машинный конфиг php-cs-fixer: табы ×2 + PSR12 + `array_indentation`. Копируется в `~/.config/vscode-php-cs-fixer/.php-cs-fixer.php` |
 | `php-cs-fixer-wrapper.sh` | Silent-wrapper (обязателен): cwd = `~/.config/vscode-php-cs-fixer` — гасит WARN «Unable to determine minimum PHP version…» и фильтрует баннер fixer'а из stderr (баг junstyle 0.3.21: `files==0` + непустой stderr → «provider FAILED» — падало каждое сохранение уже-чистого файла). Настоящие ошибки проходят насквозь. Механика — docs/clean-problems-formatting.md |
 | `composer.json` | Служебный composer.json для wrapper'а: `config.platform.php` = major.minor runtime. Копируется в `~/.config/vscode-php-cs-fixer/composer.json` |
+| `phpantom.toml` | Шаблон глобального конфига phpantom `~/.config/phpantom_lsp/.phpantom.toml`: path-ignore чужой диагностики (vendor/**, ядра WP/Bitrix, плагины) + `[phpcs] command = ""` (иначе phpantom сам находит системный phpcs в `$PATH` и гоняет PSR12-снифф при каждом сохранении; стиль — php-cs-fixer). install.sh копирует только при отсутствии. Проверка — `tools/workspace-doctor.sh` (чеки 2–3); справочник опций — docs/phpantom-lsp.md |
 | `Code-OSS-User-settings.jsonc` | Снимок user settings Code OSS (справочник переноса; источник правды — живой файл) |
 | `rust/cargo-config.toml` | Шаблон `[alias]` для `~/.cargo/config.toml` (c/t/cl/f/fc; f/fc — табы ×2). install.sh копирует при отсутствии файла / дописывает `[alias]`, если его ещё нет; существующие алиасы не трогает |
 | `rust/justfile` | Шаблон `~/.justfile` (`just -g test\|build\|clippy\|fmt\|check\|watch\|watch-test`); копируется только при отсутствии |
@@ -28,7 +29,10 @@
    ```
 
    Скрипт создаёт `~/.config/vscode-php-cs-fixer/`, копирует конфиг и служебный
-   composer.json, ставит wrapper с правами 755 и раскладывает live-templates:
+   composer.json, ставит wrapper с правами 755, создаёт глобальный конфиг
+   phpantom `~/.config/phpantom_lsp/.phpantom.toml` (path-ignore чужой
+   диагностики + PHPCS-прокси off; существующий не перезаписывает — WARN) и
+   раскладывает live-templates:
    8 файлов `.vscode/*.code-snippets` → `~/.config/Code - OSS/User/snippets/` —
    сниппеты действуют в ЛЮБОМ окне, не только в воркспейсе (гайд:
    docs/live-templates-and-css.md). Плюс Rust-глобаль: `[alias]` в

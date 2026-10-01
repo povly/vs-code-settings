@@ -76,6 +76,9 @@ command = ""
 
 Политика: **только глобальный конфиг** — проектный `[[diagnostics.ignore]]`
 заменяет массив целиком (эмпирика 0.10.0, см. docs/phpantom-wordpress.md).
+Шаблон этого конфига — `tools/machine/phpantom.toml` (деплой:
+`tools/machine/install.sh`; проверка — `tools/workspace-doctor.sh`, чеки 2–3;
+справочник всех опций — docs/phpantom-lsp.md).
 Проверка на любом инсталле:
 
 ```bash

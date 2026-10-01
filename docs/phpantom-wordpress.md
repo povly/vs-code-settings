@@ -1,4 +1,4 @@
-[← Предыдущий гайд](vue-css-intellisense.md) · [К README](../README.md) · [Следующий гайд →](rust-navigation-fix.md)
+[← Предыдущий гайд](vue-css-intellisense.md) · [К README](../README.md) · [Следующий гайд →](phpantom-lsp.md)
 
 # PHPantom + WordPress: полное IntelliSense в Code OSS (на примере WP-инсталла и Sage-темы)
 
@@ -125,7 +125,8 @@ printf '!vendor/\n!vendor/**\n' > "$T/.ignore"
 ```
 
 Всё остальное (ignore-правила, PHPCS-off, WP_Post) — уже глобально в
-`~/.config/phpantom_lsp/.phpantom.toml` и в новых проектах делать нечего.
+`~/.config/phpantom_lsp/.phpantom.toml` (шаблон: `tools/machine/phpantom.toml`,
+деплой — `tools/machine/install.sh`) и в новых проектах делать нечего.
 
 ## Регрессионные чеки (после изменений конфигов/темы)
 

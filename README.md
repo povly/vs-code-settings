@@ -82,9 +82,11 @@ Language Basics оставить для подсветки).
   и ложный тост «phpcs - Mismatch configuration provided» (PHPCS 4.x возвращает
   битовую маску — 3 = fixable + non-fixable; история: [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md)).
   Ключ `"phpResolver.phpSnifferCommand": ""` в проектах больше не нужен.
-  PHPCS-прокси самого phpantom (source `phpcs` в Problems) тоже выключен
-  глобально — `[phpcs] command = ""` в `~/.config/phpantom_lsp/.phpantom.toml`,
-  иначе на каждом сохранении сыплет PSR12-стилем.
+  PHPCS-прокси самого phpantom (source `phpcs` в Problems) выключен
+  глобально — `[phpcs] command = ""` в `~/.config/phpantom_lsp/.phpantom.toml`
+  (шаблон `tools/machine/phpantom.toml`, деплой — `tools/machine/install.sh`;
+  иначе на каждом сохранении сыплет PSR12-стилем). Возможности сервера
+  и справочник конфига — [docs/phpantom-lsp.md](docs/phpantom-lsp.md).
 
 ### Xdebug — отладка PHP
 
@@ -213,6 +215,7 @@ Intelephense…»).
 | [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md) | Матрица «симптом → фикс»: подсказки CSS-свойств, `$style` (inline + внешние `*.module.css`), `var(--…)`, color picker, Blade `@include`; автотест `tools/intellisense-check`; диагностика инсталлов `npm run diag:wp` (WP: корень темы vs корень инсталла — зеркалирование `.vscode`, машинно-локально) |
 | [docs/clean-problems-formatting.md](docs/clean-problems-formatting.md) | Политика «анализ — только свой код»: исключения vendor/ядра Bitrix/WP из поиска и диагностик, матрица форматтеров «один на язык», машинный php-cs-fixer с табами, почему не Intelephense/PHP Tools |
 | [docs/phpantom-wordpress.md](docs/phpantom-wordpress.md) | Полный IntelliSense для WP-инсталлов (Sage/Acorn, ACF, WP-CLI): открытие от корня WP, `.ignore` для vendor, editor-стабы, регресс-чеки `phpantom_lsp analyze`, глобальные path-ignore |
+| [docs/phpantom-lsp.md](docs/phpantom-lsp.md) | Возможности phpantom_lsp 0.10.0: типизация (generics, `@phpstan-type`), Laravel (ключи route/config/view/env — символы), Blade (цепочка переменных, контракт `view()`, компоненты), диагностика + внешние анализаторы (рецепт отключения phpcs-прокси), рефакторинги, CLI analyze/fix/update, справочник `.phpantom.toml` (шаблон `tools/machine/phpantom.toml`) |
 | [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md) | История миграции с phpactor: падение индексатора на `storage/`, ложный тост php-resolver/phpcs (PHPCS 4.x и битовая маска), шаблон конфига для Laravel-проектов |
 | [docs/rust-navigation-fix.md](docs/rust-navigation-fix.md) | Навигация во вложенных крейтах: `[workspace] members` в корневом Cargo.toml (без glob `"*"`), механика discovery rust-analyzer, linkedProjects-фолбэк, чек-лист проверки |
 | [docs/rust-senior-setup.md](docs/rust-senior-setup.md) | Сеньор-сетап «всё глобально»: clippy + rustfmt (табы ×2) на сохранении, Run/Debug-лензы, bacon, just, алиасы `cargo c/t/cl/f/fc`, health-check `tools/rust-doctor.sh` (5 расширений, `[rust]`+`[wgsl]`, содержимое алиасов/justfile, `[workspace]`, память), развёртывание глобалей `tools/machine/install.sh`, генератор `new-rust-project.sh`, автотесты test:rust (R0–R4) / test:wgsl (W0–W2) |

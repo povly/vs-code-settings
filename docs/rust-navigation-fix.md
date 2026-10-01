@@ -1,4 +1,4 @@
-[← Предыдущий гайд](phpantom-wordpress.md) · [К README](../README.md) · [Следующий гайд →](rust-senior-setup.md)
+[← Предыдущий гайд](phpantom-lsp.md) · [К README](../README.md) · [Следующий гайд →](rust-senior-setup.md)
 
 # Rust: навигация в Code OSS — фикс для вложенных крейтов (rust-analyzer)
 
