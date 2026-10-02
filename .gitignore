@@ -9,6 +9,7 @@ target/
 
 # AI Factory: планы — локальные рабочие документы с путями/именами машинных
 # проектов, в публичный репо не идут (политика санитизации)
+.ai-factory/PLAN.md
 .ai-factory/plans/
 .ai-factory/archive/
 .ai-factory/patches/
