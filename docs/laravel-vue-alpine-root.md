@@ -465,6 +465,33 @@ props/emits, hover по class-токену): исходники в
 | Problems забиты чужим кодом (vendor) | нет path-ignore | `~/.config/phpantom_lsp/.phpantom.toml` — глобальные path-ignore ([clean-problems-formatting.md](clean-problems-formatting.md)) |
 | Laravel LSP молчит (`@include` без подсказок) | LSP не стартовал / нет composer install | View → Output → канал **Laravel**; `php` в PATH, `composer install` выполнен |
 | Окно живёт своей жизнью после смены настроек | user settings кэшированы | `Developer: Reload Window` после правок ассоциаций/алиасов |
+| При сохранении `.php`: `Formatting failed: Failed to spawn pint: Permission denied (os error 13)` | деплой срезал exec-биты `vendor/bin/*` — phpantom-форматтер не может спавнить pint | `chmod +x vendor/bin/* artisan` от корня проекта — рецепт ниже |
+
+### После деплоя: срезанные exec-биты в `vendor/bin`
+
+Симптом → диагностика → фикс:
+
+1. **Симптом**: при каждом сохранении `.php` (format-on-save) —
+   `Formatting failed: Failed to spawn pint: Permission denied (os error 13)`,
+   LSP-код `-32603`; из терминала `vendor/bin/<любой скрипт>` и `artisan`
+   не запускаются («Permission denied»). `[php]`-форматтер phpantom
+   автодетектит pint из `vendor/bin` — спавн падает на отсутствии `x`.
+2. **Диагностика**: `ls -l vendor/bin/` — у скриптов `-rw-rw-r--` (нет
+   exec-бита). Права срезает деплой-инструмент: копирование/vendor-синк
+   без сохранения прав (маркер — «чужая» группа файла, напр. `http`).
+   Сломаны не только форматирование, но и `composer test`/CI-скрипты,
+   которые дёргают `vendor/bin/*` напрямую.
+3. **Фикс** — одна команда от корня проекта:
+
+   ```bash
+   chmod +x vendor/bin/* artisan
+   ```
+
+   Проверка: `vendor/bin/pint --version` печатает версию, spawn OK.
+
+Нюанс: `composer install` с нуля выставляет bin-права сам; повторный
+деплой срежет снова — чинить в деплой-пайплайне (сохранение прав:
+`rsync -p`, `tar -p`) или post-deploy-хуком с chmod.
 
 ### Инструменты воркспейса
 
