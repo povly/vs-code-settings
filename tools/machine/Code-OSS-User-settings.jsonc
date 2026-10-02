@@ -271,14 +271,26 @@
   "editor.mouseWheelZoom": true, // Ctrl+колесо — масштаб шрифта
   "editor.rulers": [120],
   "editor.guides.bracketPairs": "active", // направляющие пар скобок активного блока
+  // Горизонтальные направляющие многострочных конструкций (2026-10-02, интернет-аудит
+  // готовых настроек) — дополняют вертикальные active
+  "editor.guides.bracketPairsHorizontal": "active",
   "editor.hover.delay": 150,
   "editor.wordBasedSuggestions": "currentDocument",
   "editor.acceptSuggestionOnEnter": "on",
+  // Подсветка вхождений слова — только текущий файл (2026-10-02, интернет-аудит):
+  // дефолт multiFile ищет вхождения фоном по ВСЕМ файлам — лишняя работа на
+  // WP/Bitrix-корнях. Философия «только свой код». Откат — удалить строку
+  "editor.occurrencesHighlight": "singleFile",
+  // Ранжирование подсказок: «недавно использованные по префиксу» (2026-10-02,
+  // интернет-аудит) — точнее дефолтного recentlyUsed
+  "editor.suggestSelection": "recentlyUsedByPrefix",
   "explorer.compactFolders": false, // папки не схлопываются в одну строку пути
   "explorer.confirmDragAndDrop": false,
   "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
   // Фикс (2026-10-02): комментарий декларировал «меньше обновлений», но "on"
   // качал и отключённые расширения. Паритет с воркспейсом: onlyEnabledExtensions.
+  // (Повторный фикс 2026-10-02, аудит дрейфа: живой файл вернулся к "on" —
+  // приведён обратно к этому снимку.)
   "extensions.autoUpdate": "onlyEnabledExtensions",
   "files.autoGuessEncoding": true, // старые файлы WP/Bitrix в cp1251 открываются корректно
 
@@ -392,6 +404,9 @@
   // Масштаб UI — стандартный (zoom 0: хром на 100%); код мельче дефолта
   // (fontSize 13), терминал чуть крупнее кода (14). Откат — одна строка.
   "workbench.list.tightTree": true,
+  // Отступ дерева проводника 20px (2026-10-02, интернет-аудит) — читаемость
+  // глубокой вложенности (Bitrix local/, resources/views). Дефолт 8
+  "workbench.tree.indent": 20,
   "workbench.editor.tabHeight": "compact",
   "editor.scrollbar.verticalScrollbarSize": 8,
   "editor.scrollbar.horizontalScrollbarSize": 8,
@@ -400,6 +415,9 @@
   "window.zoomLevel": 0,
   "editor.fontSize": 13,
   "terminal.integrated.fontSize": 14,
+  // Scrollback терминала 10000 строк (2026-10-02, интернет-аудит): дефолта
+  // 1000 мало для длинных логов artisan serve / vite / cargo run
+  "terminal.integrated.scrollback": 10000,
   // Плавность (Zed-feel)
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.smoothScrolling": true,

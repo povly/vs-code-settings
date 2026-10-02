@@ -61,17 +61,23 @@
   // "oderwat.indent-rainbow",          // цветная подсветка отступов
   // "pranaygp.vscode-css-peek",        // прыжок от класса в HTML к CSS-правилу
   // "aaron-bond.better-comments",      // цветные комментарии
-  // "wix.vscode-import-cost",          // размер JS-пакетов рядом с import
+  // "wix.vscode-import-cost",          // размер JS-пакетов рядом с import (2026-10-02, аудит: Open VSX 3.3.0 MIT — подтверждён как опционал; в базу не идёт: Vite-проекты Laravel стартуют с шаблона)
   // "ms-vscode.live-server",           // Live Preview (официальный MS): превью HTML в встроенном браузере — замена заброшенного ritwickdey.liveserver
   // "donjayamanne.githistory",         // Git History: история файла/сравнение веток (основной сценарий уже покрыт git-graph)
   // "yzhang.markdown-all-in-one",      // Markdown All in One: TOC и шорткаты (markdownlint уже в базе)
+  // "streetsidesoftware.code-spell-checker", // (2026-10-02, интернет-аудит) орфография EN в коде/коммитах: Open VSX 4.9.5 (26.09.2026), GPL-3.0, активно. Для ru-текстов — пара со словарём streetsidesoftware.code-spell-checker-russian (2.2.4, MIT, 07.2025) + cSpell languageSettings, иначе рус. комментарии = шум. В базу НЕ входит — включать по вкусу
 
-  // Вне базового списка (установлены на машине вручную — при переносе ставить по необходимости):
+  // Вне базового списка (установлены на машине вручную — при переносе ставить по необходимости).
+  // Решение 2026-10-02 (закрыт вопрос из code-oss-global-setup-audit T7): осознанный
+  // машинный опционал под конкретные рабочие сценарии — в recommendations НЕ вносить:
   // natizyskunk.sftp (деплой по SFTP), lkrms.inifmt (.ini), lch.nginx-beautifier (nginx.conf),
   // redhat.vscode-xml (XML/LSP), cherrymarkdownpublisher.cherry-markdown (Markdown-редактор),
   // decahedra.pinit (пиннинг вкладок)
 
   // НЕ рекомендуем (freemium / платные функции / конфликты):
+  // emilast.LogFileHighlighter — отклонён 2026-10-02 (интернет-аудит): последний
+  //   релиз 2020-06 (Open VSX), стагнация 6 лет; просмотр/подсветка логов уже
+  //   покрыты phpantom log-viewer (Alt+L)
   // bmewburn.vscode-intelephense-client — rename/organize imports платные
   // devsense.phptools — DEVSENSE PHP Tools, значительная часть платная
   // eamodio.gitlens — часть функций платных
