@@ -175,6 +175,82 @@ graph LR
    Alt+R/A/M/L не перехвачены другими расширениями (Keyboard Shortcuts UI);
    Problems по-прежнему чист.
 
+## Исследование готовых настроек 2026-10 (интернет-аудит)
+
+> Цикл «поизучай в интернете → возьми в тест → проверь» (план
+> `.ai-factory/plans/code-oss-settings-research-test.md`): dotfiles-гайды
+> 2025–2026, awesome-списки, релиз-ноты VS Code 1.140, верификация кандидатов
+> через API Open VSX (`curl https://open-vsx.org/api/<ns>/<name>`).
+
+### Настройки — применённые (машинный уровень, зеркально в снимок tools/machine)
+
+| Ключ | Значение | Зачем |
+|---|---|---|
+| `editor.occurrencesHighlight` | `"singleFile"` | перф: дефолт `multiFile` ищет вхождения фоном по ВСЕМ файлам — лишняя работа на WP/Bitrix-корнях; философия «только свой код» |
+| `editor.suggestSelection` | `"recentlyUsedByPrefix"` | ранжирование подсказок «недавно использованные по префиксу» |
+| `editor.guides.bracketPairsHorizontal` | `"active"` | горизонтальные направляющие многострочных конструкций (дополняют вертикальные) |
+| `workbench.tree.indent` | `20` | читаемость глубокой вложенности (Bitrix local/, resources/views); дефолт 8 |
+| `terminal.integrated.scrollback` | `10000` | дефолта 1000 мало для логов artisan serve / vite / cargo run |
+
+Отклонённые (с причинами): `files.hotExit` — `autoSave: afterDelay` уже
+сохраняет всё; `editor.formatOnSaveMode: "modifications"` — конфликт с
+политикой полного детерминированного форматирования (php-cs-fixer/Prettier
+whole-file); `extensions.ignoreRecommendations` — гасит полезные динамические
+tips (решено ранее); «лимит reopen-closed-editors» — ключа в схеме нет.
+Отложено до обновления Code OSS до 1.140: `editor.selectedTextMatchMode`,
+`git.worktreeSymlinkFolders` (эксперимент; переиспользование node_modules
+между worktree). Анти-дрейф-фикс: `extensions.autoUpdate` в живом user
+settings вернулся к `"on"` — приведён к снимку (`"onlyEnabledExtensions"`).
+
+### Расширения — вердикты (API Open VSX, 02.10.2026)
+
+| Расширение | Open VSX | Вердикт |
+|---|---|---|
+| streetsidesoftware.code-spell-checker | 4.9.5 (26.09.2026), GPL-3.0, активно | **optional**: орфография EN в коде; для ru-текстов — словарь code-spell-checker-russian (2.2.4, MIT) + cSpell languageSettings, иначе рус. комментарии = шум |
+| emilast.LogFileHighlighter | 2.8.0; последний релиз **2020-06** | **отклонён**: стагнация 6 лет; логи уже покрыты phpantom log-viewer (Alt+L) |
+| wix.vscode-import-cost | 3.3.0 (2022), MIT | подтверждён как optional |
+| «Highlight Bad Chars» | в реестре не найден | отклонён |
+
+Внекатегорные машинные (sftp, inifmt, nginx-beautifier, vscode-xml,
+cherry-markdown, pinit): решение — осознанный машинный опционал под рабочие
+сценарии, в recommendations не вносить (закрыт вопрос T7 из
+code-oss-global-setup-audit).
+
+### Регрессии версий (диагностика 02.10.2026, intellisense-check)
+
+1. **Зомби-окна после системного обновления (главный урок 02.10.2026).**
+   `sudo pacman -Syu`, тронувший `electron42/43` (или `code`) под работающими
+   окнами Code OSS, оставляет их бегать с удалённого inode: любой спавн
+   дочернего процесса падает `spawn /usr/lib/electron42/electron (deleted)
+   ENOENT`. Симптомы: JSON Language Server крашится 5 раз и замолкает,
+   у Volar умирает tsserver → пропсы/подсказки Vue пропадают (vue-css-jump
+   hover-карточки при этом живы — работает без tsserver-цепочки). Диагностика:
+   `ls -l /proc/<pid>/exe` → `(deleted)`. **Фикс: полный перезапуск Code OSS
+   (File → Exit во всех окнах; Reload Window НЕ помогает — главный процесс
+   остаётся). Правило гигиены: после всякого pacman -Syu с electron/code —
+   полный перезапуск редактора.**
+2. **css-modules-kit 1.4.0 × VS Code 1.140** (кейс 6a): классы из
+   `*.module.css` пропадают из member-list импорта в `.ts` (CSS custom
+   properties остаются). Узкий путь (не влияет на пропсы/шаблоны/$style);
+   отслеживать upstream (mizdra/css-modules-kit).
+3. **Test-host 1.138 не воспроизводит template-цепочку Volar** (кейсы 4/5b
+   красные на ЛЮБОЙ версии Volar 3.2.9–3.3.11 при живом редакторе; 1.140
+   частично воспроизводит). Известное ограничение test-electron (см. WARN
+   кейса 6: .vue → Inferred-проект). Вывод: падение кейсов 4/5b на инстансе
+   1.138 — НЕ регрессия Volar и не повод даунгрейдить расширения/редактор.
+
+### Верификация (02.10.2026)
+
+- `npm test` (инстанс 1.140): 23 passing / 1 failing — только кейс 6a (см. выше)
+- `npm run test:rust`: 3 passing (R1–R4c) · `npm run test:wgsl`: 2 passing (W1–W2)
+- `php tools/validate-jsonc.php .vscode/extensions.json`: OK
+- Code OSS на машине: 1.138.0 (пакет `code`) — обновление до 1.140 за
+  пользователем; там же десятки memory-leak фиксов 1.140 (terminal/semantic
+  tokens/extension host — актуально для docs/rust-memory.md)
+- Замер RSS rust-analyzer в момент аудита невозможен (сервер не был запущен);
+  метод — `tools/rust-memory-report.sh`; эксперимент
+  `extensions.experimental.affinity` отложен (нет измеримой базы)
+
 ---
 
 ## См. также
