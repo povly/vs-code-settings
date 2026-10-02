@@ -16,6 +16,7 @@
 | `composer.json` | Служебный composer.json для wrapper'а: `config.platform.php` = major.minor runtime. Копируется в `~/.config/vscode-php-cs-fixer/composer.json` |
 | `phpantom.toml` | Шаблон глобального конфига phpantom `~/.config/phpantom_lsp/.phpantom.toml`: path-ignore чужой диагностики (vendor/**, ядра WP/Bitrix, плагины) + `[phpcs] command = ""` (иначе phpantom сам находит системный phpcs в `$PATH` и гоняет PSR12-снифф при каждом сохранении; стиль — php-cs-fixer). install.sh копирует только при отсутствии. Проверка — `tools/workspace-doctor.sh` (чеки 2–3); справочник опций — docs/phpantom-lsp.md |
 | `Code-OSS-User-settings.jsonc` | Снимок user settings Code OSS (справочник переноса; источник правды — живой файл) |
+| `Code-OSS-User-keybindings.jsonc` | Снимок user keybindings Code OSS: Alt+R/A/M/L — phpantom-бонусы на машинном уровне (справочник переноса; обновляется `export-user-settings.sh` вместе со settings) |
 | `rust/cargo-config.toml` | Шаблон `[alias]` для `~/.cargo/config.toml` (c/t/cl/f/fc; f/fc — табы ×2). install.sh копирует при отсутствии файла / дописывает `[alias]`, если его ещё нет; существующие алиасы не трогает |
 | `rust/justfile` | Шаблон `~/.justfile` (`just -g test\|build\|clippy\|fmt\|check\|watch\|watch-test`); копируется только при отсутствии |
 
@@ -95,6 +96,34 @@
    ключи (phpResolver, kilo-code) удалены; `editor.tabCompletion:
    "onlySnippets"` и `editor.stickyScroll.enabled: true` выровнены
    с воркспейсом.
+
+   **Дополнение 2026-10-02** (аудит живых проектов /var/www: 13 Laravel-корней
+   L12/L13, 17 WP-инсталлов, Rust bevy/iced/wgpu, Vue 3.5/Inertia/Alpine,
+   ESLint 9/10 flat): `[php]`/`[blade]` + `editor.formatOnSave: true`
+   (standalone-корни форматируются как в воркспейсе — раньше только окна
+   _vscode), новый блок `[toml]` (even-better-toml, 2 пробела, formatOnSave),
+   inlay hints JS/TS (`parameterNames: "literals"`, `enumMemberValues`,
+   `variableTypes` + `suppressWhenNoMatches`; шумные режимы не включены),
+   `search.exclude` += `**/storage/framework` (скомпилированные views —
+   сгенерированный код), `git.confirmSync: false`, fileNesting `Cargo.toml`
+   += `rust-toolchain.toml`, фикс `extensions.autoUpdate`: `"on"` →
+   `"onlyEnabledExtensions"` (комментарий декларировал «меньше обновлений» —
+   значение ему противоречило). Порядок import-ов вторым сортировщиком
+   (`source.organizeImports`) сознательно НЕ включён: им владеет ESLint
+   `import/order` + `source.fixAll.eslint` на сохранении (6 проектов) —
+   иначе каждый Ctrl+S перекладывал бы импорты по-разному. Tailwind-расширение
+   остаётся в blacklist: `tailwindcss ^4` в 8 манифестах — стартовый шаблон
+   Laravel 12/13, вёрстка на нём не пишется.
+
+   **Keybindings — Alt+R/A/M/L (2026-10-02):** 4 биндинга phpantom (роуты /
+   artisan / `@property`-аннотации / логи; `when`-гарды по `editorLangId`
+   php/blade) вынесены в машинный `~/.config/Code - OSS/User/keybindings.json` —
+   работают в любом окне с Laravel-корнем, не только в воркспейсе _vscode. В
+   user settings им сопутствует `terminal.integrated.commandsToSkipShell`
+   (клавиши срабатывают и при фокусе в терминале; дефолтный список сохраняется).
+   Воркспейс-копия в `.vscode/keybindings.json` остаётся (самодостаточность
+   воркспейса). Снимок — `Code-OSS-User-keybindings.jsonc` (обновляет
+   `export-user-settings.sh`, теперь экспортирует оба снимка разом).
 
 ## Анти-дрейф снимка user settings
 

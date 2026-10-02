@@ -232,7 +232,10 @@
     "**/bitrix": true,
     "**/upload": true,
     "**/wp-admin": true,
-    "**/wp-includes": true
+    "**/wp-includes": true,
+    // Скомпилированные blade-views/кэш Laravel — сгенерированный код
+    // (2026-10-02, паритет с глобальными user settings)
+    "**/storage/framework": true
   },
   "files.watcherExclude": {
     "**/node_modules/**": true,
@@ -292,7 +295,7 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "package.json": "package-lock.json, bun.lockb, pnpm-lock.yaml, yarn.lock, .prettierrc*, .eslintrc*",
-    "Cargo.toml": "Cargo.lock, rustfmt.toml",
+    "Cargo.toml": "Cargo.lock, rustfmt.toml, rust-toolchain.toml",
     "composer.json": "composer.lock, .php-cs-fixer.php, pint.json"
   }
 }

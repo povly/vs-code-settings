@@ -1,0 +1,44 @@
+// Снимок user keybindings Code OSS — 2026-10-02
+// Источник правды — живой файл: /home/povly/.config/Code - OSS/User/keybindings.json
+// Обновлено скриптом tools/machine/export-user-settings.sh (не править руками)
+
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+d",
+        "command": "-notebook.addFindMatchToSelection",
+        "when": "config.notebook.multiCursor.enabled && notebookCellEditorFocused && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "-editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "editor.action.duplicateSelection"
+    },
+    // phpantom-бонусы (2026-10-02, машинный уровень — паритет с воркспейсом _vscode):
+    // Alt+R — роуты, Alt+A — artisan, Alt+M — @property-аннотации, Alt+L — логи.
+    // Действуют в ЛЮБОМ окне с PHP/Blade-файлом; из терминала — commandsToSkipShell
+    // в user settings. ID команд: contributes.commands phpantom.phpantom (docs/power-ups.md)
+    {
+        "key": "alt+r",
+        "command": "phpantom.showRouteList",
+        "when": "editorLangId == php || editorLangId == blade"
+    },
+    {
+        "key": "alt+a",
+        "command": "phpantom.runArtisanCommand",
+        "when": "editorLangId == php || editorLangId == blade"
+    },
+    {
+        "key": "alt+m",
+        "command": "phpantom.generateModelAnnotations",
+        "when": "editorLangId == php"
+    },
+    {
+        "key": "alt+l",
+        "command": "phpantom.showLogViewer"
+    }
+]

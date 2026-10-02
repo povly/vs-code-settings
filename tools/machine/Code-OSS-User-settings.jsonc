@@ -1,4 +1,4 @@
-// Снимок user settings Code OSS — 2026-10-01
+// Снимок user settings Code OSS — 2026-10-02
 // Источник правды — живой файл: /home/povly/.config/Code - OSS/User/settings.json
 // Обновлено скриптом tools/machine/export-user-settings.sh (не править руками)
 
@@ -13,6 +13,11 @@
   "window.menuBarVisibility": "compact",
   "[php]": {
     "editor.defaultFormatter": "junstyle.php-cs-fixer",
+    // Форматирование при сохранении (2026-10-02, аудит /var/www): в воркспейсе
+    // _vscode действует глобальный editor.formatOnSave, а в standalone-корнях
+    // (13 Laravel + 17 WP) PHP не форматировался вовсе. Теперь табы ×2 через
+    // машинный конфиг junstyle в ЛЮБОМ окне (автосейв afterDelay тоже запускает).
+    "editor.formatOnSave": true,
   },
   // PHP-форматтер junstyle: машинный конфиг (табы ×2 + PSR12 + indentation_type).
   // "~/" поддерживается расширением → действует в любом открытом корне; воркспейс
@@ -37,6 +42,9 @@
   "workbench.editor.revealIfOpen": true,
   "[blade]": {
     "editor.defaultFormatter": "shufo.vscode-blade-formatter",
+    // + форматирование при сохранении (2026-10-02, паритет с воркспейсом):
+    // blade-шаблоны standalone-корней форматируются табами ×2 на Ctrl+S
+    "editor.formatOnSave": true,
   },
   // Blade — табы ×2 глобально (как в воркспейсе _vscode; без этих ключей
   // blade-formatter по умолчанию делает 4 пробела)
@@ -93,6 +101,10 @@
     "**/upload": true,
     "**/wp-admin": true,
     "**/wp-includes": true,
+    // Скомпилированные blade-views/кэш Laravel — сгенерированный код (2026-10-02):
+    // Ctrl+Shift+F в standalone-корнях не дублирует находки из storage
+    // (watcher это уже исключал). storage/logs остаётся доступным поиску.
+    "**/storage/framework": true,
   },
   "files.watcherExclude": {
     "**/vendor/**": true,
@@ -212,6 +224,23 @@
   "editor.tabCompletion": "onlySnippets",
   "editor.formatOnPaste": true,
 
+  // ═══ Inlay hints JS/TS (2026-10-02; встроенный TS-сервис, Vue — через Volar) ═══
+  // parameterNames «literals» — имена параметров только у литеральных аргументов
+  // (минимум шума); enumMemberValues — значения enum; variableTypes — инференс
+  // типов переменных (JS без аннотаций + TS), suppressWhenNoMatches гасит пустые.
+  // Шумные режимы (parameterTypes на call-site, functionLikeReturnTypes) — off.
+  // Порядок import-ов вторым сортировщиком (source.organizeImports) НЕ включаем:
+  // им владеет ESLint `import/order` + source.fixAll.eslint на сохранении
+  // (6 проектов /var/www) — два сортировщика конфликтовали бы на каждом Ctrl+S.
+  "javascript.inlayHints.parameterNames.enabled": "literals",
+  "typescript.inlayHints.parameterNames.enabled": "literals",
+  "javascript.inlayHints.enumMemberValues.enabled": true,
+  "typescript.inlayHints.enumMemberValues.enabled": true,
+  "javascript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "javascript.inlayHints.variableTypes.suppressWhenNoMatches": true,
+  "typescript.inlayHints.variableTypes.suppressWhenNoMatches": true,
+
   // postcss-ловушка: язык «postcss» глушит CSS IntelliSense → .pcss/.postcss = scss
   "files.associations": {
     "*.blade.php": "blade",
@@ -248,7 +277,9 @@
   "explorer.compactFolders": false, // папки не схлопываются в одну строку пути
   "explorer.confirmDragAndDrop": false,
   "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
-  "extensions.autoUpdate": "on", // меньше фоновых обновлений и перезапусков окна
+  // Фикс (2026-10-02): комментарий декларировал «меньше обновлений», но "on"
+  // качал и отключённые расширения. Паритет с воркспейсом: onlyEnabledExtensions.
+  "extensions.autoUpdate": "onlyEnabledExtensions",
   "files.autoGuessEncoding": true, // старые файлы WP/Bitrix в cp1251 открываются корректно
 
   // JSON/YAML — единственное исключение из табов: 2 пробела
@@ -278,6 +309,15 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
   },
+  // TOML (2026-10-02): even-better-toml — как в воркспейсе _vscode. Cargo.toml /
+  // phpantom.toml / rust-toolchain.toml в любом корне: 2 пробела + формат на
+  // сохранении (TOML — исключение из табов, как JSON/YAML)
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+  },
 
   // ═══ Глобальные фишки (2026-09-23, источник: воркспейс _vscode) ═══
 
@@ -297,7 +337,7 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "package.json": "package-lock.json, bun.lockb, pnpm-lock.yaml, yarn.lock, .prettierrc*, .eslintrc*",
-    "Cargo.toml": "Cargo.lock, rustfmt.toml",
+    "Cargo.toml": "Cargo.lock, rustfmt.toml, rust-toolchain.toml",
     "composer.json": "composer.lock, .php-cs-fixer.php, pint.json",
   },
 
@@ -311,9 +351,23 @@
   // статус-бар item — on по умолчанию. Авто-fetch — фоном, безопасно
   "git.blame.editorDecoration.enabled": true,
   "git.autofetch": true,
+  // Без диалога подтверждения на Sync (философия «без лишних подтверждений» —
+  // confirmDelete/confirmDragAndDrop уже off; авто-fetch включён)
+  "git.confirmSync": false,
 
   // Terminal IntelliSense — GA с 1.106: completions путей/флагов/истории в bash
   "terminal.integrated.suggest.enabled": true,
+
+  // Alt+R/A/M/L (phpantom — биндинги в машинном keybindings.json) работают и из
+  // терминала: команды перехватываются Code, а не уходят в shell. Дефолтный
+  // список commandsToSkipShell сохраняется (убрать дефолт — префикс '-commandId');
+  // при добавлении новых phpantom-команд — синхронизировать (зеркало воркспейса)
+  "terminal.integrated.commandsToSkipShell": [
+    "phpantom.showRouteList",
+    "phpantom.runArtisanCommand",
+    "phpantom.generateModelAnnotations",
+    "phpantom.showLogViewer",
+  ],
 
   // Дебаг: брейкпоинты деревом по файлам (1.108) — удобно при Xdebug/CodeLLDB
   "debug.breakpointsView.presentation": "tree",
