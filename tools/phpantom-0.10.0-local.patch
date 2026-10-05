@@ -1,0 +1,234 @@
+diff --git a/src/completion/source/throws_analysis/catch.rs b/src/completion/source/throws_analysis/catch.rs
+index 127525d..b163465 100644
+--- a/src/completion/source/throws_analysis/catch.rs
++++ b/src/completion/source/throws_analysis/catch.rs
+@@ -69,8 +69,16 @@ pub(crate) fn find_throw_variable_types(body: &str, catches: &[CatchInfo]) -> Ve
+             continue;
+         }
+ 
++        // Skip `#` line comments (`#` starts a line comment in PHP).
++        if bytes[pos] == b'#' {
++            while pos < len && bytes[pos] != b'\n' {
++                pos += 1;
++            }
++            continue;
++        }
++
+         // Look for `throw` keyword
+-        if pos + 5 <= len && &body[pos..pos + 5] == "throw" {
++        if pos + 5 <= len && &bytes[pos..pos + 5] == b"throw" {
+             let before_ok =
+                 pos == 0 || !bytes[pos - 1].is_ascii_alphanumeric() && bytes[pos - 1] != b'_';
+             let after_ok = pos + 5 >= len
+@@ -156,8 +164,16 @@ pub(crate) fn find_catch_blocks(body: &str) -> Vec<CatchInfo> {
+             continue;
+         }
+ 
++        // Skip `#` line comments (`#` starts a line comment in PHP).
++        if bytes[pos] == b'#' {
++            while pos < len && bytes[pos] != b'\n' {
++                pos += 1;
++            }
++            continue;
++        }
++
+         // Look for `try`
+-        if pos + 3 <= len && &body[pos..pos + 3] == "try" {
++        if pos + 3 <= len && &bytes[pos..pos + 3] == b"try" {
+             let before_ok = pos == 0 || !bytes[pos - 1].is_ascii_alphanumeric();
+             let after_ok = pos + 3 >= len
+                 || (!bytes[pos + 3].is_ascii_alphanumeric() && bytes[pos + 3] != b'_');
+diff --git a/src/completion/source/throws_analysis/cross_file.rs b/src/completion/source/throws_analysis/cross_file.rs
+index 518ebd6..de72a88 100644
+--- a/src/completion/source/throws_analysis/cross_file.rs
++++ b/src/completion/source/throws_analysis/cross_file.rs
+@@ -498,8 +498,14 @@ pub(crate) fn find_cross_file_propagated_throws(
+             continue;
+         }
+ 
++        // Skip `#` line comments (`#` starts a line comment in PHP).
++        if bytes[pos] == b'#' {
++            pos = skip_line_comment(bytes, pos);
++            continue;
++        }
++
+         // ── Pattern: `new ClassName(…)` ─────────────────────────────
+-        if pos + 3 < len && &body[pos..pos + 3] == "new" {
++        if pos + 3 < len && &bytes[pos..pos + 3] == b"new" {
+             let before_ok =
+                 pos == 0 || !bytes[pos - 1].is_ascii_alphanumeric() && bytes[pos - 1] != b'_';
+             let after_ok = pos + 3 >= len
+diff --git a/src/completion/source/throws_analysis/scanning.rs b/src/completion/source/throws_analysis/scanning.rs
+index 1e81c95..c5e2bfa 100644
+--- a/src/completion/source/throws_analysis/scanning.rs
++++ b/src/completion/source/throws_analysis/scanning.rs
+@@ -61,8 +61,14 @@ pub(crate) fn find_throw_statements(body: &str) -> Vec<ThrowInfo> {
+             continue;
+         }
+ 
++        // Skip `#` line comments (`#` starts a line comment in PHP).
++        if bytes[pos] == b'#' {
++            pos = skip_line_comment(bytes, pos);
++            continue;
++        }
++
+         // Look for `throw` keyword
+-        if pos + 5 <= len && &body[pos..pos + 5] == "throw" {
++        if pos + 5 <= len && &bytes[pos..pos + 5] == b"throw" {
+             let before_ok =
+                 pos == 0 || !bytes[pos - 1].is_ascii_alphanumeric() && bytes[pos - 1] != b'_';
+             let after_ok = pos + 5 >= len
+@@ -121,8 +127,14 @@ pub(crate) fn find_throw_expression_types(body: &str, file_content: &str) -> Vec
+             continue;
+         }
+ 
++        // Skip `#` line comments (`#` starts a line comment in PHP).
++        if bytes[pos] == b'#' {
++            pos = skip_line_comment(bytes, pos);
++            continue;
++        }
++
+         // Look for `throw` keyword
+-        if pos + 5 <= len && &body[pos..pos + 5] == "throw" {
++        if pos + 5 <= len && &bytes[pos..pos + 5] == b"throw" {
+             let before_ok =
+                 pos == 0 || !bytes[pos - 1].is_ascii_alphanumeric() && bytes[pos - 1] != b'_';
+             let after_ok = pos + 5 >= len
+@@ -215,8 +227,14 @@ pub(crate) fn find_propagated_throws(body: &str, file_content: &str) -> Vec<Thro
+             continue;
+         }
+ 
++        // Skip `#` line comments (`#` starts a line comment in PHP).
++        if bytes[pos] == b'#' {
++            pos = skip_line_comment(bytes, pos);
++            continue;
++        }
++
+         for pat in patterns {
+-            if pos + pat.len() <= len && &body[pos..pos + pat.len()] == *pat {
++            if pos + pat.len() <= len && &bytes[pos..pos + pat.len()] == pat.as_bytes() {
+                 let before_ok = if *pat == "$this->" {
+                     true
+                 } else {
+diff --git a/src/completion/source/throws_analysis_tests.rs b/src/completion/source/throws_analysis_tests.rs
+index 0f8afe6..de0dd4a 100644
+--- a/src/completion/source/throws_analysis_tests.rs
++++ b/src/completion/source/throws_analysis_tests.rs
+@@ -51,6 +51,55 @@ fn test_find_throw_statements_skips_comments() {
+     assert_eq!(throws[0].type_name, PhpType::named(atom("RealException")));
+ }
+ 
++#[test]
++fn test_find_throw_statements_skips_hash_comments() {
++    let body = r#"
++        # throw new HashCommentException();
++        throw new RealException("msg");
++    "#;
++    let throws = find_throw_statements(body);
++    assert_eq!(throws.len(), 1);
++    assert_eq!(throws[0].type_name, PhpType::named(atom("RealException")));
++}
++
++#[test]
++fn test_find_throw_statements_multibyte_hash_comment_no_panic() {
++    // Regression: `#` comments were not skipped and the speculative
++    // `&body[pos..pos + 5]` comparison panicked when `pos` walked into a
++    // multibyte character ("end byte index N is not a char boundary").
++    let body = "\t\t# Проверка входных данных: каталог\n\t\tthrow new LogicException('пусто');\n";
++    let throws = find_throw_statements(body);
++    assert_eq!(throws.len(), 1);
++    assert_eq!(throws[0].type_name, PhpType::named(atom("LogicException")));
++}
++
++#[test]
++fn test_find_throw_statements_multibyte_strings_and_comments() {
++    let body = "\t\t// Комментарий: бросаем исключение\n\t\t$msg = 'ошибка данных';\n\t\t/* примечание */\n\t\tthrow new DomainException($msg);\n";
++    let throws = find_throw_statements(body);
++    assert_eq!(throws.len(), 1);
++    assert_eq!(throws[0].type_name, PhpType::named(atom("DomainException")));
++}
++
++#[test]
++fn test_find_catch_blocks_multibyte_no_panic() {
++    let body = "\t\t# Комментарий с кириллицей\n\t\ttry {\n\t\t\tthrow new RuntimeException('ошибка');\n\t\t} catch (RuntimeException $e) {\n\t\t}\n";
++    let catches = find_catch_blocks(body);
++    assert_eq!(catches.len(), 1);
++}
++
++#[test]
++fn test_find_propagated_throws_multibyte_no_panic() {
++    let body = "\t\t# Комментарий: вызов метода\n\t\t$this->save('сохранение каталога');\n";
++    let file_content = "class S {\n\t/**\n\t * @throws RuntimeException\n\t */\n\tpublic function save(string $x): void {}\n}\n";
++    let propagated = find_propagated_throws(body, file_content);
++    assert_eq!(propagated.len(), 1);
++    assert_eq!(
++        propagated[0].type_name,
++        PhpType::named(atom("RuntimeException"))
++    );
++}
++
+ #[test]
+ fn test_find_method_throws_tags_basic() {
+     let content = r#"
+diff --git a/src/formatting.rs b/src/formatting.rs
+index 36a7db2..e3f28ab 100644
+--- a/src/formatting.rs
++++ b/src/formatting.rs
+@@ -391,16 +391,24 @@ fn run_php_cs_fixer(
+ ) -> Result<String, String> {
+     let temp = write_sibling_temp_file(file_path, content)?;
+ 
+-    let result = run_command_with_timeout(
+-        Command::new(tool_path)
+-            .arg("fix")
+-            .arg("--using-cache=no")
+-            .arg("--quiet")
+-            .arg("--no-interaction")
+-            .arg(temp.path()),
+-        "php-cs-fixer",
+-        timeout,
+-    );
++    let mut command = Command::new(tool_path);
++    command
++        .arg("fix")
++        .arg("--using-cache=no")
++        .arg("--quiet")
++        .arg("--no-interaction");
++    // php-cs-fixer resolves its config from the process working directory,
++    // not from the target file: a server spawned outside the project root
++    // runs with no config at all, and in the default intersection
++    // path-mode that means an empty default finder — zero files fixed,
++    // exit 0, and formatting silently no-ops.  Pass the project config
++    // explicitly, discovered from the file being formatted.
++    if let Some(config) = find_php_cs_fixer_config(file_path) {
++        command.arg(format!("--config={}", config.display()));
++    }
++    command.arg(temp.path());
++
++    let result = run_command_with_timeout(&mut command, "php-cs-fixer", timeout);
+ 
+     let formatted = std::fs::read_to_string(temp.path())
+         .map_err(|e| format!("Failed to read formatted output: {}", e))?;
+@@ -541,6 +549,22 @@ fn run_phpcbf(
+ 
+ // ── Helpers ─────────────────────────────────────────────────────────
+ 
++/// Locate the php-cs-fixer config governing `file` by walking up from
++/// its directory, mirroring how the tool itself discovers a project
++/// root (`.php-cs-fixer.php`, then `.php-cs-fixer.dist.php`).
++fn find_php_cs_fixer_config(file: &Path) -> Option<PathBuf> {
++    let mut dir = file.parent()?;
++    loop {
++        for name in [".php-cs-fixer.php", ".php-cs-fixer.dist.php"] {
++            let candidate = dir.join(name);
++            if candidate.is_file() {
++                return Some(candidate);
++            }
++        }
++        dir = dir.parent()?;
++    }
++}
++
+ /// Write content to a temporary file in the same directory as `original`
+ /// so that tool config discovery (which walks up from the file) works.
+ ///
