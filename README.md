@@ -119,24 +119,21 @@ settings.json: `useTabs: true`, `tabWidth: 2`).
 
 ### PHP-форматирование (табы, единый стиль)
 
-- Канон — **php-cs-fixer**. Laravel Pint табы не умеет: правило
+- Канон — **php-cs-fixer** (CLI/CI). Laravel Pint табы не умеет: правило
   `indentation_type` берёт отступ из `Config->getIndent()`, который Pint не
   экспонирует → всегда 4 пробела.
-- **Глобально** (одна настройка на машину, работает в любом открытом корне —
-  проекты ничего не настраивают): машинный конфиг
-  `~/.config/vscode-php-cs-fixer/.php-cs-fixer.php` + ключи user settings
-   (`[php]` → junstyle, `php-cs-fixer.config` с путём `~/`). Развёртывание —
-   [tools/machine/README.md](tools/machine/README.md).
-- Воркспейс: `.vscode/.php-cs-fixer.php` (junstyle: `setIndent("\t")` + PSR12 +
-  `indentation_type`). Настройка `php-cs-fixer.rules` табы НЕ даёт: символ
-  отступа переключается только `Config->setIndent`.
+- Редактор (02.10.2026): форматтер `[php]` — **phpantom** (junstyle.php-cs-fixer
+  снят, машинная обвязка `~/.config/vscode-php-cs-fixer/` вычищена): в проектах
+  с php-cs-fixer в require-dev phpantom авто-детектит `vendor/bin/php-cs-fixer`
+  → табы ×2 из проектного `.php-cs-fixer.php`; корни без фиксера — встроенный
+  PER-CS.
 - Проекты (в git): `.php-cs-fixer.php` в корень, `composer require --dev
   friendsofphp/php-cs-fixer`, CI — `vendor/bin/php-cs-fixer fix --dry-run`.
   Rector — рефакторер, не форматтер: после `rector process` прогонять
   php-cs-fixer.
-- Инсталлы отдельным корнем (WP/Bitrix): глобальный конфиг уже покрывает
-  редактор; для CLI скопировать `.php-cs-fixer.php` в корень инсталла.
-   Подробно: [docs/clean-problems-formatting.md](docs/clean-problems-formatting.md).
+- Инсталлы отдельным корнем (WP/Bitrix): для CLI-прогонов скопировать
+  `.php-cs-fixer.php` в корень инсталла. Подробно:
+  [docs/clean-problems-formatting.md](docs/clean-problems-formatting.md).
 
 ### Rust
 
@@ -183,7 +180,7 @@ workspace-крейта) и `npm run test:wgsl` (W0–W2: активация wgsl
 
 | Область | Инструменты (все бесплатные) |
 |---|---|
-| PHP | phpantom (Rust-LSP: типы, Laravel, Blade), xdebug.php-debug, php-cs-fixer, PHPUnit |
+| PHP | phpantom (Rust-LSP: типы, Laravel, Blade; форматтер [php] → авто-детект php-cs-fixer, табы ×2), xdebug.php-debug, PHPUnit |
 | Laravel | официальное расширение laravel.vscode-laravel — Laravel LSP: completions/links для @include, view(), route(), config(), env, переводов, middleware, валидации |
 | WordPress | johnbillion.vscode-wordpress-hooks (хуки до WP 7.1) |
 | Bitrix | отдельного расширения нет — покрывается PHP-стеком; сниппеты добавляйте в `php.code-snippets` |
@@ -213,7 +210,7 @@ Intelephense…»).
 |---|---|
 | [docs/live-templates-and-css.md](docs/live-templates-and-css.md) | Live templates в стиле PhpStorm: каталог префиксов по 8 языкам, Emmet-трюки, PostCSS-миксины |
 | [docs/vue-css-intellisense.md](docs/vue-css-intellisense.md) | Матрица «симптом → фикс»: подсказки CSS-свойств, `$style` (inline + внешние `*.module.css`), `var(--…)`, color picker, Blade `@include`; автотест `tools/intellisense-check`; диагностика инсталлов `npm run diag:wp` (WP: корень темы vs корень инсталла — зеркалирование `.vscode`, машинно-локально) |
-| [docs/clean-problems-formatting.md](docs/clean-problems-formatting.md) | Политика «анализ — только свой код»: исключения vendor/ядра Bitrix/WP из поиска и диагностик, матрица форматтеров «один на язык», машинный php-cs-fixer с табами, почему не Intelephense/PHP Tools |
+| [docs/clean-problems-formatting.md](docs/clean-problems-formatting.md) | Политика «анализ — только свой код»: исключения vendor/ядра Bitrix/WP из поиска и диагностик, матрица форматтеров «один на язык», PHP — phpantom → авто-детект php-cs-fixer (табы ×2; junstyle снят 02.10.2026), почему не Intelephense/PHP Tools |
 | [docs/phpantom-wordpress.md](docs/phpantom-wordpress.md) | Полный IntelliSense для WP-инсталлов (Sage/Acorn, ACF, WP-CLI): открытие от корня WP, `.ignore` для vendor, editor-стабы, регресс-чеки `phpantom_lsp analyze`, глобальные path-ignore |
 | [docs/phpantom-lsp.md](docs/phpantom-lsp.md) | Возможности phpantom_lsp 0.10.0: типизация (generics, `@phpstan-type`), Laravel (ключи route/config/view/env — символы), Blade (цепочка переменных, контракт `view()`, компоненты), диагностика + внешние анализаторы (рецепт отключения phpcs-прокси), рефакторинги, CLI analyze/fix/update, справочник `.phpantom.toml` (шаблон `tools/machine/phpantom.toml`) |
 | [docs/phpactor-indexer-phpcs-fix.md](docs/phpactor-indexer-phpcs-fix.md) | История миграции с phpactor: падение индексатора на `storage/`, ложный тост php-resolver/phpcs (PHPCS 4.x и битовая маска), шаблон конфига для Laravel-проектов |
@@ -227,11 +224,14 @@ Intelephense…»).
 | [docs/github-ci.md](docs/github-ci.md) | GitHub CI «всё везде»: JS-проект (матрица 3 ОС + alpine/arch/fedora-контейнеры, vitest-каркас), воркспейс (intellisense-check/shellcheck/JSONC), шаблоны templates/ для Laravel и WordPress (тема + e2e с wp-cli/Playwright) |
 | [docs/laravel-vue-alpine-root.md](docs/laravel-vue-alpine-root.md) | Паттерн «отдельный Laravel-корень» (Laravel + Vue 3 на чистом JS + Alpine.js + Inertia + Vite): расширения и чистка конфликтов (Vetur/freemium/вторые PHP-LSP), settings.json global-first + матрица форматтеров (php-cs-fixer/blade-formatter/Prettier — Pint не умеет табы), Emmet в Blade, jsconfig `@/` + алиас vite, честные границы Inertia (`@see`-тропинки), ide-helper vs phpantom-аннотации, Open VSX VSIX-флоу, чек-лист «подсказки пропали» |
 | [docs/kde-lang-switch-focus-fix.md](docs/kde-lang-switch-focus-fix.md) | Фикс кражи фокуса ввода при переключении раскладки Alt+Shift (KDE Plasma Wayland): OSD раскладки plasmashell (фикс `plasmarc [OSD] kbdLayoutChangedEnabled=false`, на лету) + Alt-меню-бар Code OSS (машинный `window.menuBarVisibility: "compact"`); диагностика через DBus/`queryWindowInfo`, fallback-лестница, чек `tools/lang-switch-doctor.sh` |
+| [docs/code-oss-internals.md](docs/code-oss-internals.md) | Как работает Code OSS: процессная модель (main/renderer/Extension Host, local/web/remote), жизненный цикл и анатомия расширения (activationEvents, contributes, vscode.*), LSP/DAP, Open VSX vs MS Marketplace, CLI-флоу, разбор своего расширения vue-css-jump |
+| [docs/extensions-catalog.md](docs/extensions-catalog.md) | Каталог всех установленных расширений (снапшот 49): версии, лицензии, роли; база extensions.json (35) vs сверх базы (опционалы, машинный опционал, своё VSIX, DEVSENSE Composer), junstyle.php-cs-fixer (убран осознанно, следы вычищены), unwanted, политика дрейфа |
 
 Внутренние документации и AI-контекст:
 
 - [tools/machine/README.md](tools/machine/README.md) — развёртывание машинного
-  (глобального) сетапа: снимок user settings Code OSS + php-cs-fixer
+  (глобального) сетапа: снимок user settings Code OSS, конфиг phpantom,
+  live-templates, Rust-глобаль
 - [tools/vscode-vue-css-jump/README.md](tools/vscode-vue-css-jump/README.md) —
   README собственного расширения (git submodule; адрес репозитория —
   в `.gitmodules`, в доках воркспейса не дублируется)
@@ -248,7 +248,6 @@ Intelephense…»).
 .vscode/
   extensions.json      — рекомендуемые расширения (все бесплатные)
   settings.json        — табы ×2, подсказки, форматирование, исключения шума
-  .php-cs-fixer.php    — форматтер PHP: табы + PSR12 (setIndent "\t")
   tasks.json           — задачи: интелли-чек (+PHPantom-чек, WP-диагностика) /
                          rust-doctor / workspace-doctor / JSONC-валидация
   keybindings.json     — Alt+R/A/M/L: phpantom-роуты/artisan/аннотации/логи
@@ -279,7 +278,7 @@ tools/vscode-vue-css-jump/ — исходники расширения povly.vsc
 tools/machine/            — глобальный машинный сетап: install.sh (развёртывание
                            одной командой; PHP-часть + Rust-глобаль: cargo-алиасы,
                            ~/.justfile), снимок user settings (анти-дрейф —
-                           export-user-settings.sh), php-cs-fixer — README внутри
+                           export-user-settings.sh); конфиг phpantom — README внутри
 tools/validate-jsonc.php — валидатор .vscode/*.json (задача «JSONC»)
 tools/rust-doctor.sh     — PASS/FAIL диагностика Rust-окружения: 5 расширений,
                            [rust]+[wgsl] user-settings, содержимое алиасов и
@@ -287,11 +286,11 @@ tools/rust-doctor.sh     — PASS/FAIL диагностика Rust-окруже�
 tools/new-rust-project.sh — генератор Rust-проекта (--bevy/--wgpu/--iced,
                            самопроверка cargo check + rust-doctor)
 tools/workspace-doctor.sh — PASS/FAIL диагностика веб-стека (phpantom, xdebug,
-                           машинный php-cs-fixer, расширения)
+                           CLI php-cs-fixer, расширения)
 tools/install-extensions.sh — CLI-установка всех рекомендаций extensions.json
 templates/             — CI-шаблоны для Laravel- и WordPress-проектов
                            (templates/{laravel,wordpress}-ci.yml; гайд — docs/github-ci.md)
-docs/                  — гайды: 11 рецептов настройки — см. раздел «Документация»
+docs/                  — гайды: 18 — см. раздел «Документация»
 .ai-factory/           — контекст AI Factory (описание, правила, архитектура)
                            (.omo/ и .codegraph/ — локальные AI-артефакты, в git не идут)
 ```

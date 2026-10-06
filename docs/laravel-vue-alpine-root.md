@@ -47,7 +47,7 @@
 ```bash
 for e in \
   phpantom.phpantom laravel.vscode-laravel onecentlin.laravel-blade \
-  shufo.vscode-blade-formatter xdebug.php-debug junstyle.php-cs-fixer \
+  shufo.vscode-blade-formatter xdebug.php-debug \
   Recca0120.vscode-phpunit mikestead.dotenv \
   connorontheweb.alpinejs-tools Vue.volar dbaeumer.vscode-eslint \
   esbenp.prettier-vscode csstools.postcss \
@@ -66,7 +66,7 @@ do code-oss --install-extension "$e"; done
 | Laravel — пути | `laravel.vscode-laravel` | официальный Laravel LSP: completions/links для `@include`, `view()`, `route()`, `config()`, `env()`, `__()`, middleware, validation |
 | Blade — подсветка | `onecentlin.laravel-blade` | подсветка + сниппеты Blade |
 | Blade — форматтер | `shufo.vscode-blade-formatter` | форматирование `.blade.php` (табы — настройками, раздел 2) |
-| PHP — форматтер | `junstyle.php-cs-fixer` | формат-on-save PHP через php-cs-fixer (табы ×2) |
+| PHP — форматтер | `phpantom.phpantom` | формат-on-save: авто-детект `vendor/bin/php-cs-fixer` (require-dev) → табы ×2 из проектного `.php-cs-fixer.php` (junstyle снят 02.10.2026) |
 | PHP — отладка | `xdebug.php-debug` | F5 → Listen for Xdebug (порт 9003) |
 | PHP — тесты | `Recca0120.vscode-phpunit` | гуттер-раннер PHPUnit/Pest |
 | Env | `mikestead.dotenv` | подсветка `.env` |
@@ -181,10 +181,9 @@ settings (`~/.config/Code - OSS/User/settings.json`), действует в лю
   "prettier.singleAttributePerLine": true,
   "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
 
-  // PHP — php-cs-fixer (машинный конфиг даёт табы; Pint табы не умеет)
-  "[php]": { "editor.defaultFormatter": "junstyle.php-cs-fixer" },
-  "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
-  "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
+  // PHP — форматтер phpantom: авто-детект vendor/bin/php-cs-fixer → табы ×2
+  // из .php-cs-fixer.php в корне (junstyle снят 02.10.2026)
+  "[php]": { "editor.defaultFormatter": "phpantom.phpantom" },
 
   // Blade — blade-formatter (префикс bladeFormatter.*, НЕ blade.*)
   "[blade]": { "editor.defaultFormatter": "shufo.vscode-blade-formatter" },
@@ -279,7 +278,7 @@ CSS перехватывается языком `postcss` без IntelliSense). 
 
 | Язык | Форматтер | Где задан | Табы |
 |---|---|---|---|
-| PHP | `junstyle.php-cs-fixer` | машина (конфиг `~/.config/vscode-php-cs-fixer/`); CLI/CI — `.php-cs-fixer.php` в корне проекта | `\t` ×2 из `setIndent` |
+| PHP | `phpantom.phpantom` | редактор: авто-детект `vendor/bin/php-cs-fixer`; CLI/CI — тот же фиксер | `\t` ×2 из `setIndent` |
 | Blade | `shufo.vscode-blade-formatter` | машина (`bladeFormatter.*`); CLI — `.bladeformatterrc` | `useTabs: true, indentSize: 2` |
 | Vue / JS / CSS / SCSS / HTML / MD | `esbenp.prettier-vscode` | машина (`prettier.*`); CLI — `.prettierrc` | `useTabs: true, tabWidth: 2` |
 | JSON / YAML | Prettier (перекрытие) | машина (`[json]`/`[jsonc]`/`[yaml]`) | 2 пробела |

@@ -12,7 +12,7 @@
 | `onecentlin.laravel-blade` | Подсветка Blade, сниппеты директив | — |
 | `shufo.vscode-blade-formatter` | Форматирование Blade при сохранении | Бесплатно (OSS) |
 | `xdebug.php-debug` | Отладка PHP по Xdebug (порт 9003) | Требует установленный Xdebug в PHP |
-| `junstyle.php-cs-fixer` | Форматтер PHP | Указать `php-cs-fixer.executablePath` или vendor/bin. На машине (17.09.2026) глобального `php-cs-fixer` в PATH нет; в Laravel-проектах фиксер — Pint (`vendor/bin/pint`), расширение неактивно, пока не указан путь |
+| ~~`junstyle.php-cs-fixer`~~ | Снят 02.10.2026 | `[php]`-форматтер — phpantom: авто-детект vendor/bin/php-cs-fixer → табы ×2 из проектного .php-cs-fixer.php. ⚠ Раздел в целом — снимок 17.09.2026 (phpactor/php-resolver ниже уже сняты с машины): актуальный список — `.vscode/extensions.json` и docs/extensions-catalog.md |
 | `Recca0120.vscode-phpunit` | Запуск PHPUnit/Pest тестов из редактора | — |
 | `stoildobreff.php-resolver` | PHP-инструменты: goto-def по всем символам, call/type hierarchy, dead code, inlay hints, ZIP-навигация | ⚠ Встроенный phpcs-сниффер: гоняет системный `phpcs` на каждом переключении PHP-вкладки и **неверно трактует exit-код 3 PHPCS 4.x** (битовая маска 1\|2 = «есть fixable и non-fixable нарушения») как «Mismatch configuration provided». В проектах на Pint отключать: `"phpResolver.phpSnifferCommand": ""` (проектный `.vscode/settings.json`); там же при желании `"phpResolver.phpBeautifierCommand": ""` (phpcbf-форматтер). Детали: [phpactor.md](phpactor.md) |
 | `johnbillion.vscode-wordpress-hooks` | Автодополнение WP-хуков (actions/filters, до WP 7.1) | GPL-3.0, 226K установок |

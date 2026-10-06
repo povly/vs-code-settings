@@ -89,7 +89,7 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
 
 | Язык | Форматтер | Где настроено | Отступ |
 |---|---|---|---|
-| PHP | junstyle.php-cs-fixer | машинный `~/.config/vscode-php-cs-fixer/` + проектный `.php-cs-fixer.php` | табы ×2 |
+| PHP | phpantom.phpantom (LSP-провайдер) | авто-детект `vendor/bin/php-cs-fixer` (require-dev) → проектный `.php-cs-fixer.php`; фолбэк — встроенный PER-CS | табы ×2 (из конфига фиксера) |
 | Blade | shufo.vscode-blade-formatter | `bladeFormatter.format.useTabs/indentSize/wrapAttributes` | табы ×2 |
 | JS, TS, JSX, TSX, Vue, HTML, CSS, SCSS, MD | Prettier | явные `[lang]`-блоки + `prettier.useTabs/tabWidth/singleAttributePerLine` | табы ×2 |
 | JSON, JSONC, YAML | Prettier | `[lang]`-блоки: `insertSpaces` | 2 пробела |
@@ -116,9 +116,10 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
   прочее: `force-aligned`, `force-expand-multiline`, `aligned-multiple`,
   `preserve(-aligned)`.
 - **PHP с HTML внутри (.php):** php-cs-fixer форматирует только PHP-токены —
-  HTML-атрибуты в php-файлах не переносит. Выносить разметку в blade или
-  переносить вручную; менять `[php]`-форматтер на HTML-форматтер нельзя —
-  сломается «один форматтер на язык» и табы ×2 в PHP.
+  HTML-атрибуты в php-файлах не переносит (и редактор через phpantom — тоже).
+  Выносить разметку в blade или переносить вручную; HTML-форматтер на `[php]`
+  не вешать — PER-CS/Pint дают 4 пробела, ломают табы ×2 и «один форматтер
+  на язык».
 
 ## PHP: табы (php-cs-fixer), Rector
 
@@ -127,16 +128,12 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
   отступ из `Config->getIndent()`, который Pint не экспонирует → Pint всегда
   даёт 4 пробела. Рецепт `pint.json {"rules":{"indentation_type":true}}` из
   ранних версий этого гайда был ошибочен — pint из конвейера убран.
-- **Три уровня конфига** (правила одни: `setIndent("\t")` + `@PSR12` +
-  `indentation_type` + `array_indentation`):
-  1. машинный `~/.config/vscode-php-cs-fixer/.php-cs-fixer.php` — подключён в
-     user settings ключом `php-cs-fixer.config` (путь с `~/` поддерживается
-     расширением) → действует в **любом** открытом корне; шаблон и снимок
-     настроек — [`tools/machine/`](../tools/machine/README.md);
-  2. воркспейс `.vscode/.php-cs-fixer.php` — перекрывает машинный на
-     workspace-уровне;
-  3. проектный `.php-cs-fixer.php` в корне — self-sufficiency для CLI/CI и
-     других машин (junstyle находит его дефолтным поиском: корень + `.vscode/`).
+- **Конфиг — один уровень: проектный `.php-cs-fixer.php` в корне** (правила:
+  `setIndent("\t")` + `@PSR12` + `indentation_type` + `array_indentation`) —
+  self-sufficiency для CLI/CI и других машин. Машинный
+  `~/.config/vscode-php-cs-fixer/` и воркспейсный `.vscode/.php-cs-fixer.php`
+  сняты 02.10.2026 вместе с редакторной интеграцией junstyle (история — git).
+  Тот же файл читает и редактор — через авто-детект phpantom.
 - **Почему файл, а не настройка `php-cs-fixer.rules`**: символ отступа живёт в
   `Config->setIndent` (дефолт — 4 пробела), правилами не переключается
   (проверено CLI: `--rules='{"indentation_type":true}'` дал «Fixed 0» на файле
@@ -162,15 +159,20 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
 
 - **Rector — рефакторер, не форматтер**: конвейер `rector process` →
   `vendor/bin/php-cs-fixer fix` — диффы только по смыслу правок, не по отступам.
-- **phpantom `[formatting]` не используется**: встроенный форматтер PER-CS 2.0
-  зашит на 4 пробела без опций отступа (config-schema.json: только
-  pint/php-cs-fixer/phpcbf-команды + timeout). Единственный `[php]`-форматтер —
-  junstyle (defaultFormatter), провайдер phpantom не вызывается.
+- **phpantom — форматтер `[php]`** (junstyle снят 02.10.2026): провайдер
+  phpantom сам находит `vendor/bin/php-cs-fixer` (фиксер в require-dev
+  composer.json) → табы ×2 из проектного `.php-cs-fixer.php`; явная секция
+  `[formatting]` в конфиге не нужна (нужна только для нестандартных случаев —
+  pint/phpcbf-команды + timeout). Корни без vendor-фиксера — встроенный
+  PER-CS 2.0 (4 пробела, опций отступа нет).
 - **Анти-паттерн**: `laravel.vscode-laravel` как `[php]`-форматтер в user
   settings — его Pint-форматирование зависит от `vendor/bin/pint` в корне
   проекта (в WP-инсталлах не работает вовсе) и даёт 4 пробела вместо табов.
 
-### WARN `composer.json` / «provider FAILED» при format-on-save
+### Архив: WARN `composer.json` / «provider FAILED» при format-on-save
+
+> Исторический кейс: junstyle.php-cs-fixer снят 02.10.2026 — раздел сохранён
+> как механика бага и история wrapper-фикса (сами wrapper и конфиги удалены).
 
 Симптом → диагностика → фикс (эмпирика 2026-09-21: junstyle.php-cs-fixer
 0.3.21-universal + PHP CS Fixer 3.95.26, runtime PHP 8.5).
@@ -241,12 +243,11 @@ wrapper даёт WARN, wrapper с битым `--config` → текст ошиб�
 
 ## Инсталлы отдельным корнем (WP/Bitrix вне воркспейса)
 
-Конфиг phpantom — уже глобальный (работает везде). PHP-форматтер — тоже:
-машинный конфиг + ключ `php-cs-fixer.config` в user settings действует в любом
-открытом корне без копирования файлов (junstyle ищет конфиг в корне
-workspace/`.vscode/`, но ключ user-настроек задаёт путь явно). Для CLI-прогонов
-по инсталлу — скопировать проектный `.php-cs-fixer.php` в корень инсталла,
-finder ограничить своим кодом (например `wp-content/themes`). Blade — табы ×2
+Конфиг phpantom — уже глобальный (работает везде). PHP-стиль — скопировать
+проектный `.php-cs-fixer.php` в корень инсталла, finder ограничить своим
+кодом (например `wp-content/themes`); при composer-зависимости php-cs-fixer
+редактор отформатирует через phpantom (авто-детект), иначе — терминал:
+`vendor/bin/php-cs-fixer fix` или глобальный CLI. Blade — табы ×2
 глобально через `bladeFormatter.*` в user settings. `search.exclude`/
 `watcherExclude` user-уровня уже покрывают типовые каталоги (vendor,
 node_modules, wp-ядра).

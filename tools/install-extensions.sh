@@ -4,7 +4,9 @@
 # или восстановления после чистки ~/.vscode-oss/extensions.
 # Использование:  tools/install-extensions.sh [--force]   (из любого каталога)
 #   --force — переустановить даже уже установленные (обновить до версии VSIX)
-# Зависимости: php (парсинг JSONC), CLI Code OSS (code-oss | code) в PATH.
+# Зависимости: php (парсинг JSONC), CLI редактора в PATH:
+#   code-oss (Arch/CachyOS Code OSS) | code (VS Code) | codium (VSCodium,
+#   в т.ч. Windows Git Bash — кодовые имена CLI одинаковы в Git Bash).
 # Exit-коды: 0 — все прошли (установлены или уже стояли), 1 — есть FAIL.
 set -uo pipefail
 
@@ -17,7 +19,7 @@ if [[ "${1:-}" == "--force" ]]; then
 fi
 
 CLI=""
-for c in code-oss code; do
+for c in code-oss code codium; do
 	if command -v "$c" >/dev/null 2>&1; then CLI="$c"; break; fi
 done
 if [ -z "$CLI" ]; then

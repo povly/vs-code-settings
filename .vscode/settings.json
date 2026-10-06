@@ -40,19 +40,14 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
+  // PHP-форматтер — PHPantom (junstyle снят 02.10.2026): в проектах с
+  // php-cs-fixer в require-dev phpantom авто-детектит vendor/bin/php-cs-fixer
+  // → табы ×2 из проектного .php-cs-fixer.php; корни без фиксера — встроенный
+  // PER-CS. CLI/CI-канон — тот же php-cs-fixer (Pint табы не умеет):
+  // docs/clean-problems-formatting.md
   "[php]": {
-    "editor.defaultFormatter": "junstyle.php-cs-fixer"
+    "editor.defaultFormatter": "phpantom.phpantom"
   },
-  // PHP — табы через конфиг .vscode/.php-cs-fixer.php (setIndent("\t") +
-  // indentation_type). ВАЖНО: настройка "php-cs-fixer.rules" табы НЕ даёт —
-  // символ отступа живёт в Config->setIndent (дефолт 4 пробела), правилами
-  // не переключается (проверено CLI: «Fixed 0» на файле с пробелами).
-  // Отдельные корни (WP/Bitrix вне воркспейса): копировать .php-cs-fixer.php
-  // в корень инсталла. Laravel CI: `vendor/bin/php-cs-fixer fix --dry-run`
-  // (Pint не умеет табы — не использовать).
-  // Схема phpantom [formatting] отпала: встроенный форматтер PER-CS 2.0 —
-  // 4 пробела без опций отступа. Подробности: docs/clean-problems-formatting.md
-  "php-cs-fixer.config": ".vscode/.php-cs-fixer.php",
   "[blade]": {
     "editor.defaultFormatter": "shufo.vscode-blade-formatter"
   },
@@ -207,9 +202,9 @@
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
-  // Обновлять только включённые расширения — меньше фоновых обновлений и
-  // перезапусков окна (неиспользуемые builtin/отключённые не качаются)
-  "extensions.autoUpdate": "onlyEnabledExtensions",
+  // Автообновление ВСЕХ расширений — осознанный выбор владельца (02.10.2026).
+  // НЕ менять на onlyEnabledExtensions: значение владелец возвращал трижды
+  "extensions.autoUpdate": "on",
 
   // ── Телеметрия ──
   "telemetry.telemetryLevel": "off",
@@ -264,12 +259,13 @@
     "**/dist/**": true
   },
 
-  // ── Todo Tree: системный ripgrep ──
-  // Arch-сборка code идёт без node_modules (встроенного rg нет), поэтому
-  // указываем системный бинарь. ВНИМАНИЕ: ключ с двойным "ripgrep" —
-  // так в расширении называется секция + параметр (текст ошибки про
-  // 'todo-tree.ripgrep' вводит в заблуждение — старое имя ключа)
-  "todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
+  // ── Todo Tree: ripgrep из PATH ──
+  // Arch-сборка code идёт без node_modules (встроенного rg нет). "rg" = поиск
+  // в PATH — работает на любой ОС (включая Windows-машины с rg в PATH);
+  // абсолютный "/usr/bin/rg" ломал бы кросс-платформенность настроек воркспейса.
+  // ВНИМАНИЕ: ключ с двойным "ripgrep" — так в расширении называется секция +
+  // параметр (текст ошибки про 'todo-tree.ripgrep' называет старое имя ключа)
+  "todo-tree.ripgrep.ripgrep": "rg",
 
   // ── PHP: Xdebug + отключение builtin-линтера ──
   "php.debug.idekey": "VSCODE",
