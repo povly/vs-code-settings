@@ -9,57 +9,55 @@
 
 | Файл | Назначение |
 |---|---|
-| `install.sh` | Развёртывание машинного уровня **одной командой**: mkdir `~/.config/vscode-php-cs-fixer/` + копия конфигов + wrapper (755); live-templates: 8 файлов `.vscode/*.code-snippets` → `~/.config/Code - OSS/User/snippets/` (сниппеты в любом окне). Идемпотентен, логирует каждый шаг |
+| `install.sh` | Развёртывание машинного уровня **одной командой**: конфиг phpantom + live-templates (8 файлов `.vscode/*.code-snippets` → `~/.config/Code - OSS/User/snippets/`) + Rust-глобаль. Идемпотентен, логирует каждый шаг |
 | `export-user-settings.sh` | Анти-дрейф снимка: перезаписывает `Code-OSS-User-settings.jsonc` из живого user settings (запускать после изменения глобальных ключей) |
-| `vscode-php-cs-fixer.php` | Машинный конфиг php-cs-fixer: табы ×2 + PSR12 + `array_indentation`. Копируется в `~/.config/vscode-php-cs-fixer/.php-cs-fixer.php` |
-| `php-cs-fixer-wrapper.sh` | Silent-wrapper (обязателен): cwd = `~/.config/vscode-php-cs-fixer` — гасит WARN «Unable to determine minimum PHP version…» и фильтрует баннер fixer'а из stderr (баг junstyle 0.3.21: `files==0` + непустой stderr → «provider FAILED» — падало каждое сохранение уже-чистого файла). Настоящие ошибки проходят насквозь. Механика — docs/clean-problems-formatting.md |
-| `composer.json` | Служебный composer.json для wrapper'а: `config.platform.php` = major.minor runtime. Копируется в `~/.config/vscode-php-cs-fixer/composer.json` |
-| `phpantom.toml` | Шаблон глобального конфига phpantom `~/.config/phpantom_lsp/.phpantom.toml`: path-ignore чужой диагностики (vendor/**, ядра WP/Bitrix, плагины) + `[phpcs] command = ""` (иначе phpantom сам находит системный phpcs в `$PATH` и гоняет PSR12-снифф при каждом сохранении; стиль — php-cs-fixer). install.sh копирует только при отсутствии. Проверка — `tools/workspace-doctor.sh` (чеки 2–3); справочник опций — docs/phpantom-lsp.md |
+| `phpantom.toml` | Шаблон глобального конфига phpantom `~/.config/phpantom_lsp/.phpantom.toml`: path-ignore чужой диагностики (vendor/**, ядра WP/Bitrix, плагины) + `[phpcs] command = ""` (иначе phpantom сам находит системный phpcs в `$PATH` и гоняет PSR12-снифф при каждом сохранении). install.sh копирует только при отсутствии. Проверка — `tools/workspace-doctor.sh` (чеки 2–3); справочник опций — docs/phpantom-lsp.md |
+| `fixperms.sh` | Команда `fixperms` (симлинк `~/.local/bin/fixperms` из install.sh): восстановление exec-битов `vendor/bin/*` в любом composer-проекте — биты сносит перенос/синк дерева (scp/rsync/tar без сохранения perms), из-за чего phpantom и CLI падают с «Failed to spawn php-cs-fixer: Permission denied (os error 13)». Флаги: `-n`/`--dry-run`; корень проекта ищется подъёмом до `composer.json` — запускать из любого подкаталога. Редакторному форматтеру бит больше не нужен: в проектах с проблемой задавайте `[formatting] php-cs-fixer = "php-cs-fixer"` (глобальный composer-фиксер, вне переносимого дерева) |
 | `Code-OSS-User-settings.jsonc` | Снимок user settings Code OSS (справочник переноса; источник правды — живой файл) |
 | `Code-OSS-User-keybindings.jsonc` | Снимок user keybindings Code OSS: Alt+R/A/M/L — phpantom-бонусы на машинном уровне (справочник переноса; обновляется `export-user-settings.sh` вместе со settings) |
 | `rust/cargo-config.toml` | Шаблон `[alias]` для `~/.cargo/config.toml` (c/t/cl/f/fc; f/fc — табы ×2). install.sh копирует при отсутствии файла / дописывает `[alias]`, если его ещё нет; существующие алиасы не трогает |
 | `rust/justfile` | Шаблон `~/.justfile` (`just -g test\|build\|clippy\|fmt\|check\|watch\|watch-test`); копируется только при отсутствии |
 
+> 02.10.2026: редакторная интеграция php-cs-fixer (junstyle) снята — машинный
+> слой фиксер-конфигов (`vscode-php-cs-fixer.php`, `php-cs-fixer-wrapper.sh`,
+> служебный `composer.json`, каталог `~/.config/vscode-php-cs-fixer/`) удалён.
+> Форматирование PHP в редакторе — phpantom (авто-детект `vendor/bin/
+> php-cs-fixer` → табы ×2 из проектного конфига); CLI/CI — тот же фиксер.
+
 ## Развёртывание на новой машине
 
-1. **Машинный конфиг форматтера + wrapper** (действует в ЛЮБОМ открытом корне —
-   проекты ничего не должны настраивать и не спрашивают форматтер):
+1. **Конфиг phpantom + live-templates + Rust-глобаль** (одна команда):
 
    ```bash
    tools/machine/install.sh
    ```
 
-   Скрипт создаёт `~/.config/vscode-php-cs-fixer/`, копирует конфиг и служебный
-   composer.json, ставит wrapper с правами 755, создаёт глобальный конфиг
-   phpantom `~/.config/phpantom_lsp/.phpantom.toml` (path-ignore чужой
-   диагностики + PHPCS-прокси off; существующий не перезаписывает — WARN) и
-   раскладывает live-templates:
-   8 файлов `.vscode/*.code-snippets` → `~/.config/Code - OSS/User/snippets/` —
-   сниппеты действуют в ЛЮБОМ окне, не только в воркспейсе (гайд:
-   docs/live-templates-and-css.md). Плюс Rust-глобаль: `[alias]` в
-   `~/.cargo/config.toml` (дописывается только при отсутствии) и `~/.justfile`
-   (копируется только при отсутствии) — гайд docs/rust-senior-setup.md.
-   Wrapper обязателен: устраняет WARN
-   «Unable to determine minimum PHP version…» на каждом сохранении и баг
-   junstyle 0.3.21 «provider FAILED» на уже-чистых файлах (механика и
-   регресс-чек —
-   [docs/clean-problems-formatting.md](../../docs/clean-problems-formatting.md),
-   раздел «WARN `composer.json` / provider FAILED при format-on-save»).
+   Скрипт создаёт глобальный конфиг phpantom
+   `~/.config/phpantom_lsp/.phpantom.toml` (path-ignore чужой диагностики +
+   PHPCS-прокси off; существующий не перезаписывает — WARN), раскладывает
+   live-templates: 8 файлов `.vscode/*.code-snippets` →
+   `~/.config/Code - OSS/User/snippets/` — сниппеты действуют в ЛЮБОМ окне,
+   не только в воркспейсе (гайд: docs/live-templates-and-css.md). Плюс
+   Rust-глобаль: `[alias]` в `~/.cargo/config.toml` (дописывается только при
+   отсутствии) и `~/.justfile` (копируется только при отсутствии) — гайд:
+   docs/rust-senior-setup.md. Также деплоит `fixperms` (симлинк
+   `~/.local/bin/fixperms` → `tools/machine/fixperms.sh`) и подтягивает
+   свежий сервер phpantom (`phpantom_lsp update`; релизы GitHub опережают
+   качалку расширения; подсказка об обновлении — workspace-doctor чек 10).
 
-2. **CLI-бинарь php-cs-fixer** (коммит-паритет терминала и редактора):
+2. **CLI-бинарь php-cs-fixer** (для CLI/CI-прогонов в инсталлах и проектам без
+   dev-зависимости; редактор форматирует через phpantom → vendor-фиксер):
 
    ```bash
    composer global require friendsofphp/php-cs-fixer
    ```
 
 3. **User settings Code OSS** (`~/.config/Code - OSS/User/settings.json`) —
-   перенести ключи из снимка `Code-OSS-User-settings.jsonc` (секция PHP —
-   обязательный минимум):
+   перенести ключи из снимка `Code-OSS-User-settings.jsonc` (PHP-форматтер —
+   phpantom; junstyle снят 02.10.2026):
 
    ```jsonc
-   "[php]": { "editor.defaultFormatter": "junstyle.php-cs-fixer" },
-   "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
-   "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
+   "[php]": { "editor.defaultFormatter": "phpantom.phpantom", "editor.formatOnSave": true },
    "bladeFormatter.format.useTabs": true,
    "bladeFormatter.format.indentSize": 2,
    "bladeFormatter.format.wrapAttributes": "auto",
@@ -99,16 +97,17 @@
 
    **Дополнение 2026-10-02** (аудит живых проектов /var/www: 13 Laravel-корней
    L12/L13, 17 WP-инсталлов, Rust bevy/iced/wgpu, Vue 3.5/Inertia/Alpine,
-   ESLint 9/10 flat): `[php]`/`[blade]` + `editor.formatOnSave: true`
-   (standalone-корни форматируются как в воркспейсе — раньше только окна
-   _vscode), новый блок `[toml]` (even-better-toml, 2 пробела, formatOnSave),
+   ESLint 9/10 flat): `[blade]` + `editor.formatOnSave: true`
+   (standalone-корни форматируются как в воркспейсе; `[php]`-блок позже
+   переключён на phpantom — junstyle снят), новый блок `[toml]` (even-better-toml, 2 пробела, formatOnSave),
    inlay hints JS/TS (`parameterNames: "literals"`, `enumMemberValues`,
    `variableTypes` + `suppressWhenNoMatches`; шумные режимы не включены),
    `search.exclude` += `**/storage/framework` (скомпилированные views —
    сгенерированный код), `git.confirmSync: false`, fileNesting `Cargo.toml`
-   += `rust-toolchain.toml`, фикс `extensions.autoUpdate`: `"on"` →
-   `"onlyEnabledExtensions"` (комментарий декларировал «меньше обновлений» —
-   значение ему противоречило). Порядок import-ов вторым сортировщиком
+   += `rust-toolchain.toml`. `extensions.autoUpdate`: `"on"` — осознанный
+   выбор владельца (подтверждён 02.10.2026); НЕ «фиксить» на
+   `"onlyEnabledExtensions"` и не трогать тумблер «Show Automatic Updates».
+   Порядок import-ов вторым сортировщиком
    (`source.organizeImports`) сознательно НЕ включён: им владеет ESLint
    `import/order` + `source.fixAll.eslint` на сохранении (6 проектов) —
    иначе каждый Ctrl+S перекладывал бы импорты по-разному. Tailwind-расширение
@@ -146,8 +145,8 @@
 Pint не экспонирует (всегда дефолтные 4 пробела). Поэтому канонический стиль
 PHP — **php-cs-fixer** с `setIndent("\t")`:
 
-- редактор: junstyle.php-cs-fixer + машинный конфиг (глобально) или
-  проектный `.php-cs-fixer.php` (self-sufficient корень);
+- редактор: phpantom → авто-детект `vendor/bin/php-cs-fixer` в проектах
+  с require-dev (табы ×2 из проектного конфига); фолбэк — PER-CS;
 - CLI/CI: `vendor/bin/php-cs-fixer fix` (dev-зависимость
   `friendsofphp/php-cs-fixer`).
 
@@ -155,25 +154,11 @@ PHP — **php-cs-fixer** с `setIndent("\t")`:
 Pint-форматирование зависит от наличия `vendor/bin/pint` в корне проекта
 и в корнях без pint (WP-инсталлы) просто не работает.
 
-## Обслуживание: апгрейд PHP
-
-Служебный `~/.config/vscode-php-cs-fixer/composer.json` держит
-`config.platform.php` = major.minor текущего runtime. После апгрейда PHP
-обновить значение, иначе WARN вернётся (runtime новее минимума):
-
-```bash
-php -r 'echo PHP_MAJOR_VERSION, ".", PHP_MINOR_VERSION, PHP_EOL;'
-```
-
-В служебном composer.json — ТОЛЬКО `config.platform.php`, без `require.php`:
-`detectPhp()` объединяет кандидатов через «||», `getMinSemVer()` берёт минимум
-из объединения — любой require вернёт WARN обратно.
-
 ## Проектный уровень (что кладётся в git проекта)
 
 | Файл | Зачем |
 |---|---|
-| `.php-cs-fixer.php` | Тот же стиль для CLI/CI и других машин (junstyle находит дефолтным поиском) |
+| `.php-cs-fixer.php` | Тот же стиль для CLI/CI и других машин |
 | `.editorconfig` | `indent_style = tab`, `indent_size = 2` |
 | `.prettierrc` | `{"useTabs": true, "tabWidth": 2, ...стиль проекта}` |
 | `.bladeformatterrc` | `{"useTabs": true, "indentSize": 2}` (для CLI blade-formatter) |

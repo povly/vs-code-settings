@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # workspace-doctor: health-check веб-стека (аналог rust-doctor для PHP/Laravel/WP/Bitrix).
 # Архитектура: машинный уровень — phpantom + path-ignore (~/.config/phpantom_lsp/),
-# php-cs-fixer (~/.config/vscode-php-cs-fixer/ + wrapper), xdebug, CLI-паритет,
-# ключевые расширения. Работает на ЛЮБОМ корне: проверяет машину, не проект.
+# xdebug, CLI-паритет php-cs-fixer (канон — CLI/CI в проектах; редакторная
+# интеграция junstyle.php-cs-fixer убрана 02.10.2026), ключевые расширения.
+# Работает на ЛЮБОМ корне: проверяет машину, не проект.
 # Использование: tools/workspace-doctor.sh   (из любого каталога)
 # Exit-коды: 0 — все PASS, 1 — есть FAIL.
 
 set -uo pipefail
 
 PHPANTOM_TOML="$HOME/.config/phpantom_lsp/.phpantom.toml"
-FIXER_DIR="$HOME/.config/vscode-php-cs-fixer"
 EXT_DIR="$HOME/.vscode-oss/extensions"
 LIVE_SETTINGS="$HOME/.config/Code - OSS/User/settings.json"
 SNAPSHOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/machine/Code-OSS-User-settings.jsonc"
@@ -60,26 +60,16 @@ else
 	bad "xdebug не загружен (sudo pacman -S --needed xdebug; см. README §Xdebug)"
 fi
 
-# 5. Машинный php-cs-fixer: конфиг + wrapper + служебный composer.json
-for f in .php-cs-fixer.php php-cs-fixer-wrapper.sh composer.json; do
-	if [ -f "$FIXER_DIR/$f" ]; then
-		ok "машинный php-cs-fixer: $f"
-	else
-		bad "нет $FIXER_DIR/$f (развернуть: tools/machine/install.sh)"
-	fi
-done
-[ -x "$FIXER_DIR/php-cs-fixer-wrapper.sh" ] && ok "wrapper исполняемый (755)" \
-	|| bad "wrapper не исполняемый: chmod 755 $FIXER_DIR/php-cs-fixer-wrapper.sh"
-
-# 6. CLI-паритет (composer global)
+# 5. CLI-паритет (composer global; редакторная интеграция junstyle убрана —
+#    стиль в проектах гоняет CLI/CI vendor/bin/php-cs-fixer)
 if command -v php-cs-fixer >/dev/null 2>&1; then
 	ok "CLI php-cs-fixer: $(command -v php-cs-fixer)"
 else
 	bad "CLI php-cs-fixer не в PATH (composer global require friendsofphp/php-cs-fixer)"
 fi
 
-# 7. Ключевые расширения веб-стека: LSP, форматтеры, IntelliSense-звено
-for ext in junstyle.php-cs-fixer xdebug.php-debug vue.volar laravel.vscode-laravel povly.vscode-vue-css-jump shufo.vscode-blade-formatter mizdra.css-modules-kit-vscode vunguyentuan.vscode-css-variables dbaeumer.vscode-eslint esbenp.prettier-vscode; do
+# 6. Ключевые расширения веб-стека: LSP, форматтеры, IntelliSense-звено
+for ext in xdebug.php-debug vue.volar laravel.vscode-laravel povly.vscode-vue-css-jump shufo.vscode-blade-formatter mizdra.css-modules-kit-vscode vunguyentuan.vscode-css-variables dbaeumer.vscode-eslint esbenp.prettier-vscode; do
 	if has_ext "$ext"; then
 		ok "расширение: $ext"
 	else
@@ -87,7 +77,7 @@ for ext in junstyle.php-cs-fixer xdebug.php-debug vue.volar laravel.vscode-larav
 	fi
 done
 
-# 8. WGSL (Rust/wgpu-трек): LSP wgsl-analyzer + [wgsl]-блок форматтера
+# 7. WGSL (Rust/wgpu-трек): LSP wgsl-analyzer + [wgsl]-блок форматтера
 if has_ext "wgsl-analyzer.wgsl-analyzer"; then
 	ok "wgsl-analyzer: $(ls "$EXT_DIR" | grep -i '^wgsl-analyzer.wgsl-analyzer-' | head -n1)"
 else
@@ -99,7 +89,7 @@ else
 	note "WARN: в user settings нет [wgsl]-блока — редактор вне воркспейса будет вставлять табы, formatOnSave переписывать в пробелы (снимок machine/Code-OSS-User-settings.jsonc)"
 fi
 
-# 9. Снимок user settings не старше живого файла (анти-дрейф; WARN, не FAIL)
+# 8. Снимок user settings не старше живого файла (анти-дрейф; WARN, не FAIL)
 if [ -f "$SNAPSHOT" ] && [ -f "$LIVE_SETTINGS" ]; then
 	if [ "$SNAPSHOT" -nt "$LIVE_SETTINGS" ] || [ "$SNAPSHOT" -ef "$LIVE_SETTINGS" ]; then
 		ok "снимок user settings актуальнее живого файла"
@@ -110,7 +100,7 @@ else
 	note "WARN: снимок ($SNAPSHOT) или живой settings не найдены — сравнение пропущено"
 fi
 
-# 10. Машинные live-templates: сниппеты развёрнуты на user-уровень (install.sh)
+# 9. Машинные live-templates: сниппеты развёрнуты на user-уровень (install.sh)
 REPO_SNIPPETS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.vscode"
 USER_SNIPPETS="${VSCODE_USER_SNIPPETS_DIR:-$HOME/.config/Code - OSS/User/snippets}"
 snip_missing=""
@@ -127,6 +117,20 @@ if grep -q '"editor.tabCompletion"' "$LIVE_SETTINGS" 2>/dev/null; then
 	ok "user settings: editor.tabCompletion — Tab разворачивает сниппеты в любом окне"
 else
 	note "WARN: в user settings нет editor.tabCompletion — Tab вне воркспейса не развернёт сниппет (снимок machine/Code-OSS-User-settings.jsonc, секция подсказок)"
+fi
+
+# 10. phpantom_lsp: сервер не устарел (релизы GitHub опережают качалку
+#     расширения). WARN, не FAIL: расширение владеет своим кешем и может
+#     перекачать свою версию при обновлении самого расширения.
+PHPANTOM_LSP_BIN="$HOME/.local/bin/phpantom_lsp"
+if [ -x "$PHPANTOM_LSP_BIN" ]; then
+	if "$PHPANTOM_LSP_BIN" update --check >/dev/null 2>&1; then
+		ok "phpantom_lsp: сервер свежий (обновлений нет)"
+	else
+		note "WARN: phpantom_lsp: доступно обновление сервера — phpantom_lsp update (затем PHPantom: Restart Language Server)"
+	fi
+else
+	note "WARN: phpantom_lsp CLI-мост не найден (~/.local/bin/phpantom_lsp) — сервер обновляется расширением"
 fi
 
 echo "────────────────────────────────────────────────────────────────"

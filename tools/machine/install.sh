@@ -1,35 +1,20 @@
 #!/usr/bin/env bash
-# install.sh — развёртывание машинного уровня (форматирование PHP +
-# конфиг phpantom: path-ignore чужой диагностики + PHPCS-прокси off,
-# live-templates + Rust-глобаль: cargo-алиасы и ~/.justfile) одной командой.
-# Заменяет 3 ручных шага README (mkdir + cp + install). Идемпотентен: повторный
-# запуск безопасен (копирование поверх, wrapper переустанавливается с 755,
+# install.sh — развёртывание машинного уровня (конфиг phpantom: path-ignore
+# чужой диагностики + PHPCS-прокси off, live-templates + Rust-глобаль:
+# cargo-алиасы и ~/.justfile) одной командой.
+# Редакторная интеграция php-cs-fixer (junstyle) снята 02.10.2026: машинный
+# слой фиксер-конфигов/wrapper'а больше не развёртывается; форматтер [php] —
+# phpantom (авто-детект vendor/bin/php-cs-fixer с проектным .php-cs-fixer.php).
+# Идемпотентен: повторный запуск безопасен (копирование поверх,
 # существующие [alias]/~/.justfile/~/.phpantom.toml пользователя
 # не перезаписываются — WARN).
 # Использование: tools/machine/install.sh   (из любого каталога)
 set -uo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEST="$HOME/.config/vscode-php-cs-fixer"
 
 step() { printf 'INFO [machine-install] %s\n' "$1"; }
 die()  { printf 'ERROR [machine-install] %s\n' "$1" >&2; exit 1; }
-
-mkdir -p "$DEST" || die "не удалось создать $DEST"
-
-for f in vscode-php-cs-fixer.php composer.json; do
-	if cp "$SRC/$f" "$DEST/$f"; then
-		step "скопирован: $DEST/$f"
-	else
-		die "копирование не удалось: $f"
-	fi
-done
-
-if install -m 755 "$SRC/php-cs-fixer-wrapper.sh" "$DEST/php-cs-fixer-wrapper.sh"; then
-	step "установлен wrapper (755): $DEST/php-cs-fixer-wrapper.sh"
-else
-	die "установка wrapper не удалась"
-fi
 
 # phpantom: глобальный конфиг (~/.config/phpantom_lsp/.phpantom.toml) —
 # path-ignore чужой диагностики (vendor/**, ядра WP/Bitrix, плагины) +
@@ -98,19 +83,40 @@ else
 	die "копирование не удалось: $JUSTFILE"
 fi
 
-echo
-echo "PASS [machine-install] машинный уровень развёрнут в $DEST"
-if command -v php-cs-fixer >/dev/null 2>&1; then
-	echo "PASS  CLI php-cs-fixer: $(command -v php-cs-fixer)"
+# fixperms: ~/.local/bin/fixperms — восстановление exec-битов vendor/bin/* в
+# любом composer-проекте (права сносит перенос/синк дерева: scp/rsync/tar без
+# сохранения perms → «Failed to spawn php-cs-fixer: Permission denied»).
+# Симлинк (не копия): правки fixperms.sh в воркспейсе подхватываются сразу.
+FIXPERMS_LINK="$HOME/.local/bin/fixperms"
+if ln -sf "$SRC/fixperms.sh" "$FIXPERMS_LINK" 2>/dev/null; then
+	step "fixperms: $FIXPERMS_LINK → tools/machine/fixperms.sh (запускать внутри проекта)"
 else
-	echo "WARN  CLI php-cs-fixer не в PATH — один раз на машину:"
-	echo "      composer global require friendsofphp/php-cs-fixer"
+	printf 'WARN [machine-install] fixperms: не удалось создать симлинк %s (создайте вручную)\n' "$FIXPERMS_LINK"
 fi
+
+# phpantom: подтянуть свежий сервер (релизы GitHub опережают качалку
+# расширения; CLI-мост обновляет тот же бинарь, что исполняет расширение).
+# Подсказка об обновлении без развёртывания — workspace-doctor.sh (чек 10).
+PHPANTOM_LSP_BIN="$HOME/.local/bin/phpantom_lsp"
+if [ -x "$PHPANTOM_LSP_BIN" ]; then
+	if "$PHPANTOM_LSP_BIN" update --no-confirm >/dev/null 2>&1; then
+		step "phpantom: сервер проверен/обновлён до актуального релиза (phpantom_lsp update)"
+	else
+		printf 'WARN [machine-install] phpantom_lsp update не удался (сеть?) — вручную: phpantom_lsp update\n'
+	fi
+else
+	printf 'WARN [machine-install] phpantom_lsp CLI-мост не найден (%s) — откройте PHP-файл в Code OSS (расширение скачает сервер), затем перезапустите install.sh\n' "$PHPANTOM_LSP_BIN"
+fi
+
+echo
+echo "PASS [machine-install] машинный уровень развёрнут (phpantom-конфиг + сервер, live-templates, fixperms, Rust)"
+echo "NOTE  CLI php-cs-fixer (для CLI/CI-прогонов в инсталлах): composer global"
+echo "      require friendsofphp/php-cs-fixer — один раз на машину (чек — workspace-doctor)"
 echo "NOTE  phpantom: после ПЕРВОГО создания ~/.config/phpantom_lsp/.phpantom.toml —"
 echo "      PHPantom: Restart Language Server (или Reload Window) в открытых окнах"
-echo "NOTE  ключи user settings (~/config Code - OSS/User/settings.json) —"
-echo "      перенос из снимка Code-OSS-User-settings.jsonc, секция PHP обязательна"
-echo "      (полный чек после — tools/workspace-doctor.sh)"
+echo "NOTE  ключи user settings (~/.config/Code - OSS/User/settings.json) —"
+echo "      перенос из снимка Code-OSS-User-settings.jsonc ([php]-форматтер —"
+echo "      phpantom; junstyle убран 02.10.2026; чек — tools/workspace-doctor.sh)"
 echo "NOTE  live-templates: $snippets_installed файл(ов) в $USER_SNIPPETS_DIR —"
 echo "      действуют в любом окне после Reload Window; Tab принимает пункты"
-echo "      списка и разворачивает сниппеты: editor.tabCompletion: \"on\" (есть в снимке)"
+echo "      списка и разворачивает сниппеты: editor.tabCompletion (есть в снимке)"

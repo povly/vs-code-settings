@@ -4,10 +4,14 @@
 
 > Обзор и конфигурация PHP-LSP `phpantom.phpantom` (сервер — Rust-проект
 > [phpantom_lsp](https://github.com/PHPantom-dev/phpantom_lsp), MIT). Дата:
-> 2026-10-01, сервер **0.10.0** (бинарь extension ≥ 0.6.1 качает сам),
+> 2026-10-06, сервер **0.11.0** (бинарь extension ≥ 0.6.1 качает сам;
+> релизы GitHub опережают качалку расширения — обновление:
+> `phpantom_lsp update` / подсказка — `tools/workspace-doctor.sh` чек 10;
+> `update` заменяет бинарь в кеше расширения по `latest.json`, расширение
+> при своём апдейте может перекачать свою версию — doctor-чек это ловит),
 > конфигурация — `~/.config/phpantom_lsp/.phpantom.toml` (шаблон:
 > `tools/machine/phpantom.toml`, деплой — `tools/machine/install.sh`).
-> Источники: README и `config-schema.json` репо, notes релизов 0.8.0–0.10.0,
+> Источники: README и `config-schema.json` репо, notes релизов 0.8.0–0.11.0,
 > [документация-сайт](https://phpantom-dev.github.io/phpantom_lsp/).
 > Паттерн WordPress-инсталлов — отдельный гайд
 > [phpantom-wordpress.md](phpantom-wordpress.md); политика «Problems — только
@@ -131,9 +135,10 @@ command = ""   # пустая строка = disable (config-schema.json)
 Встроенный форматтер — PER-CS 2.0. Если в `composer.json` require-dev есть
 php-cs-fixer или PHP_CodeSniffer — phpantom использует их вместо
 встроенного. Явный конфиг (`pint`/`php-cs-fixer`/`phpcbf` — команда или
-`""` для отключения, `timeout` 10 с) приоритетнее автодетекта. В воркспейсе
-редакторский форматтер PHP — расширение junstyle.php-cs-fixer (матрица
-«один форматтер на язык»), поэтому секция неактивна и не конфликтует.
+`""` для отключения, `timeout` 10 с) приоритетнее автодетекта. Форматтер
+`[php]` в воркспейсе — сам phpantom (defaultFormatter; junstyle снят
+02.10.2026): автодетект подхватывает `vendor/bin/php-cs-fixer` → табы ×2 из
+проектного `.php-cs-fixer.php`.
 
 ## Laravel
 
@@ -250,6 +255,16 @@ phpantom_lsp analyze <путь> --project-root <корень проекта> --n
 
 # автофиксы встроенных диагностик
 phpantom_lsp fix <путь> --project-root <корень>
+
+# форматирование всего проекта тем же форматтером, что и редактор
+# (0.11.0; --check — CI-гейт: exit 2, если есть неформатированные)
+phpantom_lsp format [пути] --check --project-root <корень>
+
+# перенос класса/namespace с обновлением деклараций, импортов и PSR-4 (0.11.0)
+phpantom_lsp move <from> <to> --project-root <корень>
+
+# интерактивный генератор .phpantom.toml (0.11.0)
+phpantom_lsp init
 
 # самообновление бинаря (релизы GitHub, 6 платформ)
 phpantom_lsp update --check     # dry-run: код 1, если есть апдейт
