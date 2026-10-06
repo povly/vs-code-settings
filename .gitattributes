@@ -1,0 +1,12 @@
+# Git-слой кросс-платформенных концов строк (editor-слой — .editorconfig).
+# LF на чекауте любой ОС: Windows-клиенты с core.autocrlf=true не получат CRLF
+# в рабочих копиях (редактор пишет LF: files.eol "\n" + .editorconfig).
+* text=auto eol=lf
+
+# Бинарники — без конвертации и текстовых дифов
+*.png binary
+*.ico binary
+*.zip binary
+*.vsix binary
+*.woff binary
+*.woff2 binary
