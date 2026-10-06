@@ -1,4 +1,4 @@
-// Снимок user settings Code OSS — 2026-10-02
+// Снимок user settings Code OSS — 2026-10-06
 // Источник правды — живой файл: /home/povly/.config/Code - OSS/User/settings.json
 // Обновлено скриптом tools/machine/export-user-settings.sh (не править руками)
 
@@ -11,26 +11,23 @@
   // меню-бар (панель File) и крадёт фокус ввода (нужен ESC). Без меню-бара
   // Alt нечего активировать. Гайд: docs/kde-lang-switch-focus-fix.md (_vscode)
   "window.menuBarVisibility": "compact",
+  // PHP-форматтер — PHPantom (junstyle.php-cs-fixer снят 02.10.2026): в
+  // проектах с php-cs-fixer в require-dev сам подхватывает vendor/bin/
+  // php-cs-fixer → табы ×2 из проектного .php-cs-fixer.php; корни без фиксера
+  // — встроенный PER-CS. CLI/CI-канон — vendor/bin/php-cs-fixer fix.
+  // Проекты с mago (перенос длинных строк) переопределяют [php]-форматтер
+  // на michael4d45.mago-vscode точечно в СВОЁМ .vscode/settings.json —
+  // глобально mago форматтером НЕ ставим: в корнях без vendor/bin/mago
+  // форматирование падало бы. phpantom остаётся глобальным дефолтом.
   "[php]": {
-    "editor.defaultFormatter": "junstyle.php-cs-fixer",
-    // Форматирование при сохранении (2026-10-02, аудит /var/www): в воркспейсе
-    // _vscode действует глобальный editor.formatOnSave, а в standalone-корнях
-    // (13 Laravel + 17 WP) PHP не форматировался вовсе. Теперь табы ×2 через
-    // машинный конфиг junstyle в ЛЮБОМ окне (автосейв afterDelay тоже запускает).
+    "editor.defaultFormatter": "phpantom.phpantom",
     "editor.formatOnSave": true,
   },
-  // PHP-форматтер junstyle: машинный конфиг (табы ×2 + PSR12 + indentation_type).
-  // "~/" поддерживается расширением → действует в любом открытом корне; воркспейс
-  // _vscode перекрывает своим .vscode/.php-cs-fixer.php на workspace-уровне.
-  // Анти-паттерн: laravel.vscode-laravel как [php]-форматтер (его Pint-поведение
-  // зависит от наличия vendor/bin/pint в корне проекта).
-  "php-cs-fixer.config": "~/.config/vscode-php-cs-fixer/.php-cs-fixer.php",
-  // CLI-бинарь composer global (v3.95.26) — через wrapper: junstyle спавнит фиксер
-  // с cwd каталога редактируемого файла, а php-cs-fixer ищет composer.json строго
-  // в cwd (без walk-up) → WARN «Unable to determine minimum PHP version…» на каждом
-  // сохранении. Wrapper ставит cwd = ~/.config/vscode-php-cs-fixer (там служебный
-  // composer.json с config.platform.php). Шаблоны: tools/machine/ в воркспейсе _vscode.
-  "php-cs-fixer.executablePath": "~/.config/vscode-php-cs-fixer/php-cs-fixer-wrapper.sh",
+  // mago-расширение (michael4d45.mago-vscode): ГЛОБАЛЬНО только форматтер.
+  // Диагностику mago не запускаем ни в одном корне — единственный PHP-LSP
+  // остаётся phpantom (06.10.2026; lint/analyze маго дублировали бы Problems).
+  "mago.enableLint": false,
+  "mago.enableAnalyze": false,
   "security.workspace.trust.untrustedFiles": "open",
   "chat.disableAIFeatures": true,
   "editor.minimap.enabled": false,
@@ -38,7 +35,7 @@
   // Sticky scroll редактора — on (паритет с воркспейсом): контекст-шапка
   // при навигации по большим файлам (WP/Bitrix/vendor).
   // Терминальный sticky scroll — off (осознанный выбор)
-  "editor.stickyScroll.enabled": true,
+  "editor.stickyScroll.enabled": false,
   "workbench.editor.revealIfOpen": true,
   "[blade]": {
     "editor.defaultFormatter": "shufo.vscode-blade-formatter",
@@ -287,11 +284,10 @@
   "explorer.compactFolders": false, // папки не схлопываются в одну строку пути
   "explorer.confirmDragAndDrop": false,
   "diffEditor.ignoreTrimWhitespace": false, // git-дифф показывает и пробельные изменения
-  // Фикс (2026-10-02): комментарий декларировал «меньше обновлений», но "on"
-  // качал и отключённые расширения. Паритет с воркспейсом: onlyEnabledExtensions.
-  // (Повторный фикс 2026-10-02, аудит дрейфа: живой файл вернулся к "on" —
-  // приведён обратно к этому снимку.)
-  "extensions.autoUpdate": "onlyEnabledExtensions",
+  // Осознанный выбор владельца (подтверждён 02.10.2026): автообновление ВСЕХ
+  // расширений ("on"). Это НЕ дрейф и не ошибка — не «фиксить» на
+  // onlyEnabledExtensions и не трогать тумблер «Show Automatic Updates».
+  "extensions.autoUpdate": "on",
   "files.autoGuessEncoding": true, // старые файлы WP/Bitrix в cp1251 открываются корректно
 
   // JSON/YAML — единственное исключение из табов: 2 пробела

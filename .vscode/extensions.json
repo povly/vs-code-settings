@@ -5,13 +5,16 @@
   //   docs/clean-problems-formatting.md
   // Обзор расширений-2026 (вердикты/даты релизов): docs/power-ups.md
   "recommendations": [
-    // ── PHP / Laravel / WordPress / Bitrix (9) ──
+    // ── PHP / Laravel / WordPress / Bitrix (8) ──
     "phpantom.phpantom",                // PHP LSP (Rust, MIT): типизация, Laravel + Blade. Path-ignore чужой диагностики — ~/.config/phpantom_lsp/.phpantom.toml (vendor/**, ядра WP/Bitrix). Заменил phpactor 18.09.2026. НЕ Intelephense/DEVSENSE — freemium
+    "michael4d45.mago-vscode",          // Форматтер PHP mago (перенос длинных строк, psr-12+табы, mago.toml) — для проектов с composer-dev carthage-software/mago; подключается точечно в .vscode проекта (глобальный [php]-форматтер — phpantom). lint/analyze расширения выключены глобально (user settings) — LSP только phpantom. 06.10.2026: Prettier+plugin-php для PHP запрещён (калечит файлы, prettier 3.9.x)
     "laravel.vscode-laravel",            // ОФИЦИАЛЬНОЕ Laravel-расширение (MIT): completions/links для @include, view(), route(), config(), env, переводов (см. docs/vue-css-intellisense.md)
     "onecentlin.laravel-blade",          // Подсветка и сниппеты Blade
     "shufo.vscode-blade-formatter",      // Форматтер Blade (табы заданы в settings.json: bladeFormatter.format.useTabs)
     "xdebug.php-debug",                  // Отладка PHP через Xdebug (порт 9003)
-    "junstyle.php-cs-fixer",             // Форматирование PHP — единый [php]-форматтер; табы глобально через .vscode/.php-cs-fixer.php (setIndent "\t"); CI Laravel-проектов — vendor/bin/php-cs-fixer fix --dry-run (Pint не умеет табы)
+    // Убрано 02.10.2026: junstyle.php-cs-fixer (расширение снято с машины
+    // осознанно; автоформат PHP в редакторе отключён, канон — CLI/CI
+    // vendor/bin/php-cs-fixer в проектах; механика: docs/clean-problems-formatting.md)
     "Recca0120.vscode-phpunit",          // Запуск тестов PHPUnit/Pest из редактора
     "johnbillion.vscode-wordpress-hooks",// WordPress: автодополнение хуков/экшенов/фильтров
     "mikestead.dotenv",                  // Подсветка .env (Laravel): ключи/значения не сливаются (MIT, стабильная)
