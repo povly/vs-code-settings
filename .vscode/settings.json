@@ -161,6 +161,11 @@
     // и поддерживает nesting.
     "*.pcss": "scss",
     "*.postcss": "scss",
+    // (2026-10-07) plain *.css → scss — зеркалит машинные user settings:
+    // csstools.postcss рядом с postcss.config.js перехватывает обычные .css
+    // языком «postcss» без LSP (масс-прогон /var/www: 17 корней); scss —
+    // надмножество css, свойства/Emmet возвращаются.
+    "*.css": "scss",
     "*.wgsl": "wgsl",
     "*.volt": "html"
   },

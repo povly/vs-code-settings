@@ -1,4 +1,4 @@
-// Снимок user settings Code OSS — 2026-10-06
+// Снимок user settings Code OSS — 2026-10-07
 // Источник правды — живой файл: /home/povly/.config/Code - OSS/User/settings.json
 // Обновлено скриптом tools/machine/export-user-settings.sh (не править руками)
 
@@ -62,7 +62,11 @@
   },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    // (2026-10-07, запрос владельца) НЕ форматировать css на сохранении:
+    // autoSave afterDelay + formatOnSave переписывали файл на каждой паузе
+    // набора (проявилось после ассоциации *.css → scss). Вручную —
+    // Ctrl+Shift+I / Shift+Alt+F (форматтер остаётся, табы ×2)
+    "editor.formatOnSave": false,
   },
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -245,6 +249,12 @@
     "*.postcss": "scss",
     "*.wgsl": "wgsl",
     "*.volt": "html",
+    // (2026-10-07, запрос владельца) plain *.css → scss ГЛОБАЛЬНО: csstools.postcss
+    // рядом с postcss.config.js (Sage/WP-темы, Laravel+Tailwind, Vite) перехватывает
+    // обычные .css языком «postcss» без LSP — ни свойств, ни Emmet. Ассоциация
+    // user-scope перебивает auto-claim расширения в любом окне и любом корне;
+    // scss-сервис — надмножество css (nesting + те же подсказки).
+    "*.css": "scss",
   },
   "scss.lint.unknownAtRules": "ignore",
 
@@ -315,7 +325,9 @@
   "security.promptForLocalFileProtocolHandling": false,
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    // (2026-10-07, запрос владельца) то же, что [css]: без автоформата на
+    // сохранении (.scss и ассоциированные *.css); вручную — Ctrl+Shift+I
+    "editor.formatOnSave": false,
   },
   // TOML (2026-10-02): even-better-toml — как в воркспейсе _vscode. Cargo.toml /
   // phpantom.toml / rust-toolchain.toml в любом корне: 2 пробела + формат на

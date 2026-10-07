@@ -106,6 +106,7 @@ phpantom_lsp analyze <wp-инсталл>/wp-content/themes/<тема>/app \
 | `~/.config/phpantom_lsp/stubs/*.php` | канонические editor-стабы (`view()`, `app()`, `e()`, WP_CLI) — ЕДИНСТВЕННОЕ место правки |
 | `wp-content/themes/<тема>/stubs/editor/*.php` | симлинки на глобальные стабы (walker индексирует симлинки — проверено) |
 | `~/.config/phpantom_lsp/.phpantom.toml` | ЕДИНСТВЕННЫЙ конфиг: дефолты + 5 path-правил чужого кода + WP_Post-шум |
+| `<wp-инсталл>/.vscode/settings.json` + `<тема>/.vscode/settings.json` (+ `themes/.vscode/`) | зеркала фикса CSS IntelliSense (postcss-перехват plain `*.css`): `"*.css": "scss"` + `scss.lint.unknownAtRules` + `cssVariables.lookupFiles`; масс-прогон и правила зеркал — docs/vue-css-intellisense.md, «postcss-ловушка» (2026-10-07) |
 
 ## Новая Sage/WP-тема — подключение одной командой
 
@@ -154,6 +155,9 @@ cd <wp-инсталл>/wp-content/themes/<тема> && vendor/bin/pest
 # автотест редактора: реальный VS Code (test-electron) + PHPantom на воркспейсе
 # <wp-инсталл> — F12 (ACF/wp-includes/vendor/стабы), completion, Problems 0 «not found»
 WP_ROOT=<wp-инсталл> WP_THEME=<тема> npm run test:phpantom   # из tools/intellisense-check
+
+# CSS IntelliSense после зеркал .vscode: languageId=scss, property-подсказки >0
+npm run diag:wp -- --theme=<wp-инсталл>/wp-content/themes/<тема> [--workspace=<wp-инсталл>]
 ```
 
 ## Известные нюансы phpantom 0.10.0 (эмпирика, учтена в автотесте)

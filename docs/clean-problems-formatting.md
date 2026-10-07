@@ -91,7 +91,8 @@ phpantom_lsp analyze <путь своего кода> --project-root <корен
 |---|---|---|---|
 | PHP | phpantom.phpantom (LSP-провайдер) | авто-детект `vendor/bin/php-cs-fixer` (require-dev) → проектный `.php-cs-fixer.php`; фолбэк — встроенный PER-CS | табы ×2 (из конфига фиксера) |
 | Blade | shufo.vscode-blade-formatter | `bladeFormatter.format.useTabs/indentSize/wrapAttributes` | табы ×2 |
-| JS, TS, JSX, TSX, Vue, HTML, CSS, SCSS, MD | Prettier | явные `[lang]`-блоки + `prettier.useTabs/tabWidth/singleAttributePerLine` | табы ×2 |
+| JS, TS, JSX, TSX, Vue, HTML, MD | Prettier | явные `[lang]`-блоки + `prettier.useTabs/tabWidth/singleAttributePerLine` | табы ×2 |
+| CSS, SCSS | Prettier — только по запросу (Ctrl+Shift+I / Shift+Alt+F) | `[css]`/`[scss]`-блоки машинных user settings: `formatOnSave: false` (2026-10-07, запрос владельца: autoSave afterDelay + автоформат переписывали css на каждой паузе набора после ассоциации `*.css → scss`) | табы ×2 |
 | JSON, JSONC, YAML | Prettier | `[lang]`-блоки: `insertSpaces` | 2 пробела |
 | TOML | even-better-toml | `[toml]`-блок | 2 пробела |
 | Rust | rustfmt (rust-analyzer) | `rust-analyzer.rustfmt.extraArgs` = `hard_tabs=true,tab_spaces=2` | табы ×2 |

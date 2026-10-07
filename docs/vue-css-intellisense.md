@@ -27,6 +27,7 @@
 | 8 | TS: `File '…​.css' is not a module` на внешние стили | `resolveStyleImports: true` генерирует `typeof import('./x.css')`; css-modules-kit типизирует строго `*.module.css` — plain `.css` остаётся без типа модуля | именовать ВСЕ внешние CSS-модули `*.module.css` (конвенция, см. «Дисциплина именования»); fallback — ambient-стаб `declare module '*.css'` (PR #5136) |
 | 9 | Blade: `Undefined variable '$page'` (Inertia) | `$page` приходит в runtime из Inertia-middleware — статически не резолвит ни один LSP | `@var`-докблок в app.blade.php (тип в hover) + `@see`-тропинка для навигации к источникам (пример ниже); заглушка — `[[diagnostics.ignore]]` identifier+message-regex в `~/.config/phpantom_lsp/.phpantom.toml` |
 | 10 | Hover по тегу компонента — стена генериков + import, пропсов не видно | Нативный Volar не строит читаемую сводку public API компонента | расширение `povly.vscode-vue-css-jump` ≥ 0.4.0 (карточка props/emits/v-model/expose с ts-подсветкой, ссылками на типы и их превью; ≥ 0.5.0 — ещё hover по class-токену, сводка `$style`, карточка библиотечных компонентов); нативно — Ctrl+Space внутри тега; см. раздел «Компоненты» |
+| 11 | В WP-инсталле (Sage-тема) или любом проекте с `postcss.config.js` нет подсказок CSS-свойств в обычных `*.css` — при этом `var(--…)` работает | Расширение `csstools.postcss` рядом с `postcss.config.js` ассоциирует plain `.css` с языком `postcss` (без LSP); перехват привязан к предкам файла, а не к корню окна — `.vscode` темы не действует, когда окно открыто другим корнем | `.vscode/settings.json` ОТКРЫТОГО корня: `"*.css": "scss"` + `scss.lint.unknownAtRules: "ignore"` + `cssVariables.lookupFiles`; для WP — зеркала в корень инсталла / корень темы / `themes/` (см. «postcss-ловушка»); проверка — `npm run diag:wp` |
 
 ## Быстрая диагностика на машине (2 минуты)
 
@@ -57,13 +58,69 @@ color picker на таких файлах полностью отключают�
 SCSS-сервис покрывает nesting и все подсказки. Расширение `csstools.postcss`
 оставлено в рекомендациях только ради подсветки — при желании можно отключить.
 
+### Перехват plain `*.css` рядом с `postcss.config.js` (масс-прогон 2026-10-07)
+
+Вторая, более коварная ипостась той же ловушки: в проектах, где рядом со
+стилями лежит `postcss.config.js` (Sage/WP-темы, Laravel+Tailwind, сборки на
+Vite), `csstools.postcss` ассоциирует **обычные `*.css`** с языком `postcss`.
+Перехват привязан к предкам файла, а не к корню окна: ловушка срабатывает при
+любом варианте открытия (корень проекта / корень WP-инсталла / каталог
+`wp-content/themes`). Симптом: 0 property-подсказок и пустая диагностика,
+`var(--…)` при этом работает (его даёт css-variables-расширение — вводит в
+заблуждение, будто «всё живо, кроме свойств»).
+
+Фикс — ассоциация в `.vscode/settings.json` **того корня, который открыт как
+воркспейс** (VS Code применяет `.vscode` только из корня воркспейса):
+
+```jsonc
+{
+	"files.associations": { "*.css": "scss" },
+	"scss.lint.unknownAtRules": "ignore",
+	"cssVariables.lookupFiles": ["wp-content/themes/*/resources/**/*.css"]
+}
+```
+
+Для WP-инсталла зеркалим в три места — какое окно ни открой, фикс действует:
+корень инсталла (`lookupFiles: wp-content/themes/*/resources/**/*.css`), корень
+темы (`resources/**/*.css`) и каталог `wp-content/themes`
+(`*/resources/**/*.css`; dot-каталог невидим для WP-сканера тем — glob `*`
+не матчит имена с точкой, это не тема). Для Laravel/JS-корня с
+`postcss.config.js` в корне — один файл с `resources/css/**` +
+`resources/js/**` (или фактическими местами исходников; кейс: standalone-JS
+корень со стилями в `src/scss/**` + минифицированными `build/css/**`).
+
+**С 2026-10-07 (запрос владельца) фикс глобальный:** `"*.css": "scss"` добавлен
+в машинные user settings (`~/.config/Code - OSS/User/settings.json`, снимок
+`tools/machine/`) — действует в любом окне и любом корне без зеркал.
+Проверено изолированным прогоном: каталог с `postcss.config.js` и БЕЗ `.vscode`
+→ user-scope ассоциация сама перебивает auto-claim csstools.postcss
+(languageId=scss, property-подсказки ~1100 items). Проектные зеркала `.vscode`
+остаются как самодостаточность на машинах без глобальной настройки. Откат —
+удалить строку из user settings (уже открытые вкладки .css после смены языка:
+закрыть/открыть вкладку).
+
+Эмпирика масс-прогона 2026-10-07 (18 корней /var/www через
+`tools/intellisense-check`): 17 были в ловушке (9 WP-инсталлов с Sage-темами,
+7 Laravel, 1 JS) — после зеркал все 17 PASS (languageId `scss`,
+property-подсказки ~1100–1200 items); единственный непоражённый проект —
+чистые `.scss`-исходники (scss-файлам язык не перехватывается).
+
+Верификация: `cd tools/intellisense-check && npm run diag:wp --
+--theme=<корень темы/проекта> [--workspace=<корень окна>]
+[--files=<относит. пути через запятую>]` — чистый инстанс VS Code (сам ставит
+и сносит csstools.postcss), печатает languageId и счётчики подсказок.
+Нюанс сьюта: в минифицированных однострочных `*.css` (артефакты
+`build/css/**`) якорь «первый `{`» не находится — список свойств напрямую не
+проверяется, но язык (`scss`) и selector-подсказки видны; исходники
+проверяйте до минификации (`src/scss/**`).
+
 ## Глобально (User Settings) — применено на этой машине
 
 Настройки воркспейса действуют только при открытом воркспейсе `_vscode`, поэтому
 все фиксы **продублированы в пользовательские настройки Code OSS**
 (`~/.config/Code - OSS/User/settings.json`, бэкап: `settings.json.bak-20260917`)
 и действуют во **всех окнах и проектах**: отступы (табы ×2, без точек),
-`files.associations` (`.pcss`/`.postcss` → `scss`, `*.blade.php` → blade),
+`files.associations` (`.pcss`/`.postcss`/`.css` → `scss` (`*.css` — с 2026-10-07), `*.blade.php` → blade),
 `scss.lint.unknownAtRules`, `cssVariables.lookupFiles`, оба `colorDecorators`,
 `quickSuggestions.strings`, `[json]`/`[jsonc]`/`[yaml]` = 2 пробела.
 Расширения `vunguyentuan.vscode-css-variables` и `naumovs.color-highlight`

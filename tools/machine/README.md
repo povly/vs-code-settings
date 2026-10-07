@@ -114,6 +114,17 @@
    остаётся в blacklist: `tailwindcss ^4` в 8 манифестах — стартовый шаблон
    Laravel 12/13, вёрстка на нём не пишется.
 
+   **Дополнение 2026-10-07** (postcss-перехват plain `*.css`; масс-прогон 18
+   корней /var/www, 17 были в ловушке): `files.associations` +=
+   `"*.css": "scss"` — csstools.postcss рядом с `postcss.config.js`
+   (Sage/WP-темы, Laravel+Tailwind) перехватывает обычные .css языком
+   «postcss» без LSP; user-scope ассоциация перебивает auto-claim в любом
+   окне/корне (изолированный прогон без `.vscode`: scss, ~1100
+   property-подсказок). Диагностика инсталлов — `npm run diag:wp`
+   (tools/intellisense-check); гайд — docs/vue-css-intellisense.md,
+   «postcss-ловушка». Проектные зеркала `.vscode` в инсталлах остаются как
+   самодостаточность на машинах без глобальной настройки.
+
    **Keybindings — Alt+R/A/M/L (2026-10-02):** 4 биндинга phpantom (роуты /
    artisan / `@property`-аннотации / логи; `when`-гарды по `editorLangId`
    php/blade) вынесены в машинный `~/.config/Code - OSS/User/keybindings.json` —
